@@ -297,8 +297,12 @@ def frame(f):
     c0, c1 = T.COUNTER
     if c0 - 0.3 < t < c1 + 1.0:
         a = smooth((t - (c0 - 0.25)) / 0.4) * (1 - smooth((t - (c1 + 0.5)) / 0.45))
-        img = scrim(img, 960, 360, 0.55 * a)
-        img = over(img, counter_layer(t), a)
+        img = scrim(img, 960, 380, 0.62 * a)
+        cl = counter_layer(t)
+        sh = np.asarray(cl, np.float32)[..., 3] / 255
+        sh = cv2.GaussianBlur(sh, (0, 0), 6) * 0.7          # soft shadow keeps it legible on white pages
+        img = img * (1 - (sh * a)[..., None])
+        img = over(img, cl, a)
     # height comparison
     if T.TEXT_176 - 0.4 < t < T.SUMMIT_CUT:
         lays, _ = measure_layer(t, f)
