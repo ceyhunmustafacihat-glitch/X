@@ -306,7 +306,7 @@ function paintInsirah(PW, PH) {
   }
   // lake: the scene above, mirrored with a gentle ripple displacement
   {
-    const strip = 3;
+    const strip = 2;
     g.save();
     g.beginPath(); g.rect(0, hz, PW, PH - hz); g.clip();
     for (let y = hz; y < PH; y += strip) {
@@ -314,7 +314,7 @@ function paintInsirah(PW, PH) {
       const dx = Math.sin(y * 0.11 + noise1(y * 0.03) * 3) * (1 + depth * 9);
       const srcY = hz - (y - hz) * 1.0 - strip;
       if (srcY < 0) break;
-      g.drawImage(c, 0, srcY, PW, strip, dx, y, PW, strip);
+      g.drawImage(c, 0, srcY, PW, strip, dx - 14, y, PW + 28, strip);
     }
     g.restore();
     // flip each strip: drawing rows from above the horizon downward already mirrors them
@@ -530,9 +530,15 @@ function drawPost(g, idx, top, t, junkFilter) {
     g.fillStyle = 'rgba(236,234,240,0.55)';
     g.fillText(' devamı', x + 30 + g.measureText('Arapça kökenli bu sözcük, “iç açılması”…').width, ay + 114);
   } else {
-    g.fillStyle = 'rgba(236,234,240,0.55)';
-    rr(g, x + 30, ay + 62, 520 - (idx % 3) * 90, 24, 12); g.fill();
-    rr(g, x + 30, ay + 100, 340 + (idx % 2) * 80, 24, 12); g.fill();
+    const caps = ['Bunu kimse beklemiyordu 😳', 'Etiketle, o da görsün 😂', 'Stoklarla sınırlı! Kaçırma', 'Tarifi yoruma bırakıyorum',
+      'Bugünün kombini ✨', 'Sonuna kadar izleyin…', 'Yeni akım geldi 💃', 'Pazartesi modu: kapalı'];
+    g.font = '600 28px Inter'; g.fillStyle = '#eceaf0';
+    g.fillText(FEED_NAMES[idx % 8], x + 30, ay + 76);
+    const nw = g.measureText(FEED_NAMES[idx % 8] + ' ').width;
+    g.font = '400 28px Inter'; g.fillStyle = 'rgba(236,234,240,0.8)';
+    g.fillText(caps[idx % 8], x + 30 + nw, ay + 76);
+    g.fillStyle = 'rgba(236,234,240,0.5)';
+    g.fillText(`${(R2() * 900 + 20) | 0} yorumun tümünü gör`, x + 30, ay + 114);
   }
 }
 
@@ -607,10 +613,10 @@ function renderFeed(g, t) {
   drawGlow(g, 120, 1500, 300, '#1a2233', 0.5);
 
   // push-in on the post after it stops, then zoom into the word for the transition
-  const push = ss(TL.postStop, TL.feed[1], t) * 0.05 + easeIn(inv(10.75, 11.45, t)) * 1.4;
+  const push = ss(TL.postStop, TL.feed[1], t) * 0.05 + easeIn(inv(10.95, 11.5, t)) * 1.6;
   const enter = 1 - easeOut(inv(5.45, 5.95, t));
   const sc = 1 + push + enter * 0.35;
-  const fx = W / 2, fy = lerp(H / 2, F.sy + F.landY + F.mediaY + F.mediaH * 0.297, ss(10.6, 11.2, t));
+  const fx = W / 2, fy = lerp(H / 2, F.sy + F.landY + F.mediaY + F.mediaH * 0.297, ss(10.85, 11.3, t));
   g.save();
   g.translate(fx, fy); g.scale(sc, sc); g.translate(-fx, -fy);
 
@@ -634,7 +640,7 @@ function renderFeed(g, t) {
   }
   g.save();
   rr(g, F.sx, F.sy, F.sw, F.sh, 80); g.clip();
-  const n = blurLen > 4 ? 7 : 1;
+  const n = blurLen > 4 ? 11 : 1;
   for (let i = 0; i < n; i++) {
     g.globalAlpha = 1 / (i + 1) * (n > 1 ? 1 : 1);
     const off = n > 1 ? (i / (n - 1) - 0.5) * blurLen : 0;
@@ -650,7 +656,7 @@ function renderFeed(g, t) {
   g.font = '600 46px Inter'; g.fillText('Keşfet', F.sx + 36, F.sy + 150);
   g.strokeStyle = '#e8e8ea'; g.lineWidth = 3.4;
   iconHeart(g, F.sx + F.sw - 140, F.sy + 134, 42); iconPlane(g, F.sx + F.sw - 60, F.sy + 134, 40);
-  g.fillStyle = 'rgba(12,12,15,0.96)'; g.fillRect(F.sx, F.sy + F.sh - 140, F.sw, 140);
+  g.fillStyle = '#0c0c0f'; g.fillRect(F.sx, F.sy + F.sh - 140, F.sw, 140);
   g.strokeStyle = '#e8e8ea'; g.lineWidth = 3.4;
   for (let k = 0; k < 5; k++) { rr(g, F.sx + 80 + k * 172, F.sy + F.sh - 104, 44, 44, 12); g.stroke(); }
   // the post glows a little once it is noticed
@@ -689,6 +695,6 @@ function renderFeed(g, t) {
   const wf = 1 - ss(5.62, 6.05, t);
   if (wf > 0.001) { g.globalCompositeOperation = 'screen'; g.fillStyle = `rgba(200,220,255,${wf * 0.85})`; g.fillRect(0, 0, W, H); g.globalCompositeOperation = 'source-over'; }
   // transition flare into the eye
-  const fl = win(10.95, 11.35, 11.4, 11.6, t);
+  const fl = win(11.05, 11.33, 11.38, 11.5, t);
   if (fl > 0.001) { g.globalCompositeOperation = 'screen'; g.fillStyle = `rgba(255,214,140,${fl * 0.9})`; g.fillRect(0, 0, W, H); g.globalCompositeOperation = 'source-over'; }
 }

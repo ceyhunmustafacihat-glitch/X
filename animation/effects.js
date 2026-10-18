@@ -22,13 +22,13 @@ function initEffects() {
     acc += wch;
     return o;
   });
-  FX.wordCenter = [hc[0] + 120, hc[1] - 330];
+  FX.wordCenter = [hc[0] + 120, hc[1] - 285];
 
   // ---- shapes (world coords) ----
   const shapes = [];
   // 0: open book
   {
-    const c = [hc[0] - 190, hc[1] - 300], pts = [], lines = [];
+    const c = [hc[0] - 80, hc[1] - 170], pts = [], lines = [];
     const page = (sgn) => {
       const p = [];
       for (let i = 0; i <= 8; i++) { const u = i / 8; p.push([c[0] + sgn * u * 120, c[1] + 46 - Math.sin(u * Math.PI) * 14 - u * 8]); }
@@ -149,8 +149,8 @@ function initEffects() {
 
   // ---- final scene: floating words, pages, thought bubbles ----
   FX.words = [
-    ['merak', 25.25, 300, 930], ['tefekkür', 25.55, 690, 880], ['irfan', 25.85, 250, 1110],
-    ['ufuk', 26.15, 760, 1060], ['sebat', 26.45, 330, 770], ['hezarfen', 26.75, 640, 720], ['azim', 27.05, 470, 640]
+    ['tefekkür', 25.25, 520, 880], ['ufuk', 25.55, 720, 1150], ['merak', 25.85, 360, 960], ['irfan', 26.15, 300, 1130],
+    ['sebat', 26.45, 440, 770], ['hezarfen', 26.75, 470, 600], ['azim', 27.05, 480, 470]
   ];
 }
 
@@ -244,16 +244,16 @@ function drawWorldEffects(g, t, pose, S, L) {
   // ---- the word itself rises first ----
   if (t > 13.3 && t < 17.8) {
     for (const L2 of FX.word) {
-      const e = 13.32 + L2.k * 0.09;
+      const e = 13.42 + L2.k * 0.09;
       if (t < e) continue;
       const slot = [FX.wordCenter[0] + L2.dx * 1.05, FX.wordCenter[1]];
-      const u = smoother(clamp((t - e) / 0.95));
+      const u = smoother(clamp((t - e) / 1.05));
       const p0 = [ph[0], ph[1] - 10];
       let [x, y] = bez(p0, [p0[0] - 60 + L2.k * 20, p0[1] - 300], [slot[0] + (L2.k - 3) * 30, slot[1] + 160], slot, u);
       y += Math.sin(t * 1.6 + L2.k * 0.7) * 5 * u;
       let size = lerp(18, 56, u), alpha = Math.min(1, (t - e) * 5);
       // the word melts into the book's pages
-      const j = ss(15.3, 16.0, t);
+      const j = ss(15.45, 16.05, t);
       if (j > 0) {
         const bp = FX.shapes[0].pts[(L2.k * 5) % FX.shapes[0].pts.length];
         x = lerp(x, bp[0], j); y = lerp(y, bp[1], j); size = lerp(size, 22, j);
@@ -299,19 +299,6 @@ function drawWorldEffects(g, t, pose, S, L) {
 }
 
 function drawLearningFloaters(g, t, pose) {
-  // words in elegant italic, drifting upward
-  for (const [wd, t0, x, y] of FX.words) {
-    const a = win(t0, t0 + 0.5, t0 + 1.8, t0 + 2.5, t);
-    if (a <= 0.01) continue;
-    const dy = (t - t0) * -26;
-    g.save();
-    g.globalAlpha = a * 0.9;
-    g.font = 'italic 600 50px "Cormorant Garamond"'; g.textAlign = 'center';
-    g.fillStyle = '#6e4312';
-    g.shadowColor = 'rgba(255,236,190,0.95)'; g.shadowBlur = 14;
-    g.fillText(wd, x, y + dy);
-    g.restore();
-  }
   // loose pages drifting
   const rnd = mulberry32(31);
   for (let i = 0; i < 5; i++) {
@@ -329,6 +316,19 @@ function drawLearningFloaters(g, t, pose) {
     g.strokeStyle = 'rgba(190,150,80,0.9)'; g.lineWidth = 1.5; g.strokeRect(-34, -44, 68, 88);
     g.strokeStyle = 'rgba(120,100,80,0.45)'; g.lineWidth = 1.5;
     for (let k = 0; k < 6; k++) { g.beginPath(); g.moveTo(-24, -30 + k * 12); g.lineTo(18 - (k % 3) * 8, -30 + k * 12); g.stroke(); }
+    g.restore();
+  }
+  // words in elegant italic, drifting upward
+  for (const [wd, t0, x, y] of FX.words) {
+    const a = win(t0, t0 + 0.5, t0 + 1.8, t0 + 2.5, t);
+    if (a <= 0.01) continue;
+    const dy = (t - t0) * -26;
+    g.save();
+    g.globalAlpha = a * 0.9;
+    g.font = 'italic 600 50px "Cormorant Garamond"'; g.textAlign = 'center';
+    g.fillStyle = '#6e4312';
+    g.shadowColor = 'rgba(255,236,190,0.95)'; g.shadowBlur = 14;
+    g.fillText(wd, x, y + dy);
     g.restore();
   }
   // thought bubbles rising from his head with tiny symbols

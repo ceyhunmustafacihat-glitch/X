@@ -167,7 +167,7 @@ function renderFrame(t) {
   const g = Sc.g;
   g.fillStyle = '#000'; g.fillRect(0, 0, W, H);
 
-  const roomA = win(-1, 0, 5.62, 5.8, t) + win(11.3, 11.6, 22.62, 22.85, t) + win(25.0, 25.3, TL.fadeOut[0], TL.fadeOut[1], t);
+  const roomA = win(-1, 0, 5.62, 5.8, t) + win(11.28, 11.42, 22.62, 22.85, t) + win(25.02, 25.3, TL.fadeOut[0], TL.fadeOut[1], t);
   if (roomA > 0.001) {
     const R = layer('room');
     renderRoomShot(R.g, t);
@@ -177,11 +177,11 @@ function renderFrame(t) {
     g.globalAlpha = clamp(roomA); g.drawImage(R.c, 0, 0); g.globalAlpha = 1;
   }
   if (typeof renderFeed === 'function') {
-    const fa = win(5.6, 5.8, 11.4, 11.75, t);
+    const fa = win(5.6, 5.8, 11.33, 11.5, t);
     if (fa > 0.001) { const F = layer('feed'); renderFeed(F.g, t); g.globalAlpha = fa; g.drawImage(F.c, 0, 0); g.globalAlpha = 1; }
   }
   if (typeof renderInsert === 'function') {
-    const ia = win(22.5, 22.82, 24.95, 25.3, t);
+    const ia = win(22.5, 22.82, 25.02, 25.32, t);
     if (ia > 0.001) { const I = layer('insert'); renderInsert(I.g, t); g.globalAlpha = ia; g.drawImage(I.c, 0, 0); g.globalAlpha = 1; }
   }
   if (typeof renderLogo === 'function' && t > TL.logo[0]) {

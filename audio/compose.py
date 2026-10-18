@@ -191,9 +191,9 @@ while t < TL["postArrive"] - 0.2:
 place(music_dry, music_wet, 0.2, pad([note_hz("A2"), note_hz("E3")], 8.4, 0.16, attack=3.0, release=1.5, cutoff=700), 1.0, 0, 0.6)
 
 # 2) the post: thin, mysterious notes (celesta), the piano stops
-for tn, nm in [(9.3, "E6"), (9.72, "B5"), (10.15, "F#6"), (10.55, "E6"), (10.95, "A6")]:
-    place(music_dry, music_wet, tn, celesta(note_hz(nm), 0.5), 0.8, 0.25, 0.65)
-place(music_dry, music_wet, 9.2, pad([note_hz("A2"), note_hz("E3"), note_hz("B3")], 2.6, 0.25, attack=1.4, release=1.2, cutoff=900), 1.0, 0, 0.6)
+for dt, nm in [(0.08, "E6"), (0.55, "B5"), (1.02, "F#6"), (1.5, "E6"), (2.0, "A6")]:
+    place(music_dry, music_wet, TL["postStop"] + dt, celesta(note_hz(nm), 0.5), 0.8, 0.25, 0.65)
+place(music_dry, music_wet, TL["postStop"] - 0.05, pad([note_hz("A2"), note_hz("E3"), note_hz("B3")], 2.4, 0.25, attack=1.4, release=1.2, cutoff=900), 1.0, 0, 0.6)
 
 # 3) curiosity grows (face close-up)
 for tn, nm, v in [(11.45, "A3", 0.38), (11.75, "C4", 0.36), (12.05, "E4", 0.38), (12.35, "B4", 0.4), (12.75, "F3", 0.38),

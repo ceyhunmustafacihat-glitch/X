@@ -52,55 +52,70 @@ function inkText(g, txt, x, y, size, reveal, color = '#1e2b47', font = 'Caveat')
   return x + wdt * reveal;
 }
 
-function drawSpread(g, t, page2) {
+function drawPageBase(g, side) {
+  const { ph } = NB;
+  const p = pagePath(side);
+  g.fillStyle = '#f8f1e1'; g.fill(p);
+  g.save(); g.clip(p);
+  // gutter shading near the spine
+  const sg = g.createLinearGradient(0, 0, side * 120, 0);
+  sg.addColorStop(0, 'rgba(120,90,50,0.35)'); sg.addColorStop(1, 'rgba(120,90,50,0)');
+  g.fillStyle = sg; g.fillRect(side > 0 ? 0 : -120, -ph, 120, ph * 2);
+  drawPageLines(g, side);
+  g.restore();
+}
+
+// left page before: old notes, abandoned half-way
+function drawOldNotes(g) {
   const { pw, ph } = NB;
-  for (const side of [-1, 1]) {
-    const p = pagePath(side);
-    g.fillStyle = '#f8f1e1'; g.fill(p);
-    g.save(); g.clip(p);
-    // gutter shading near the spine
-    const sg = g.createLinearGradient(0, 0, side * 120, 0);
-    sg.addColorStop(0, 'rgba(120,90,50,0.35)'); sg.addColorStop(1, 'rgba(120,90,50,0)');
-    g.fillStyle = sg; g.fillRect(side > 0 ? 0 : -120, -ph, 120, ph * 2);
-    drawPageLines(g, side);
-    g.restore();
+  g.save(); g.globalAlpha *= 0.7;
+  inkText(g, 'yapılacaklar:', -pw + 40, -ph / 2 + 128, 44, 1, '#3d4a63');
+  inkText(g, '– kitap bitir', -pw + 56, -ph / 2 + 172, 40, 1, '#3d4a63');
+  inkText(g, '– düzenli uyu', -pw + 56, -ph / 2 + 216, 40, 1, '#3d4a63');
+  g.strokeStyle = 'rgba(61,74,99,0.6)'; g.lineWidth = 2;
+  g.beginPath(); g.moveTo(-pw + 50, -ph / 2 + 160); g.lineTo(-pw + 250, -ph / 2 + 158); g.stroke();
+  g.restore();
+}
+
+// right page: the new word and its meaning, written by hand; returns the pen tip
+function drawNewEntry(g, t) {
+  const { ph } = NB;
+  const wr = clamp((t - TL.writeStart) / (TL.writeEnd - TL.writeStart));
+  let penX = inkText(g, 'inşirah', 92, -ph / 2 + 210, 118, easeInOut(wr));
+  let penY = -ph / 2 + 190;
+  const mr = clamp((t - TL.writeEnd - 0.04) / 0.3);
+  if (mr > 0) { penX = inkText(g, 'iç açılması,', 96, -ph / 2 + 300, 44, mr, '#33415f'); penY = -ph / 2 + 290; }
+  const mr2 = clamp((t - TL.writeEnd - 0.38) / 0.24);
+  if (mr2 > 0) { penX = inkText(g, 'ferahlık ✦', 96, -ph / 2 + 348, 44, mr2, '#33415f'); penY = -ph / 2 + 334; }
+  // underline flourish
+  const ul = clamp((t - TL.writeEnd + 0.15) / 0.3);
+  if (ul > 0) {
+    g.strokeStyle = '#1e2b47'; g.lineWidth = 3.2; g.lineCap = 'round';
+    g.beginPath(); g.moveTo(96, -ph / 2 + 228);
+    g.quadraticCurveTo(96 + 160 * ul, -ph / 2 + 240, 96 + 330 * ul, -ph / 2 + 222); g.stroke();
   }
-  if (!page2) {
-    // left page: old notes, abandoned half-way
-    g.save(); g.globalAlpha = 0.7;
-    inkText(g, 'yapılacaklar:', -pw + 40, -ph / 2 + 128, 44, 1, '#3d4a63');
-    inkText(g, '– kitap bitir', -pw + 56, -ph / 2 + 172, 40, 1, '#3d4a63');
-    inkText(g, '– düzenli uyu', -pw + 56, -ph / 2 + 216, 40, 1, '#3d4a63');
-    g.strokeStyle = 'rgba(61,74,99,0.6)'; g.lineWidth = 2;
-    g.beginPath(); g.moveTo(-pw + 50, -ph / 2 + 160); g.lineTo(-pw + 250, -ph / 2 + 158); g.stroke();
-    g.restore();
-    // right page: the new word
-    const wr = clamp((t - TL.writeStart) / (TL.writeEnd - TL.writeStart));
-    let penX = inkText(g, 'inşirah', 92, -ph / 2 + 210, 118, easeInOut(wr));
-    let penY = -ph / 2 + 190;
-    const mr = clamp((t - TL.writeEnd - 0.04) / 0.32);
-    if (mr > 0) { penX = inkText(g, 'iç açılması,', 96, -ph / 2 + 300, 44, mr, '#33415f'); penY = -ph / 2 + 290; }
-    const mr2 = clamp((t - TL.writeEnd - 0.4) / 0.24);
-    if (mr2 > 0) { penX = inkText(g, 'ferahlık ✦', 96, -ph / 2 + 348, 44, mr2, '#33415f'); penY = -ph / 2 + 334; }
-    // underline flourish
-    const ul = clamp((t - TL.writeEnd + 0.15) / 0.3);
-    if (ul > 0 && mr <= 0) {
-      g.strokeStyle = '#1e2b47'; g.lineWidth = 3.2; g.lineCap = 'round';
-      g.beginPath(); g.moveTo(96, -ph / 2 + 228);
-      g.quadraticCurveTo(96 + 160 * ul, -ph / 2 + 240, 96 + 330 * ul, -ph / 2 + 222); g.stroke();
-    }
-    return [penX, penY, wr];
-  }
-  // the spread after time has passed: pages full of new words
-  g.save(); g.globalAlpha = 0.95;
-  const L = [['merak', 'öğrenme isteği'], ['tefekkür', 'derin düşünme'], ['irfan', 'bilgi, anlayış'], ['sebat', 'kararlılık'], ['ufuk', 'görüş alanı'], ['hezarfen', 'pek çok hünerli']];
-  L.forEach(([wd, mn], i) => {
-    const side = i < 3 ? -1 : 1, row = i % 3;
+  return [penX, penY, wr];
+}
+
+// the spread after time has passed: pages full of new words (side -1 left, +1 right)
+const LATER_WORDS = [['merak', 'öğrenme isteği'], ['tefekkür', 'derin düşünme'], ['irfan', 'bilgi, anlayış'], ['sebat', 'kararlılık'], ['ufuk', 'görüş alanı'], ['hezarfen', 'pek çok hünerli']];
+function drawLaterWords(g, side) {
+  const { pw, ph } = NB;
+  g.save(); g.globalAlpha *= 0.95;
+  LATER_WORDS.forEach(([wd, mn], i) => {
+    if ((i < 3 ? -1 : 1) !== side) return;
+    const row = i % 3;
     const x0 = side < 0 ? -pw + 50 : 90, y0 = -ph / 2 + 130 + row * 170;
     inkText(g, wd, x0, y0, 64, 1, '#1e2b47');
     inkText(g, mn, x0 + 12, y0 + 52, 38, 1, '#4a5874');
   });
   g.restore();
+}
+
+function drawSpread(g, t, page2) {
+  drawPageBase(g, -1); drawPageBase(g, 1);
+  if (!page2) { drawOldNotes(g); return drawNewEntry(g, t); }
+  drawLaterWords(g, -1); drawLaterWords(g, 1);
   return [0, 0, 1];
 }
 
@@ -138,7 +153,7 @@ function renderInsert(g, t) {
   g.restore();
 
   // notebook
-  const turn = clamp((t - TL.pageTurn) / 0.42);
+  const turn = clamp((t - TL.pageTurn) / 0.38);
   g.save();
   g.translate(NB.cx, NB.cy); g.rotate(NB.rot);
   // cover + shadow
@@ -159,15 +174,16 @@ function renderInsert(g, t) {
     g.restore();
     const a = easeInOut(turn) * Math.PI;
     const cx = Math.cos(a);
+    // the leaf carries its writing over; its back becomes the new left page
+    const side = cx >= 0 ? 1 : -1;
     g.save();
-    g.scale(cx === 0 ? 0.001 : cx, 1);
-    const p = pagePath(1);
-    g.fillStyle = cx > 0 ? '#f8f1e1' : '#efe5cf'; g.fill(p);
-    g.save(); g.clip(p);
-    const sh = g.createLinearGradient(0, 0, NB.pw, 0);
-    sh.addColorStop(0, `rgba(90,60,30,${0.15 + 0.35 * Math.sin(a)})`); sh.addColorStop(1, 'rgba(90,60,30,0)');
-    g.fillStyle = sh; g.fillRect(0, -NB.ph, NB.pw, NB.ph * 2);
-    if (cx > 0) drawPageLines(g, 1);
+    g.scale(Math.max(0.001, Math.abs(cx)), 1);
+    drawPageBase(g, side);
+    if (side > 0) drawNewEntry(g, t); else drawLaterWords(g, -1);
+    g.save(); g.clip(pagePath(side));
+    const sh = g.createLinearGradient(0, 0, side * NB.pw, 0);
+    sh.addColorStop(0, `rgba(90,60,30,${0.12 + 0.32 * Math.sin(a)})`); sh.addColorStop(1, 'rgba(90,60,30,0.04)');
+    g.fillStyle = sh; g.fillRect(side > 0 ? 0 : -NB.pw, -NB.ph, NB.pw, NB.ph * 2);
     g.restore();
     g.restore();
     // the turning page's shadow onto the right side
@@ -193,12 +209,19 @@ function renderInsert(g, t) {
 
   // hand + pen (writing on the right page)
   if (!page2 && turn <= 0) {
+    // writing hand; lifts away before the page is turned
     const [px, py, wr] = pen;
-    const tipX = (wr > 0 ? px : 96) + Math.sin(t * 24) * 2, tipY = py + 4 + Math.sin(t * 19) * 3;
+    const away = ss(TL.pageTurn - 0.32, TL.pageTurn - 0.02, t);
+    const done = clamp((t - TL.writeEnd - 0.62) / 0.1);
+    const tipX = (wr > 0 ? px : 96) + Math.sin(t * 24) * 2 * (1 - done) + away * 300, tipY = py + 4 + Math.sin(t * 19) * 3 * (1 - done) + away * 260;
+    g.save(); g.globalAlpha *= 1 - away;
     drawWritingHand(g, tipX, tipY, t);
+    g.restore();
   } else if (turn > 0 && turn < 1) {
-    // hand flips the page: rests near the page corner
+    // a hand guides the leaf's corner over the spine
+    g.save(); g.globalAlpha *= ss(0, 0.18, turn) * (1 - ss(0.75, 1, turn));
     drawWritingHand(g, NB.pw * Math.cos(easeInOut(turn) * Math.PI) * 0.9, NB.ph / 2 - 60, t, true);
+    g.restore();
   }
   g.restore();
 
