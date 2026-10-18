@@ -18,7 +18,7 @@ Telefondaki paylaşım sayfanın kendi gönderi şablonunu izler: koyu, sinemati
 **İnşirah**: Arapça kökenli bir kelime olup “iç açılması, ferahlık” demektir.
 Hikâyenin metaforuyla birebir örtüşür: zihnin açılması, içe dolan aydınlık.
 Paylaşımdaki örnek cümle (“Sabahın ilk ışığı, daralmış gönlüme inşirah verdi.”) animasyon için yazılmıştır.
-Arka plandaki gün doğumu görseli koddan çizilmiştir. Bu kelime için kendi görselinizi kullanmak isterseniz `animation/feed.js` içindeki `paintInsirah` yerine konabilir.
+Arka plandaki gün doğumu görseli koddan çizilmiştir. Bu kelime için kendi görselinizi kullanmak isterseniz, onu `animation/feed.js` içindeki `paintInsirah` yerine koyabilirsiniz.
 Yayından önce tanımı [sozluk.gov.tr](https://sozluk.gov.tr) üzerinden teyit etmenizi öneririm.
 
 ## Sahne akışı

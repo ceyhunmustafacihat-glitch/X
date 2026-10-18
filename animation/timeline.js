@@ -21,8 +21,8 @@ window.TIMELINE = {
   "reading": [25.0, 27.9],
   "fadeOut": [27.45, 28.3],
   "logo": [28.2, 32.0],
-  "logoText": 29.35,
-  "slogan": 29.95,
+  "logoText": 29.05,
+  "slogan": 29.55,
   "flicksRoom": [1.35, 2.55, 3.6, 4.55],
   "flicksFeed": [5.75, 6.45, 7.05, 7.55, 7.98, 8.35],
   "chimeLetters": [13.55, 13.85, 14.1, 14.4, 14.65, 14.95, 15.2],
@@ -30,6 +30,6 @@ window.TIMELINE = {
   "phoneDown": 20.75,
   "notebookOpen": 21.6,
   "writeStart": 22.95,
-  "writeEnd": 24.25,
+  "writeEnd": 23.85,
   "readPageTurns": [26.6]
 };

@@ -368,7 +368,7 @@ def paper(dur=0.35):
 
 fx(TL["notebookOpen"], paper(0.3), 0.22, 0.25, 0.2)
 # pen on paper
-wd = TL["writeEnd"] + 0.9 - TL["writeStart"]
+wd = TL["writeEnd"] + 0.62 - TL["writeStart"]
 scr = noise_band(wd, 2500, 7000)
 tt = np.arange(len(scr)) / SR
 strokes = np.clip(np.sin(2 * np.pi * 6.5 * tt + 1.4 * np.sin(2 * np.pi * 1.7 * tt)), 0, 1) ** 0.6

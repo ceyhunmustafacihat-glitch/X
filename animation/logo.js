@@ -117,7 +117,7 @@ function renderLogo(g, t) {
     g.restore();
   }
   // slogan
-  const ks = ss(TL.slogan, TL.slogan + 0.9, t);
+  const ks = ss(TL.slogan, TL.slogan + 0.7, t);
   if (ks > 0) {
     g.save();
     g.globalAlpha = ks;
@@ -130,7 +130,7 @@ function renderLogo(g, t) {
     g.restore();
   }
   // the page's handle
-  const kh = ss(TL.slogan + 0.7, TL.slogan + 1.5, t);
+  const kh = ss(TL.slogan + 0.5, TL.slogan + 1.0, t);
   if (kh > 0) {
     g.save();
     g.globalAlpha = kh * 0.8;

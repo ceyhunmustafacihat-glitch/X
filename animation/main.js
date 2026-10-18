@@ -7,6 +7,7 @@ function init(canvas) {
   MAIN = { c: canvas, g: canvas.getContext('2d') };
   if (!GrainTiles.length) buildGrain();
   if (typeof initEffects === 'function') initEffects();
+  if (typeof warmFeed === 'function') warmFeed();
 }
 
 // ---------- the room shot (with cold -> warm radial reveal) ----------

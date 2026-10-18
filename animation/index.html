@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>sözlükdeus — Bir kelimeyle başlar</title>
+<title>sözlükdeus — Türk dili, Türk milletinin kalbidir, zihnidir.</title>
 <link rel="stylesheet" href="fonts/fonts.css">
 <style>
   html, body { margin: 0; background: #000; color: #d9b26a; font-family: Inter, sans-serif; }
@@ -44,7 +44,7 @@
   const params = new URLSearchParams(location.search);
   const canvas = document.getElementById('c');
   const fams = ['600 40px "Cormorant Garamond"', 'italic 500 40px "Cormorant Garamond"', '500 40px Inter', '600 40px Caveat',
-    '400 40px Montserrat', '700 40px Montserrat', 'italic 400 40px Montserrat', '500 40px Montserrat'];
+    '400 40px Montserrat', '700 40px Montserrat', '800 40px Montserrat', 'italic 400 40px Montserrat', '500 40px Montserrat'];
   await Promise.all(fams.map(f => document.fonts.load(f, 'İnşirah sözlükdeus ğüşıöç')));
   await document.fonts.ready;
   init(canvas);

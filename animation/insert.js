@@ -78,9 +78,9 @@ function drawSpread(g, t, page2) {
     const wr = clamp((t - TL.writeStart) / (TL.writeEnd - TL.writeStart));
     let penX = inkText(g, 'inşirah', 92, -ph / 2 + 210, 118, easeInOut(wr));
     let penY = -ph / 2 + 190;
-    const mr = clamp((t - TL.writeEnd - 0.02) / 0.5);
+    const mr = clamp((t - TL.writeEnd - 0.04) / 0.32);
     if (mr > 0) { penX = inkText(g, 'iç açılması,', 96, -ph / 2 + 300, 44, mr, '#33415f'); penY = -ph / 2 + 290; }
-    const mr2 = clamp((t - TL.writeEnd - 0.5) / 0.4);
+    const mr2 = clamp((t - TL.writeEnd - 0.4) / 0.24);
     if (mr2 > 0) { penX = inkText(g, 'ferahlık ✦', 96, -ph / 2 + 348, 44, mr2, '#33415f'); penY = -ph / 2 + 334; }
     // underline flourish
     const ul = clamp((t - TL.writeEnd + 0.15) / 0.3);

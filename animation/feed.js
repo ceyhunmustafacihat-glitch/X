@@ -129,9 +129,11 @@ const FEED_NAMES = ['gundem.tv', 'komik.anlar', 'firsat.market', 'lezzet.durağ�
 // A dark, cinematic photo-like painting; the word in quotes; "Sözlük"; a definition
 // with a bar on its left; an example sentence; the open-book mark at the bottom.
 
-// lucide-style open book (24x24 viewbox), the page's avatar mark
-const BOOK_ICON = [new Path2D('M12 7v14'),
-  new Path2D('M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z')];
+// the page's open-book mark (24x24 box): arched page tops, pages meeting at the spine
+const BOOK_ICON = [
+  new Path2D('M12 6.5C9.5 4.8 6 4.3 2.5 5.2V18.6C6 17.8 9.5 18.3 12 20'),
+  new Path2D('M12 6.5C14.5 4.8 18 4.3 21.5 5.2V18.6C18 17.8 14.5 18.3 12 20'),
+  new Path2D('M12 6.5V20')];
 function drawBookIcon(g, cx, cy, size, color = '#ffffff', lw = 1.8) {
   g.save();
   g.translate(cx - size / 2, cy - size / 2); g.scale(size / 24, size / 24);
@@ -149,157 +151,210 @@ function ridge(u, seed, oct = 5) {
   }
   return v / n;
 }
+// 2D value noise + fBm (for clouds and rock texture)
+function vnoise2(x, y, seed) {
+  const xi = Math.floor(x), yi = Math.floor(y), xf = x - xi, yf = y - yi;
+  const h = (i, j) => { const q = Math.sin(i * 127.1 + j * 311.7 + seed * 74.7) * 43758.5453; return q - Math.floor(q); };
+  const u = xf * xf * (3 - 2 * xf), v = yf * yf * (3 - 2 * yf);
+  return lerp(lerp(h(xi, yi), h(xi + 1, yi), u), lerp(h(xi, yi + 1), h(xi + 1, yi + 1), u), v);
+}
+function fbm2(x, y, seed, oct = 5) {
+  let a = 0.5, f = 1, sum = 0, n = 0;
+  for (let i = 0; i < oct; i++) { sum += a * vnoise2(x * f, y * f, seed + i * 17); n += a; a *= 0.5; f *= 2.03; }
+  return sum / n;
+}
 
-// "İnşirah": dawn breaking through heavy clouds behind layered mountains, mirrored in a still lake
+// "İnşirah": dawn breaking through heavy clouds behind layered mountains, mirrored in a still lake.
+// Painted once at load (about the size it is shown at).
 function paintInsirah(PW, PH) {
   const c = makeCanvas(PW, PH), g = c.getContext('2d');
   const R = mulberry32(404);
-  const hz = PH * 0.6;                       // horizon / lake line
-  const sunX = PW * 0.6, sunY = PH * 0.505;
+  const hz = PH * 0.665;                     // horizon / lake line
+  const sunX = PW * 0.62, sunY = PH * 0.6;   // low, just behind the far range
   const blur = px => (g.filter = px > 0 ? `blur(${(px * PW).toFixed(1)}px)` : 'none');
-  // sky
+  // sky: dark above, the warm band kept low near the horizon (white type sits above it)
   let gr = g.createLinearGradient(0, 0, 0, hz);
-  gr.addColorStop(0, '#0d1119'); gr.addColorStop(0.3, '#1f2533'); gr.addColorStop(0.55, '#4f4650');
-  gr.addColorStop(0.75, '#b5774a'); gr.addColorStop(0.9, '#eeb36d'); gr.addColorStop(1, '#ffdca0');
+  gr.addColorStop(0, '#0b0e15'); gr.addColorStop(0.4, '#1c212d'); gr.addColorStop(0.62, '#3c363f');
+  gr.addColorStop(0.8, '#9a6a48'); gr.addColorStop(0.92, '#e3a764'); gr.addColorStop(1, '#ffd89a');
   g.fillStyle = gr; g.fillRect(0, 0, PW, hz + 4);
-  // sun glow
   g.globalCompositeOperation = 'screen';
-  for (const [r, a] of [[0.9, 0.35], [0.45, 0.45], [0.18, 0.7], [0.06, 0.95]]) {
+  for (const [r, a] of [[0.8, 0.22], [0.4, 0.38], [0.16, 0.65], [0.05, 0.95]]) {
     gr = g.createRadialGradient(sunX, sunY, 0, sunX, sunY, PW * r);
     gr.addColorStop(0, `rgba(255,222,160,${a})`); gr.addColorStop(1, 'rgba(255,170,90,0)');
     g.fillStyle = gr; g.fillRect(0, 0, PW, hz + 4);
   }
   g.globalCompositeOperation = 'source-over';
-  // cloud masses: soft dark bodies, parted around the sun, with sunlit undersides
-  const clouds = [];
-  for (let i = 0; i < 26; i++) {
-    const x = R() * PW * 1.3 - PW * 0.15, y = PH * (0.03 + Math.pow(R(), 1.3) * 0.38);
-    const d = Math.hypot((x - sunX) / PW, (y - sunY) / PH * 1.8);
-    clouds.push({ x, y, rx: PW * (0.16 + R() * 0.28), ry: PH * (0.035 + R() * 0.05), open: clamp(d * 2.3 - 0.3), d });
+  // clouds: domain-warped fBm density at 1/3 resolution, lit on the side facing the sun
+  {
+    const cw = Math.round(PW / 3), ch = Math.round(hz / 3);
+    const cc = makeCanvas(cw, ch), cg = cc.getContext('2d');
+    const img = cg.createImageData(cw, ch), d = img.data;
+    const sx = sunX / PW, sy = sunY / hz;
+    for (let y = 0; y < ch; y++) for (let x = 0; x < cw; x++) {
+      const u = x / cw, v = y / ch;
+      const q = fbm2(u * 2.2, v * 5.5, 3, 4);
+      const dens = fbm2(u * 2.6 + q * 1.1, v * 6.5 + q * 0.7, 7, 6);
+      const toward = fbm2((u + (sx - u) * 0.03) * 2.6 + q * 1.1, (v + (sy - v) * 0.03) * 6.5 + q * 0.7, 7, 6);
+      const dist = Math.hypot((u - sx) * 1.1, (v - sy) * 0.75);
+      const cover = sstep(clamp((0.92 - v) / 0.5)) * clamp(dist * 2.6 - 0.32);
+      const a = sstep(clamp((dens - 0.44) / 0.22)) * cover;
+      if (a <= 0.003) continue;
+      const lit = clamp((dens - toward) * 9 + 0.15) * clamp(1.25 - dist * 1.6);
+      const body = clamp(1 - v * 0.6);
+      const k = (y * cw + x) * 4;
+      d[k] = lerp(lerp(20, 58, 1 - body), 246, lit);
+      d[k + 1] = lerp(lerp(23, 50, 1 - body), 176, lit);
+      d[k + 2] = lerp(lerp(32, 58, 1 - body), 108, lit);
+      d[k + 3] = a * 245;
+    }
+    cg.putImageData(img, 0, 0);
+    g.imageSmoothingQuality = 'high';
+    blur(0.002);
+    g.drawImage(cc, 0, 0, PW, hz);
+    blur(0);
   }
-  blur(0.035);
-  for (const cl of clouds) {
-    g.fillStyle = `rgba(20,23,32,${0.75 * cl.open})`;
-    g.beginPath(); g.ellipse(cl.x, cl.y, cl.rx, cl.ry, 0, 0, TAU); g.fill();
-  }
-  blur(0.012);
+  // soft crepuscular rays through the gaps
+  blur(0.03);
   g.globalCompositeOperation = 'screen';
-  for (const cl of clouds) {
-    const lit = clamp(1.1 - cl.d * 1.5);
-    g.fillStyle = `rgba(255,178,104,${0.45 * lit * cl.open})`;
-    g.beginPath(); g.ellipse(cl.x + (sunX - cl.x) * 0.05, cl.y + cl.ry * 0.65, cl.rx * 0.75, cl.ry * 0.28, 0, 0, TAU); g.fill();
-  }
-  g.globalCompositeOperation = 'source-over';
-  blur(0.005);
-  for (let i = 0; i < 160; i++) {          // texture in the cloud bodies
-    const cl = clouds[(R() * clouds.length) | 0];
-    g.fillStyle = `rgba(${R() < 0.5 ? '12,14,20' : '70,62,70'},${0.18 * cl.open})`;
-    g.beginPath(); g.ellipse(cl.x + (R() - 0.5) * cl.rx * 1.6, cl.y + (R() - 0.5) * cl.ry * 1.4, cl.rx * (0.1 + R() * 0.2), cl.ry * (0.2 + R() * 0.3), 0, 0, TAU); g.fill();
-  }
-  // crepuscular rays fanning up through the gaps
-  blur(0.01);
-  g.globalCompositeOperation = 'screen';
-  for (let i = 0; i < 18; i++) {
-    const a0 = -Math.PI + 0.35 + i * 0.135 + (R() - 0.5) * 0.05, wdt = 0.015 + R() * 0.03;
-    g.fillStyle = `rgba(255,214,150,${0.04 + R() * 0.07})`;
+  for (let i = 0; i < 12; i++) {
+    const a0 = -Math.PI + 0.45 + i * 0.19 + (R() - 0.5) * 0.08, wdt = 0.03 + R() * 0.05;
+    g.fillStyle = `rgba(255,206,140,${0.035 + R() * 0.045})`;
     g.beginPath(); g.moveTo(sunX, sunY);
-    g.lineTo(sunX + Math.cos(a0) * PW * 1.5, sunY + Math.sin(a0) * PW * 1.5);
-    g.lineTo(sunX + Math.cos(a0 + wdt) * PW * 1.5, sunY + Math.sin(a0 + wdt) * PW * 1.5);
+    g.lineTo(sunX + Math.cos(a0) * PW * 1.4, sunY + Math.sin(a0) * PW * 1.4);
+    g.lineTo(sunX + Math.cos(a0 + wdt) * PW * 1.4, sunY + Math.sin(a0 + wdt) * PW * 1.4);
     g.closePath(); g.fill();
   }
   g.globalCompositeOperation = 'source-over';
   blur(0);
-  // backlit mountain layers with glowing valley mist between them
+  // rock texture used to break up the mountain faces
+  const tex = makeCanvas(Math.round(PW / 2), Math.round(PH / 4));
+  {
+    const tg = tex.getContext('2d'), img = tg.createImageData(tex.width, tex.height), d = img.data;
+    for (let y = 0; y < tex.height; y++) for (let x = 0; x < tex.width; x++) {
+      const u = x / tex.width, v = y / tex.height;
+      const n = fbm2(u * 14, v * 7 + fbm2(u * 6, v * 3, 5, 3) * 1.5, 11, 5);
+      const k = (y * tex.width + x) * 4, val = n * 255;
+      d[k] = d[k + 1] = d[k + 2] = val; d[k + 3] = 255;
+    }
+    tg.putImageData(img, 0, 0);
+  }
+  // backlit mountain layers with glowing mist in the valleys between them
   const layers = [
-    { base: 0.545, amp: 0.13, col: '#a07e72', seed: 1, oct: 4 },
-    { base: 0.565, amp: 0.11, col: '#6b5359', seed: 2, oct: 5 },
-    { base: 0.585, amp: 0.085, col: '#3a2f37', seed: 3, oct: 5, trees: 0.006 },
-    { base: 0.6, amp: 0.05, col: '#17141b', seed: 4, oct: 5, trees: 0.01 }
+    { base: 0.6, amp: 0.15, col: '#8d7270', seed: 1, oct: 5, haze: 0.42, fog: 0.004 },
+    { base: 0.625, amp: 0.115, col: '#5b4850', seed: 2, oct: 6, haze: 0.26, fog: 0.002 },
+    { base: 0.648, amp: 0.085, col: '#30282f', seed: 3, oct: 6, trees: 0.009, haze: 0.12 },
+    { base: 0.668, amp: 0.05, col: '#141217', seed: 4, oct: 6, trees: 0.014, haze: 0.04 }
   ];
   for (const L of layers) {
-    // mist glowing in the valley before this layer
-    gr = g.createLinearGradient(0, PH * (L.base - L.amp * 0.6), 0, PH * L.base);
-    gr.addColorStop(0, 'rgba(255,196,130,0)'); gr.addColorStop(1, 'rgba(255,196,130,0.38)');
-    g.fillStyle = gr; g.fillRect(0, PH * (L.base - L.amp * 0.6), PW, PH * L.amp * 0.6);
+    gr = g.createLinearGradient(0, PH * (L.base - L.amp * 0.7), 0, PH * L.base);
+    gr.addColorStop(0, 'rgba(255,190,125,0)'); gr.addColorStop(1, `rgba(255,190,125,${0.2 + L.haze * 0.5})`);
+    g.fillStyle = gr; g.fillRect(0, PH * (L.base - L.amp * 0.7), PW, PH * L.amp * 0.7);
     const pts = [];
-    for (let i = 0; i <= 220; i++) {
-      const u = i / 220;
-      pts.push([u * PW, PH * (L.base - L.amp * ridge(u * 1.2, L.seed, L.oct) * (0.65 + 0.35 * Math.sin(u * 3 + L.seed)))]);
+    for (let i = 0; i <= 260; i++) {
+      const u = i / 260;
+      const saddle = 1 - 0.55 * Math.exp(-Math.pow((u - sunX / PW) / 0.09, 2)) * (L.seed <= 2 ? 1 : 0.3);
+      pts.push([u * PW, PH * (L.base - L.amp * ridge(u * 1.25, L.seed, L.oct) * (0.6 + 0.4 * Math.sin(u * 3 + L.seed)) * saddle)]);
     }
     const p = new Path2D(); p.moveTo(0, hz + 2); pts.forEach(q => p.lineTo(q[0], q[1])); p.lineTo(PW, hz + 2); p.closePath();
+    if (L.fog) blur(L.fog);
     g.fillStyle = L.col; g.fill(p);
+    blur(0);
     g.save(); g.clip(p);
-    // haze thinning towards the foot, warmer near the sun
+    g.globalCompositeOperation = 'soft-light';
+    g.globalAlpha = 0.55;
+    g.drawImage(tex, 0, PH * (L.base - L.amp * 1.1), PW, PH * L.amp * 1.4);
+    g.globalAlpha = 1;
+    g.globalCompositeOperation = 'source-over';
+    // aerial perspective: haze thickens towards the foot; warm bloom near the sun
     gr = g.createLinearGradient(0, PH * (L.base - L.amp), 0, hz);
-    gr.addColorStop(0, 'rgba(255,190,130,0.0)'); gr.addColorStop(1, 'rgba(255,190,130,0.16)');
+    gr.addColorStop(0, 'rgba(255,190,130,0)'); gr.addColorStop(1, `rgba(255,190,130,${L.haze * 0.6})`);
     g.fillStyle = gr; g.fillRect(0, 0, PW, PH);
-    gr = g.createRadialGradient(sunX, sunY, 0, sunX, sunY, PW * 0.5);
-    gr.addColorStop(0, 'rgba(255,200,140,0.35)'); gr.addColorStop(1, 'rgba(255,200,140,0)');
+    gr = g.createRadialGradient(sunX, sunY, 0, sunX, sunY, PW * 0.42);
+    gr.addColorStop(0, `rgba(255,200,140,${0.15 + L.haze * 0.6})`); gr.addColorStop(1, 'rgba(255,200,140,0)');
     g.fillStyle = gr; g.fillRect(0, 0, PW, PH);
-    // gullies / rock texture
-    g.lineWidth = Math.max(1, PW * 0.0012);
-    for (let i = 0; i < 260; i++) {
-      const idx = (R() * 220) | 0, q = pts[idx], len = PH * L.amp * (0.2 + R() * 0.6);
-      g.strokeStyle = R() < 0.6 ? 'rgba(0,0,0,0.12)' : 'rgba(255,210,170,0.06)';
-      g.beginPath(); g.moveTo(q[0], q[1] + 2); g.lineTo(q[0] + (R() - 0.5) * len * 0.5, q[1] + len); g.stroke();
-    }
     g.restore();
-    // rim light where the sun grazes the ridge
-    g.save();
-    blur(0.0015);
+    // rim light where the low sun grazes the ridge
+    blur(0.0012);
     for (let i = 1; i < pts.length; i++) {
       const q0 = pts[i - 1], q = pts[i];
-      const k = clamp(1 - Math.abs(q[0] - sunX) / (PW * 0.35));
+      const k = clamp(1 - Math.abs(q[0] - sunX) / (PW * 0.3));
       if (k <= 0.02) continue;
-      g.strokeStyle = `rgba(255,214,150,${0.75 * k * k})`; g.lineWidth = PW * 0.0025;
+      g.strokeStyle = `rgba(255,214,150,${0.8 * k * k * (0.4 + L.haze)})`; g.lineWidth = PW * 0.0022;
       g.beginPath(); g.moveTo(q0[0], q0[1]); g.lineTo(q[0], q[1]); g.stroke();
     }
     blur(0);
-    g.restore();
     if (L.trees) {
-      g.fillStyle = L.col;
-      for (let i = 0; i < 700; i++) {
-        const idx = (R() * 220) | 0, q = pts[idx], h = PH * L.trees * (0.6 + R() * 0.9);
-        g.beginPath(); g.moveTo(q[0], q[1] - h); g.lineTo(q[0] + h * 0.2, q[1] + 1); g.lineTo(q[0] - h * 0.2, q[1] + 1); g.closePath(); g.fill();
+      // clustered conifers with gaps, a little down the slope too, drawn back to front
+      const trees = [];
+      for (let i = 0; i < 900; i++) {
+        const u = R(), idx = Math.round(u * 260), q = pts[idx];
+        if (fbm2(u * 18, L.seed, 21, 3) < 0.47) continue;
+        trees.push([q[0], q[1] + R() * PH * L.trees * 1.6, PH * L.trees * (0.5 + R() * 1.0)]);
+      }
+      trees.sort((A, B) => A[1] - B[1]);
+      const tc = mixc(L.col, '#000000', 0.25);
+      for (const [x, y, h] of trees) {
+        g.fillStyle = rgb(tc);
+        g.beginPath();
+        for (let tier = 0; tier < 3; tier++) {
+          const ty = y - h + tier * h * 0.3, tw = h * (0.12 + tier * 0.07);
+          g.moveTo(x, ty); g.lineTo(x + tw, ty + h * 0.42); g.lineTo(x - tw, ty + h * 0.42); g.closePath();
+        }
+        g.fill();
       }
     }
   }
-  // lake: a soft, darker mirror of everything above the horizon
-  g.save();
-  g.beginPath(); g.rect(0, hz, PW, PH - hz); g.clip();
-  g.filter = `blur(${(PW * 0.004).toFixed(1)}px)`;
-  g.translate(0, hz * 2); g.scale(1, -1);
-  g.drawImage(c, 0, 0);
-  g.restore();
-  gr = g.createLinearGradient(0, hz, 0, PH);
-  gr.addColorStop(0, 'rgba(14,12,16,0.35)'); gr.addColorStop(0.45, 'rgba(10,10,14,0.7)'); gr.addColorStop(1, 'rgba(6,6,9,0.92)');
-  g.fillStyle = gr; g.fillRect(0, hz, PW, PH - hz);
-  // ripples and the sun's glittering path
-  g.globalCompositeOperation = 'screen';
-  for (let i = 0; i < 420; i++) {
-    const v = R(), y = hz + 3 + Math.pow(v, 1.5) * (PH - hz);
-    const spread = PW * (0.02 + Math.pow(v, 1.1) * 0.2);
-    const x = sunX + (R() + R() - 1) * spread, len = PW * (0.006 + R() * 0.04) * (1 - v * 0.4);
-    g.fillStyle = `rgba(255,${196 + (R() * 50) | 0},140,${(0.7 - v * 0.6) * (0.3 + R() * 0.7)})`;
-    g.fillRect(x - len / 2, y, len, Math.max(1, PH * 0.0016));
+  // lake: the scene above, mirrored with a gentle ripple displacement
+  {
+    const strip = 3;
+    g.save();
+    g.beginPath(); g.rect(0, hz, PW, PH - hz); g.clip();
+    for (let y = hz; y < PH; y += strip) {
+      const depth = (y - hz) / (PH - hz);
+      const dx = Math.sin(y * 0.11 + noise1(y * 0.03) * 3) * (1 + depth * 9);
+      const srcY = hz - (y - hz) * 1.0 - strip;
+      if (srcY < 0) break;
+      g.drawImage(c, 0, srcY, PW, strip, dx, y, PW, strip);
+    }
+    g.restore();
+    // flip each strip: drawing rows from above the horizon downward already mirrors them
+    gr = g.createLinearGradient(0, hz, 0, PH);
+    gr.addColorStop(0, 'rgba(14,12,16,0.3)'); gr.addColorStop(0.4, 'rgba(10,10,14,0.68)'); gr.addColorStop(1, 'rgba(6,6,9,0.93)');
+    g.fillStyle = gr; g.fillRect(0, hz, PW, PH - hz);
+    // glitter: soft elongated highlights in a column under the sun, longer towards us
+    g.globalCompositeOperation = 'screen';
+    const spr = glowSprite('#ffd496');
+    for (let i = 0; i < 320; i++) {
+      const v = Math.pow(R(), 1.4), y = hz + 2 + v * (PH - hz) * 0.85;
+      const spread = PW * (0.015 + v * 0.16);
+      const x = sunX + (R() + R() - 1) * spread;
+      const len = PW * (0.008 + R() * 0.03) * (0.5 + v * 1.6), th = PH * (0.002 + v * 0.004);
+      g.globalAlpha = (0.75 - v * 0.55) * (0.35 + R() * 0.65);
+      g.drawImage(spr, x - len / 2, y - th / 2, len, th);
+    }
+    g.globalAlpha = 1;
+    g.globalCompositeOperation = 'source-over';
   }
-  g.globalCompositeOperation = 'source-over';
-  g.strokeStyle = 'rgba(0,0,0,0.25)'; g.lineWidth = 1;
-  for (let i = 0; i < 70; i++) { const y = hz + Math.pow(R(), 1.3) * (PH - hz); g.beginPath(); g.moveTo(0, y); g.lineTo(PW, y + (R() - 0.5) * 3); g.stroke(); }
   // dark shoreline with reeds in the foreground
-  blur(0.002);
+  blur(0.0018);
   g.fillStyle = '#07070a';
   g.beginPath(); g.moveTo(0, PH);
-  for (let i = 0; i <= 40; i++) { const u = i / 40; g.lineTo(u * PW, PH * (0.93 + 0.035 * Math.sin(u * 5.3 + 1) + 0.02 * noise1(u * 9))); }
+  for (let i = 0; i <= 40; i++) { const u = i / 40; g.lineTo(u * PW, PH * (0.94 + 0.03 * Math.sin(u * 5.3 + 1) + 0.015 * noise1(u * 9))); }
   g.lineTo(PW, PH); g.closePath(); g.fill();
   g.strokeStyle = '#07070a'; g.lineWidth = Math.max(1.2, PW * 0.0018);
   for (let i = 0; i < 90; i++) {
-    const x = R() * PW, base = PH * (0.94 + 0.03 * Math.sin(x / PW * 5.3 + 1)), hh = PH * (0.02 + R() * 0.05);
+    const x = R() * PW, base = PH * (0.945 + 0.03 * Math.sin(x / PW * 5.3 + 1)), hh = PH * (0.015 + R() * 0.045);
     g.beginPath(); g.moveTo(x, base); g.quadraticCurveTo(x + (R() - 0.5) * hh * 0.4, base - hh * 0.6, x + (R() - 0.5) * hh * 0.5, base - hh); g.stroke();
   }
   blur(0);
-  // the page's look: darkened for white type, vignette, a touch of grain
-  g.fillStyle = 'rgba(6,7,10,0.3)'; g.fillRect(0, 0, PW, PH);
+  // the page's look: darkened for white type (more behind the text blocks), vignette, grain
+  g.fillStyle = 'rgba(6,7,10,0.28)'; g.fillRect(0, 0, PW, PH);
+  for (const [cy, ry, a] of [[0.27, 0.06, 0.35], [0.445, 0.07, 0.42], [0.655, 0.06, 0.3]]) {
+    gr = g.createRadialGradient(PW / 2, PH * cy, 0, PW / 2, PH * cy, PW * 0.55);
+    gr.addColorStop(0, `rgba(0,0,0,${a})`); gr.addColorStop(1, 'rgba(0,0,0,0)');
+    g.save(); g.translate(PW / 2, PH * cy); g.scale(1, ry / 0.55 * (PH / PW) * 1.8); g.translate(-PW / 2, -PH * cy);
+    g.fillStyle = gr; g.fillRect(0, 0, PW, PH * 2); g.restore();
+  }
   gr = g.createRadialGradient(PW / 2, PH * 0.5, PW * 0.35, PW / 2, PH * 0.5, PH * 0.78);
   gr.addColorStop(0, 'rgba(0,0,0,0)'); gr.addColorStop(1, 'rgba(0,0,0,0.6)');
   g.fillStyle = gr; g.fillRect(0, 0, PW, PH);
@@ -311,22 +366,20 @@ function paintInsirah(PW, PH) {
 
 // rich text: runs of {t, b} wrapped to maxW; returns lines of runs
 function wrapRuns(g, runs, maxW, font, boldFont) {
+  // split runs into words, remembering where real spaces were
   const words = [];
-  for (const r of runs) for (const [i, w] of r.t.split(' ').entries()) {
-    if (i > 0) words.push({ sp: true });
-    if (w) words.push({ t: w, b: r.b });
-  }
-  const lines = [[]]; let lw = 0;
-  const width = w => { g.font = w.b ? boldFont : font; return g.measureText(w.t).width; };
+  for (const r of runs) r.t.split(/( )/).forEach(w => { if (w === ' ') words.push({ sp: true }); else if (w) words.push({ t: w, b: r.b }); });
   g.font = font; const spW = g.measureText(' ').width;
+  const lines = [[]]; let lw = 0, space = false;
   for (const w of words) {
-    if (w.sp) { if (lines[lines.length - 1].length) lw += spW; continue; }
-    const ww = width(w);
-    if (lw + ww > maxW && lines[lines.length - 1].length) { lines.push([]); lw = 0; }
-    const L = lines[lines.length - 1];
-    if (L.length) L.push({ t: ' ', b: false, w: spW });
-    L.push(Object.assign({ w: ww }, w)); lw += ww + (L.length > 1 ? 0 : 0);
-    lw = L.reduce((s2, r) => s2 + r.w, 0);
+    if (w.sp) { space = true; continue; }
+    g.font = w.b ? boldFont : font;
+    const ww = g.measureText(w.t).width;
+    let L = lines[lines.length - 1];
+    if (space && L.length && lw + spW + ww > maxW) { lines.push([]); L = lines[lines.length - 1]; lw = 0; }
+    else if (space && L.length) { L.push({ t: ' ', b: false, w: spW }); lw += spW; }
+    L.push({ t: w.t, b: w.b, w: ww }); lw += ww;
+    space = false;
   }
   return lines;
 }
@@ -338,14 +391,15 @@ function drawRunLine(g, line, x, y, font, boldFont, align = 'left') {
 }
 
 const POST_ART = {};
+// paint the post's background once, at load, instead of mid-playback
+function warmFeed() { if (!POST_ART.c) POST_ART.c = paintInsirah(FEED.sw, FEED.mediaH); }
 function drawSozlukPost(g, x, y, w, h, t) {
-  const k = 1.6;  // paint at higher resolution so the transition zoom stays crisp
-  if (!POST_ART.c) POST_ART.c = paintInsirah(Math.round(w * k), Math.round(h * k));
+  warmFeed();
   g.save(); g.beginPath(); g.rect(x, y, w, h); g.clip();
   g.drawImage(POST_ART.c, x, y, w, h);
   // a slow breath of light from the sun (the post is a video)
   g.globalCompositeOperation = 'screen';
-  drawGlow(g, x + w * 0.6, y + h * 0.545, w * (0.5 + 0.04 * Math.sin(t * 1.3)), '#ffcf8a', 0.18 + 0.05 * Math.sin(t * 0.9));
+  drawGlow(g, x + w * 0.62, y + h * 0.6, w * (0.42 + 0.03 * Math.sin(t * 1.3)), '#ffcf8a', 0.12 + 0.04 * Math.sin(t * 0.9));
   g.globalCompositeOperation = 'source-over';
   const cx = x + w / 2;
   g.fillStyle = '#ffffff';
@@ -353,13 +407,15 @@ function drawSozlukPost(g, x, y, w, h, t) {
   g.textAlign = 'center'; g.textBaseline = 'alphabetic';
   // the word
   const wy = y + h * 0.297 + 22;
-  g.font = '700 60px Montserrat';
+  g.font = '800 60px Montserrat';
+  g.letterSpacing = '-0.5px';
   g.fillText('“İnşirah”', cx, wy);
+  g.letterSpacing = '0px';
   // shimmer sweep across the word
   if (t > TL.postStop) {
     const sweep = ((t - TL.postStop - 0.2) % 2.6) / 2.6;
     const T = layer('shimmer', w, 120);
-    T.g.font = g.font; T.g.textAlign = 'center'; T.g.fillStyle = '#fff';
+    T.g.font = '800 60px Montserrat'; T.g.letterSpacing = '-0.5px'; T.g.textAlign = 'center'; T.g.fillStyle = '#fff';
     T.g.fillText('“İnşirah”', w / 2, 90);
     T.g.globalCompositeOperation = 'source-in';
     const sx = -300 + sweep * (w + 600);
@@ -412,7 +468,7 @@ function drawStar(g, x, y, r, inner = 0.45) {
 function drawAvatarLogo(g, x, y, r) {
   g.fillStyle = '#050506'; g.beginPath(); g.arc(x, y, r, 0, TAU); g.fill();
   g.strokeStyle = 'rgba(255,255,255,0.18)'; g.lineWidth = 1.5; g.beginPath(); g.arc(x, y, r, 0, TAU); g.stroke();
-  drawBookIcon(g, x, y, r * 1.05, '#ffffff', 1.9);
+  drawBookIcon(g, x, y, r * 0.95, '#ffffff', 1.6);
 }
 
 function drawPost(g, idx, top, t, junkFilter) {
@@ -429,7 +485,15 @@ function drawPost(g, idx, top, t, junkFilter) {
   g.fillText(isS ? 'sozlukdeus' : FEED_NAMES[idx % 8], x + 116, top + 52);
   g.fillStyle = 'rgba(230,230,235,0.75)'; g.font = '400 24px Inter';
   if (isS) {
-    g.fillText('♫  sozlukdeus · Orijinal ses', x + 116, top + 86);
+    // filled double note, then the audio line
+    g.save(); g.fillStyle = '#ffffff'; g.strokeStyle = '#ffffff'; g.lineWidth = 2.4;
+    const nx = x + 118, ny = top + 86;
+    g.beginPath(); g.ellipse(nx + 3, ny - 1, 4.6, 3.6, -0.4, 0, TAU); g.ellipse(nx + 15, ny - 4, 4.6, 3.6, -0.4, 0, TAU); g.fill();
+    g.beginPath(); g.moveTo(nx + 7, ny - 2); g.lineTo(nx + 7, ny - 19); g.lineTo(nx + 19, ny - 22); g.lineTo(nx + 19, ny - 5); g.stroke();
+    g.fillRect(nx + 6, ny - 21, 14, 4);
+    g.restore();
+    g.fillStyle = 'rgba(255,255,255,0.92)';
+    g.fillText('sozlukdeus · Orijinal ses', x + 146, top + 86);
   } else g.fillText(idx % 3 === 0 ? 'Sponsorlu' : 'Önerilen', x + 116, top + 84);
   g.fillStyle = 'rgba(230,230,235,0.8)';
   for (let k = 0; k < 3; k++) { g.beginPath(); g.arc(x + w - 70 + k * 14, top + 56, 3.5, 0, TAU); g.fill(); }
@@ -444,7 +508,8 @@ function drawPost(g, idx, top, t, junkFilter) {
   g.strokeStyle = '#eceaf0'; g.lineWidth = 3.4; g.lineJoin = 'round'; g.lineCap = 'round';
   g.fillStyle = '#eceaf0'; g.font = '600 28px Inter'; g.textAlign = 'left';
   const R2 = mulberry32(idx * 7 + 3);
-  const counts = isS ? ['2.418', '96', '312', '1.204'] : [`${(R2() * 90 + 3).toFixed(1)} B`, `${(R2() * 900) | 0}`, `${(R2() * 300) | 0}`, `${(R2() * 2000) | 0}`];
+  const tr = n => n.toLocaleString('tr-TR');
+  const counts = isS ? ['2.418', '96', '312', '1.204'] : [`${(R2() * 90 + 3).toFixed(1).replace('.', ',')} B`, tr((R2() * 900) | 0), tr((R2() * 300) | 0), tr((R2() * 2000) | 0)];
   let ix = x + 46;
   const icons = [iconHeart, iconBubble, iconRepost, iconPlane];
   icons.forEach((fn, i) => {
@@ -561,7 +626,7 @@ function renderFeed(g, t) {
   const C = layer('feedContent');
   drawFeedContent(C.g, s, t, junkFilter);
   // ghost echoes: contents bleeding into each other as time blurs
-  const ghost = ss(6.4, 8.2, t) * (1 - goldK);
+  const ghost = ss(6.4, 8.2, t) * (1 - ss(TL.postArrive, TL.postStop - 0.15, t));
   if (ghost > 0.01) {
     C.g.globalAlpha = 0.22 * ghost; drawFeedContent(C.g, s + F.postH * 0.5, t, junkFilter);
     C.g.globalAlpha = 0.14 * ghost; drawFeedContent(C.g, s - F.postH * 0.33, t, junkFilter);
@@ -591,14 +656,14 @@ function renderFeed(g, t) {
   // the post glows a little once it is noticed
   if (goldK > 0.01) {
     g.globalCompositeOperation = 'screen';
-    const gy = F.sy + 190 + F.K * F.postH - s + F.mediaY + F.mediaH * 0.45;
-    drawGlow(g, W / 2, gy, 700, '#b8862f', 0.25 * goldK);
+    const gy = F.sy + 190 + F.K * F.postH - s + F.mediaY + F.mediaH * 0.62;
+    drawGlow(g, W / 2, gy, 640, '#b8862f', 0.16 * goldK);
     g.globalCompositeOperation = 'source-over';
     // dim everything outside the post
     g.fillStyle = `rgba(0,0,0,${0.45 * goldK})`;
     const top = F.sy + 190 + F.K * F.postH - s;
     g.fillRect(F.sx, F.sy, F.sw, Math.max(0, top - F.sy));
-    g.fillRect(F.sx, top + F.mediaY + F.mediaH + 160, F.sw, 2000);
+    g.fillRect(F.sx, top + F.postH, F.sw, 2000);
   }
   // glass reflection
   const gl = g.createLinearGradient(F.sx, F.sy, F.sx + F.sw, F.sy + F.sh);
