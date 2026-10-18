@@ -10,9 +10,7 @@ CACHE = os.path.join(ROOT, ".cache")          # downloaded models, never committ
 BUILD = os.path.join(ROOT, "build")           # intermediate renders, never committed
 OUT = os.path.join(ROOT, "output")
 
-# The page is @sozlukdeus. Change both lines if the brand should read differently.
-BRAND = "SÖZLÜKDEUS"
-BRAND_SPOKEN = "Sözlükdeus"
+# No brand lettering or spoken brand name: the film carries only the story.
 
 FPS = 24
 DURATION = 42.0
@@ -29,6 +27,7 @@ SCENES = {
 }
 
 # Narration: (start time, [(phrase, length_scale, pause_after_s), ...]).
+# CHECK holds the written form Whisper is expected to hear for phrases with numbers.
 # Numbers are spelled out so the TTS reads them exactly; "dill" keeps the
 # final consonant of "dil" from being swallowed by the voice model.
 NARRATION = [
@@ -40,9 +39,17 @@ NARRATION = [
             ("bu kâğıtları üst üste koyduğumuzda...", 1.12, 0.0)]),
     (29.15, [("Yaklaşık yüz yetmiş altı metreye ulaşırız.", 1.08, 0.4),
              ("Yani, elli dokuz katlı bir gökdelen kadar!", 1.04, 0.0)]),
-    (36.3, [("Bir dill...", 1.15, 0.35), ("sandığınızdan çok daha büyük.", 1.1, 0.45),
-            (f"{BRAND_SPOKEN}.", 1.12, 0.3), ("Her kelimede yeni bir dünya.", 1.1, 0.0)]),
+    (37.2, [("Bir dill...", 1.15, 0.35), ("sandığınızdan çok daha büyük.", 1.1, 0.45),
+            ("Her kelimede yeni bir dünya.", 1.1, 0.0)]),
 ]
+
+CHECK = {
+    "Türk Dil Kurumunun iki bin yirmi üç yılında yayımladığı Türkçe Sözlük'ün metninde,":
+        "Türk Dil Kurumunun 2023 yılında yayımladığı Türkçe Sözlük'ün metninde",
+    "tam bir milyon yedi yüz elli altı bin üç yüz doksan altı sözcük bulunuyor.": "tam 1.756.396 sözcük bulunuyor.",
+    "Yaklaşık yüz yetmiş altı metreye ulaşırız.": "Yaklaşık 176 metreye ulaşırız.",
+    "Yani, elli dokuz katlı bir gökdelen kadar!": "Yani 59 katlı bir gökdelen kadar.",
+}
 
 # Subtitle text per narration line (written form, for the SRT).
 SUBTITLES = [
@@ -51,7 +58,7 @@ SUBTITLES = [
     "Şimdi hayal edin. Her sözcüğü, ayrı bir kâğıda yazdığımızı düşünün.",
     "Her biri yalnızca onda bir milimetre kalınlığında olan bu kâğıtları üst üste koyduğumuzda...",
     "Yaklaşık 176 metreye ulaşırız. Yani, 59 katlı bir gökdelen kadar!",
-    f"Bir dil... sandığınızdan çok daha büyük. {BRAND_SPOKEN}. Her kelimede yeni bir dünya.",
+    "Bir dil... sandığınızdan çok daha büyük. Her kelimede yeni bir dünya.",
 ]
 
 WORD_COUNT = 1_756_396

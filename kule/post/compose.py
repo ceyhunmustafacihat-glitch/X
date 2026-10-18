@@ -250,48 +250,28 @@ def measure_layer(t, f):
     return (lay, glow), 1.0
 
 
-_LOGO = None
+_TAG = None
 
 
-def logo_layers():
-    global _LOGO
-    if _LOGO is None:
-        cy = 900
+def tag_layer():
+    global _TAG
+    if _TAG is None:
         m = Image.new("L", (W, H), 0)
-        d = ImageDraw.Draw(m)
-        fn = font("CormorantGaramond-600.ttf", 108)
-        name = config.BRAND
-        while tracked(ImageDraw.Draw(Image.new("L", (W, H))), (W / 2, cy), name, fn, 255, 18) > W - 240:
-            fn = font("CormorantGaramond-600.ttf", fn.size - 6)
-        tracked(d, (W / 2, cy), name, fn, 255, 18)
-        rule = Image.new("L", (W, H), 0)
-        ImageDraw.Draw(rule).line([W / 2 - 120, cy + 52, W / 2 + 120, cy + 52], fill=255, width=2)
-        tag = Image.new("L", (W, H), 0)
-        tracked(ImageDraw.Draw(tag), (W / 2, cy + 128), "Her kelimede yeni bir dünya.", font("Montserrat-300.ttf", 34), 255, 3)
-        _LOGO = (np.asarray(m, np.float32) / 255, np.asarray(rule, np.float32) / 255, np.asarray(tag, np.float32) / 255, cy)
-    return _LOGO
+        tracked(ImageDraw.Draw(m), (W / 2, 940), "Her kelimede yeni bir dünya.", font("Montserrat-300.ttf", 44), 255, 4)
+        tm = json.load(open(os.path.join(config.BUILD, "voice", "timing.json"), encoding="utf-8"))
+        _TAG = (np.asarray(m, np.float32) / 255, tm[-1]["end"] - 1.65)   # as the line is spoken
+    return _TAG
 
 
 def logo_frame(t):
-    name, rule, tag, cy = logo_layers()
+    """End card: no brand lettering, only the closing line of the story."""
+    tag, t_in = tag_layer()
     img = np.zeros((H, W, 3), np.float32) + 0.006
-    a = smooth((t - T.LOGO_IN) / 0.9)
-    # a slow light sweep across the letters
-    xx = np.arange(W)[None, :]
-    sweep_x = -300 + (W + 600) * smooth((t - (T.LOGO_IN + 0.35)) / 1.6)
-    sweep = np.exp(-((xx - sweep_x) / 140.0) ** 2) * 0.55
-    yy = np.linspace(0, 1, H)[:, None]
-    grad = GOLD_HI + (GOLD - GOLD_HI) * np.clip((yy - (cy - 100) / H) / (120 / H), 0, 1)[..., None]
-    col = grad * (1 + sweep[..., None] * 0.6)
-    glow = cv2.GaussianBlur(name, (0, 0), 18) * 0.45
-    img = img + (glow[..., None] * GOLD * 0.8) * a
-    img = img * (1 - (name * a)[..., None]) + col * (name * a)[..., None]
-    ra = smooth((t - (T.LOGO_IN + 0.6)) / 0.6)
-    img = img * (1 - (rule * ra * 0.9)[..., None]) + GOLD * (rule * ra * 0.9)[..., None]
-    ta = smooth((t - 41.0) / 0.5) * 0.85
+    ta = smooth((t - t_in) / 0.6) * 0.9
+    glow = cv2.GaussianBlur(tag, (0, 0), 10) * 0.3
+    img = img + (glow[..., None] * GOLD * 0.6) * ta
     img = img * (1 - (tag * ta)[..., None]) + IVORY * (tag * ta)[..., None]
-    end = 1 - smooth((t - 41.72) / 0.28) * 0.15
-    return img * end
+    return img * (1 - smooth((t - 41.72) / 0.28) * 0.15)
 
 
 # ------------------------------------------------------------------ frame

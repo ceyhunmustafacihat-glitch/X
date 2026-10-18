@@ -23,6 +23,9 @@ import config
 
 VOICE = "vits-piper-tr_TR-fahrettin-medium"
 URL = f"https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/{VOICE}.tar.bz2"
+ASR = "sherpa-onnx-whisper-small"
+ASR_URL = f"https://github.com/k2-fsa/sherpa-onnx/releases/download/asr-models/{ASR}.tar.bz2"
+TAKES = 14
 SR = 48000
 VDIR = os.path.join(config.BUILD, "voice")
 
@@ -48,6 +51,35 @@ def engine(d, ls):
         length_scale=ls, noise_scale=0.55, noise_scale_w=0.65)
     return sherpa_onnx.OfflineTts(sherpa_onnx.OfflineTtsConfig(
         model=sherpa_onnx.OfflineTtsModelConfig(vits=vits, num_threads=4)))
+
+
+_ASR = None
+
+
+def asr_score(audio, sr, text):
+    """Similarity of a Whisper transcript to the intended phrase (takes are ranked by it)."""
+    global _ASR
+    import difflib
+    import sherpa_onnx
+    if _ASR is None:
+        d = os.path.join(config.CACHE, ASR)
+        if not os.path.isdir(d):
+            tb = d + ".tar.bz2"
+            urllib.request.urlretrieve(ASR_URL, tb)
+            with tarfile.open(tb) as t:
+                t.extractall(config.CACHE, filter="data")
+            os.remove(tb)
+        _ASR = sherpa_onnx.OfflineRecognizer.from_whisper(
+            encoder=f"{d}/small-encoder.int8.onnx", decoder=f"{d}/small-decoder.int8.onnx",
+            tokens=f"{d}/small-tokens.txt", language="tr", task="transcribe", num_threads=4)
+    x = signal.resample_poly(audio, 16000, sr).astype(np.float32)
+    st = _ASR.create_stream()
+    st.accept_waveform(16000, x)
+    _ASR.decode_stream(st)
+
+    def clean(z):
+        return "".join(c for c in z.lower().replace("ı", "i").replace("â", "a") if c.isalnum())
+    return difflib.SequenceMatcher(None, clean(st.result.text), clean(text.replace("dill", "dil"))).ratio()
 
 
 def trim(a, sr, thr=0.012):
@@ -112,9 +144,17 @@ def main():
         for text, ls, pause in phrases:
             if ls not in engines:
                 engines[ls] = engine(d, ls)
-            g = engines[ls].generate(text, sid=0, speed=1.0)
-            sr = g.sample_rate
-            parts.append(trim(np.array(g.samples, dtype=np.float32), sr))
+            takes = []
+            for _ in range(TAKES):                 # the model is stochastic: keep the clearest take
+                g = engines[ls].generate(text, sid=0, speed=1.0)
+                sr = g.sample_rate
+                a = trim(np.array(g.samples, dtype=np.float32), sr)
+                takes.append((asr_score(a, sr, config.CHECK.get(text, text)), a))
+                if takes[-1][0] > 0.985:
+                    break
+            score, best = max(takes, key=lambda k: k[0])
+            print(f"  {score:.2f}  {text}")
+            parts.append(best)
             parts.append(np.zeros(int(pause * sr), dtype=np.float32))
         raw = np.concatenate(parts)
         rp = os.path.join(VDIR, f"raw_{li}.wav")
