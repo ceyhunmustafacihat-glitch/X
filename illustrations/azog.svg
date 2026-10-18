@@ -1,0 +1,225 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="1080" height="1080">
+  <title>sözlükdeus — Azog</title>
+  <defs>
+    <radialGradient id="bg" cx="0.66" cy="0.32" r="0.8">
+      <stop offset="0" stop-color="#262626"/>
+      <stop offset="0.45" stop-color="#151515"/>
+      <stop offset="1" stop-color="#0c0c0c"/>
+    </radialGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="skin" x1="0" y1="0" x2="1" y2="0.15">
+      <stop offset="0" stop-color="#6e6e6e"/>
+      <stop offset="0.5" stop-color="#a9a9a9"/>
+      <stop offset="0.8" stop-color="#cdcdcd"/>
+      <stop offset="1" stop-color="#bdbdbd"/>
+    </linearGradient>
+    <linearGradient id="skinBody" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#3a3a3a"/>
+      <stop offset="0.45" stop-color="#6c6c6c"/>
+      <stop offset="0.75" stop-color="#8f8f8f"/>
+      <stop offset="1" stop-color="#7a7a7a"/>
+    </linearGradient>
+    <linearGradient id="arm" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#5a5a5a"/>
+      <stop offset="0.6" stop-color="#9a9a9a"/>
+      <stop offset="1" stop-color="#b8b8b8"/>
+    </linearGradient>
+    <linearGradient id="ear" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#5c5c5c"/>
+      <stop offset="1" stop-color="#8e8e8e"/>
+    </linearGradient>
+    <linearGradient id="metal" x1="0" y1="0" x2="0.4" y2="1">
+      <stop offset="0" stop-color="#4c4c4c"/>
+      <stop offset="1" stop-color="#1e1e1e"/>
+    </linearGradient>
+    <pattern id="hatch" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(-35)">
+      <line x1="0" y1="0" x2="0" y2="9" stroke="#bdbdbd" stroke-width="1" opacity="0.35"/>
+    </pattern>
+    <filter id="soft" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="6" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <clipPath id="disc"><circle cx="540" cy="540" r="500"/></clipPath>
+  </defs>
+
+  <rect width="1080" height="1080" fill="#0a0a0a"/>
+  <circle cx="540" cy="540" r="500" fill="url(#bg)"/>
+  <circle cx="815" cy="330" r="260" fill="url(#glow)"/>
+
+  <!-- floating Turkish letters -->
+  <g font-family="'Cormorant Garamond', Georgia, 'Times New Roman', serif" font-size="40" fill="#3d3d3d" text-anchor="middle">
+    <text x="512" y="112">ö</text>
+    <text x="640" y="150">ş</text>
+    <text x="200" y="325">ç</text>
+    <text x="955" y="560">ğ</text>
+    <text x="215" y="520">ı</text>
+    <text x="935" y="740">ü</text>
+  </g>
+
+  <g clip-path="url(#disc)" stroke-linejoin="round" stroke-linecap="round">
+
+    <!-- torso -->
+    <path d="M90,1080 L100,860 C110,770 180,722 268,694 C322,676 350,630 358,560 L364,450 L584,450 L590,560 C600,630 630,674 690,692 C782,720 862,762 892,852 L930,1080 Z"
+          fill="url(#skinBody)" stroke="#c8c8c8" stroke-width="2"/>
+    <!-- neck & chest muscle lines -->
+    <g fill="none" stroke="#1d1d1d" stroke-width="2">
+      <path d="M380,560 C412,620 446,668 478,712"/>
+      <path d="M570,560 C540,620 508,668 498,712"/>
+      <path d="M360,600 C335,665 290,690 230,712"/>
+      <path d="M590,600 C620,665 680,692 770,722"/>
+      <path d="M488,722 C420,748 330,744 238,758"/>
+      <path d="M492,722 C560,748 660,748 770,766"/>
+      <path d="M488,760 L488,1080"/>
+      <path d="M250,905 C320,940 420,945 482,915"/>
+      <path d="M496,915 C560,945 660,945 735,905"/>
+    </g>
+    <!-- shadow hatching on far side of body -->
+    <path d="M90,1080 L100,860 C110,770 180,722 268,694 C300,684 330,668 350,640 C320,740 290,900 280,1080 Z" fill="url(#hatch)"/>
+    <!-- chest scars -->
+    <g fill="none" stroke-linecap="round">
+      <path d="M300,1000 C380,972 470,975 560,1012" stroke="#262626" stroke-width="4"/>
+      <path d="M302,1006 C382,980 470,983 558,1019" stroke="#b5b5b5" stroke-width="1.3" opacity="0.7"/>
+      <path d="M215,830 C240,870 262,930 270,990" stroke="#262626" stroke-width="3.5"/>
+      <path d="M560,790 C600,815 640,830 690,838" stroke="#262626" stroke-width="3"/>
+    </g>
+
+    <!-- shoulder plate (his right shoulder) and harness -->
+    <path d="M300,792 C420,852 620,870 840,872 L840,904 C620,904 400,884 290,824 Z" fill="#1b1b1b" stroke="#8a8a8a" stroke-width="2"/>
+    <path d="M300,792 C420,852 620,870 840,872" fill="none" stroke="#5a5a5a" stroke-width="1"/>
+    <path d="M150,770 C190,705 280,690 350,722 C352,748 345,772 332,792 C270,770 205,775 160,808 Z" fill="url(#metal)" stroke="#bdbdbd" stroke-width="2"/>
+    <path d="M140,815 C190,782 262,778 330,800 L320,850 C258,828 195,834 135,866 Z" fill="url(#metal)" stroke="#bdbdbd" stroke-width="2"/>
+    <path d="M132,872 C190,840 255,836 318,856 L306,905 C252,888 192,893 128,925 Z" fill="url(#metal)" stroke="#bdbdbd" stroke-width="2"/>
+    <g fill="none" stroke="#7a7a7a" stroke-width="1">
+      <path d="M170,760 C220,725 285,722 335,742"/>
+      <path d="M150,832 C200,808 260,805 318,820"/>
+    </g>
+    <path d="M150,770 C190,705 280,690 350,722 C352,748 345,772 332,792 C270,770 205,775 160,808 Z" fill="url(#hatch)" opacity="0.6"/>
+    <circle cx="315" cy="770" r="5" fill="#2a2a2a" stroke="#bdbdbd" stroke-width="1.5"/>
+    <circle cx="700" cy="884" r="6" fill="#2a2a2a" stroke="#bdbdbd" stroke-width="1.5"/>
+
+    <!-- shadow cast by the jaw on the neck -->
+    <path d="M362,548 C380,600 430,624 474,626 C520,624 568,600 586,548 Z" fill="#1c1c1c" opacity="0.55"/>
+    <path d="M362,548 C380,600 430,624 474,626 C520,624 568,600 586,548 Z" fill="url(#hatch)" opacity="0.5"/>
+
+    <!-- ears -->
+    <path d="M340,350 C306,328 270,298 226,266 C240,316 278,382 342,432 Z" fill="url(#ear)" stroke="#c8c8c8" stroke-width="2"/>
+    <path d="M332,366 C306,346 280,324 254,300 C270,338 296,378 334,406" fill="none" stroke="#1d1d1d" stroke-width="2"/>
+    <path d="M608,350 C645,330 678,308 722,284 C706,332 670,388 610,432 Z" fill="url(#ear)" stroke="#c8c8c8" stroke-width="2"/>
+    <path d="M614,366 C642,350 670,332 696,314 C680,348 650,382 616,406" fill="none" stroke="#1d1d1d" stroke-width="2"/>
+
+    <!-- head -->
+    <path d="M472,594 C418,594 376,580 360,548 C350,526 346,500 342,470 C336,432 324,400 324,358 C322,284 344,214 384,182 C414,160 445,151 472,151 C505,151 538,160 566,182 C606,214 626,284 624,358 C624,400 612,432 606,470 C602,500 596,526 586,548 C568,580 526,594 472,594 Z"
+          fill="url(#skin)" stroke="#d4d4d4" stroke-width="2"/>
+    <!-- cranium shading and highlight -->
+    <path d="M384,182 C344,214 322,284 324,358 C326,420 340,480 360,548 C356,470 346,400 350,330 C354,265 366,220 384,182 Z" fill="url(#hatch)"/>
+    <path d="M500,175 C545,182 585,215 596,275" fill="none" stroke="#efefef" stroke-width="3" opacity="0.55"/>
+    <!-- forehead wrinkles -->
+    <g fill="none" stroke="#3a3a3a" stroke-width="1.6" opacity="0.8">
+      <path d="M410,300 C440,290 500,290 540,300"/>
+      <path d="M420,320 C450,312 500,312 530,320"/>
+    </g>
+
+    <!-- eye sockets and brow ridge -->
+    <path d="M378,382 C392,360 430,352 458,372 C445,392 400,398 378,382 Z" fill="#3c3c3c"/>
+    <path d="M490,372 C520,350 560,358 574,382 C552,396 505,392 490,372 Z" fill="#3c3c3c"/>
+    <path d="M370,362 C398,334 440,338 466,368" fill="none" stroke="#e6e6e6" stroke-width="3"/>
+    <path d="M484,368 C512,334 556,330 584,356" fill="none" stroke="#f2f2f2" stroke-width="3"/>
+    <path d="M462,358 C468,348 482,348 488,358" fill="none" stroke="#2a2a2a" stroke-width="2"/>
+    <path d="M466,342 C470,330 472,318 470,306" fill="none" stroke="#2a2a2a" stroke-width="1.6"/>
+    <path d="M482,342 C480,330 482,318 486,306" fill="none" stroke="#2a2a2a" stroke-width="1.6"/>
+    <path d="M520,410 C545,404 572,410 592,428" fill="none" stroke="#f2f2f2" stroke-width="2" opacity="0.7"/>
+    <path d="M354,428 C368,412 392,406 418,410" fill="none" stroke="#1e1e1e" stroke-width="1.6" opacity="0.8"/>
+    <!-- eyes -->
+    <path d="M398,381 Q418,368 440,382 Q418,390 398,381 Z" fill="#e2e2e2" stroke="#111" stroke-width="1.8"/>
+    <path d="M510,382 Q532,368 553,381 Q532,390 510,382 Z" fill="#ececec" stroke="#111" stroke-width="1.8"/>
+    <circle cx="421" cy="380" r="4.3" fill="#111"/>
+    <circle cx="530" cy="380" r="4.3" fill="#111"/>
+    <circle cx="423" cy="378" r="1.2" fill="#fff"/>
+    <circle cx="532" cy="378" r="1.2" fill="#fff"/>
+    <g fill="none" stroke="#2c2c2c" stroke-width="1.5">
+      <path d="M396,392 C410,402 430,402 444,394"/>
+      <path d="M508,394 C522,402 542,402 556,392"/>
+      <path d="M380,388 C374,396 372,404 374,412"/>
+      <path d="M572,388 C578,396 580,404 578,412"/>
+    </g>
+
+    <!-- nose -->
+    <path d="M463,372 C460,400 452,424 438,446 C448,460 462,464 475,458 C488,464 502,460 512,446 C498,424 490,400 487,372 Z" fill="#8f8f8f" opacity="0.55"/>
+    <path d="M463,372 C460,400 452,424 438,446 C448,460 462,464 475,458" fill="none" stroke="#1d1d1d" stroke-width="2"/>
+    <path d="M487,372 C490,400 498,424 512,446 C502,460 488,464 475,458" fill="none" stroke="#e8e8e8" stroke-width="2"/>
+    <ellipse cx="456" cy="450" rx="7" ry="4" fill="#1a1a1a" transform="rotate(20 456 450)"/>
+    <ellipse cx="494" cy="450" rx="7" ry="4" fill="#1a1a1a" transform="rotate(-20 494 450)"/>
+
+    <!-- cheek folds -->
+    <g fill="none" stroke="#2a2a2a" stroke-width="2">
+      <path d="M436,446 C412,458 396,474 392,494"/>
+      <path d="M514,446 C538,458 556,474 562,492"/>
+      <path d="M440,552 C458,562 486,562 502,552"/>
+    </g>
+
+    <!-- grin -->
+    <path d="M394,492 C430,476 520,474 562,488 C556,512 536,530 478,534 C422,532 400,514 394,492 Z" fill="#121212" stroke="#2a2a2a" stroke-width="2"/>
+    <g fill="#eeeeee" stroke="#1a1a1a" stroke-width="1.4">
+      <!-- upper teeth -->
+      <path d="M404,490 L416,486 L411,503 Z"/>
+      <path d="M418,485 L433,482 L426,528 Z"/>
+      <path d="M435,481 L447,480 L441,497 Z"/>
+      <path d="M449,480 L461,479 L455,494 Z"/>
+      <path d="M463,479 L475,479 L469,493 Z"/>
+      <path d="M477,479 L489,479 L483,495 Z"/>
+      <path d="M491,479 L503,480 L497,497 Z"/>
+      <path d="M505,480 L521,482 L514,526 Z"/>
+      <path d="M523,483 L536,485 L530,500 Z"/>
+      <path d="M538,486 L552,489 L546,502 Z"/>
+      <!-- lower teeth -->
+      <path d="M436,527 L452,530 L446,502 Z"/>
+      <path d="M456,530 L468,531 L462,516 Z"/>
+      <path d="M470,531 L482,531 L476,517 Z"/>
+      <path d="M484,531 L496,530 L490,517 Z"/>
+      <path d="M498,529 L514,526 L507,500 Z"/>
+    </g>
+    <path d="M392,490 C430,472 520,470 564,486" fill="none" stroke="#dcdcdc" stroke-width="2"/>
+    <path d="M398,502 C410,524 440,538 478,540 C520,538 548,522 560,500" fill="none" stroke="#3a3a3a" stroke-width="1.6"/>
+
+    <!-- face scars -->
+    <g fill="none" stroke-linecap="round">
+      <path d="M440,168 C425,225 408,285 392,338" stroke="#232323" stroke-width="4"/>
+      <path d="M444,170 C430,226 413,286 397,338" stroke="#e2e2e2" stroke-width="1.2" opacity="0.6"/>
+      <path d="M372,398 C377,440 388,482 406,522" stroke="#232323" stroke-width="3.6"/>
+      <path d="M582,292 C570,352 556,410 532,462" stroke="#232323" stroke-width="3.6"/>
+      <path d="M586,294 C574,354 560,412 537,463" stroke="#f0f0f0" stroke-width="1.2" opacity="0.6"/>
+      <path d="M600,322 C588,388 572,442 548,498" stroke="#232323" stroke-width="3.6"/>
+      <path d="M604,324 C592,390 576,444 553,499" stroke="#f0f0f0" stroke-width="1.2" opacity="0.6"/>
+      <path d="M606,384 C596,440 578,490 556,540" stroke="#232323" stroke-width="3.4"/>
+      <path d="M512,170 C522,200 530,230 534,262" stroke="#232323" stroke-width="3"/>
+    </g>
+
+    <!-- left forearm raised, ending in the blade prosthesis -->
+    <path d="M790,1080 C792,960 780,830 768,716 L888,700 C910,810 960,930 1030,1050 Z" fill="url(#arm)" stroke="#d0d0d0" stroke-width="2"/>
+    <path d="M820,1010 C814,900 800,800 792,724" fill="none" stroke="#2a2a2a" stroke-width="2"/>
+    <path d="M880,860 C900,900 915,935 930,965" fill="none" stroke="#262626" stroke-width="3"/>
+    <!-- cuff -->
+    <path d="M764,730 L890,714 L878,608 L770,620 Z" fill="url(#metal)" stroke="#d6d6d6" stroke-width="2.5"/>
+    <path d="M767,704 L887,690" fill="none" stroke="#7a7a7a" stroke-width="1.2"/>
+    <path d="M772,644 L880,632" fill="none" stroke="#7a7a7a" stroke-width="1.2"/>
+    <!-- open-book emblem on the cuff -->
+    <g transform="translate(826,668) rotate(-6)" fill="none" stroke="#ffffff" stroke-width="2.6" filter="url(#soft)">
+      <path d="M0,14 C-8,8 -18,7 -27,10 L-27,-14 C-18,-18 -8,-17 0,-9 C8,-17 18,-18 27,-14 L27,10 C18,7 8,8 0,14 Z"/>
+      <path d="M0,-9 L0,14"/>
+    </g>
+    <!-- blade -->
+    <g fill="#0e0e0e" stroke="#ffffff" stroke-width="4" filter="url(#soft)">
+      <path d="M806,622 C790,500 798,380 838,236 C848,370 852,500 846,618 Z"/>
+      <path d="M846,572 C892,552 922,506 916,432 C938,498 928,562 852,600 Z"/>
+      <path d="M806,586 C768,564 746,522 750,462 C728,524 742,582 802,614 Z"/>
+    </g>
+    <path d="M824,600 C818,500 822,400 836,290" fill="none" stroke="#6a6a6a" stroke-width="1.5"/>
+  </g>
+
+  <!-- frame -->
+  <circle cx="540" cy="540" r="500" fill="none" stroke="#d9d9d9" stroke-width="3"/>
+  <circle cx="540" cy="540" r="492" fill="none" stroke="#4a4a4a" stroke-width="1.2"/>
+</svg>
