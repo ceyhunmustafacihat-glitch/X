@@ -121,7 +121,7 @@ def finish(y, f):
 
 
 # dust in the moonlight (library only): soft motes drifting on the air
-MOTES = np.random.default_rng(42).random((90, 6))
+MOTES = np.random.default_rng(42).random((40, 6))
 
 
 def dust(img, t):
@@ -139,7 +139,7 @@ def dust(img, t):
         xi, yi = int(x), int(y)
         y_a, y_b, x_a, x_b = max(yi - k, 0), min(yi + k + 1, H), max(xi - k, 0), min(xi + k + 1, W)
         yy, xx = np.mgrid[y_a:y_b, x_a:x_b]
-        g = np.exp(-((xx - x) ** 2 + (yy - y) ** 2) / (2 * r * r)) * (0.35 / (1 + r * 0.25)) * (0.4 + br) * a * min(lit * 3, 1.0)
+        g = np.exp(-((xx - x) ** 2 + (yy - y) ** 2) / (2 * r * r)) * (0.2 / (1 + r * 0.3)) * (0.3 + br) * a * min(lit * 3, 1.0)
         out[y_a:y_b, x_a:x_b] += g[..., None] * IVORY
     return out
 
