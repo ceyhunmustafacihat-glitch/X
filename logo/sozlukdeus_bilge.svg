@@ -194,12 +194,15 @@
     <use href="#s-face" fill="url(#skin)"/>
     <path d="M462 446 C470 470 470 500 462 522 C474 504 478 474 476 446 Z" fill="url(#skinLit)"/>
     <rect x="390" y="436" width="94" height="52" fill="url(#brimShade)" clip-path="url(#faceClip)"/>
-    <path d="M402 466 C412 458 426 457 436 462 C426 462 414 464 404 471 Z" fill="#dcdcdc" stroke="#0a0a0a" stroke-width="0.8"/>
-    <path d="M476 466 C466 458 452 457 442 462 C452 462 464 464 474 471 Z" fill="#ececec" stroke="#0a0a0a" stroke-width="0.8"/>
-    <path d="M410 476 C416 471 425 471 431 476" fill="none" stroke="#0a0a0a" stroke-width="2.2" stroke-linecap="round"/>
-    <path d="M446 476 C452 471 461 471 467 476" fill="none" stroke="#0a0a0a" stroke-width="2.2" stroke-linecap="round"/>
-    <ellipse cx="421" cy="477.5" rx="3" ry="2.2" fill="#0a0a0a"/>
-    <ellipse cx="456" cy="477.5" rx="3" ry="2.2" fill="#0a0a0a"/>
+    <path d="M400 459 C412 455 427 459 437 468 C426 466 413 465 402 465 Z" fill="#dcdcdc" stroke="#0a0a0a" stroke-width="0.8"/>
+    <path d="M478 459 C466 455 451 459 441 468 C452 466 465 465 476 465 Z" fill="#ececec" stroke="#0a0a0a" stroke-width="0.8"/>
+    <path d="M410 475 C417 472 425 473 432 478" fill="none" stroke="#0a0a0a" stroke-width="2.4" stroke-linecap="round"/>
+    <path d="M412 480 C418 482 425 482 430 480" fill="none" stroke="#2a2a2a" stroke-width="1.1" stroke-linecap="round"/>
+    <path d="M445 478 C452 473 460 472 467 475" fill="none" stroke="#0a0a0a" stroke-width="2.4" stroke-linecap="round"/>
+    <path d="M447 480 C452 482 459 482 465 480" fill="none" stroke="#4a4a4a" stroke-width="1.1" stroke-linecap="round"/>
+    <path d="M438 465 C439 468 439 471 438 473" fill="none" stroke="#2a2a2a" stroke-width="1" stroke-linecap="round"/>
+    <ellipse cx="422" cy="477.6" rx="2.6" ry="2" fill="#0a0a0a"/>
+    <ellipse cx="455" cy="477.6" rx="2.6" ry="2" fill="#0a0a0a"/>
     <path d="M439 466 C441 482 445 494 448 502 C444 507 436 507 431 503" fill="none" stroke="#2a2a2a" stroke-width="1.8" stroke-linecap="round"/>
     <path d="M443 470 C445 484 448 494 450 500" fill="none" stroke="#d6d6d6" stroke-width="1.1" stroke-linecap="round"/>
     <path d="M404 488 C406 500 411 510 417 516" fill="none" stroke="#3a3a3a" stroke-width="1.1" stroke-linecap="round"/>
@@ -219,8 +222,7 @@
     </g>
     <path d="M484 500 C494 560 500 630 492 700" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>
     <use href="#s-beard" fill="none" stroke="#0a0a0a" stroke-width="1.8" stroke-linejoin="round"/>
-    <path d="M438 504 C426 500 410 506 402 520 C398 530 398 542 402 552 C410 540 418 530 428 524 C432 522 436 521 438 521 C440 521 444 522 448 524 C458 530 466 540 474 552 C478 542 478 530 474 520 C466 506 450 500 438 504 Z" fill="#efefef" stroke="#0a0a0a" stroke-width="1.6" stroke-linejoin="round"/>
-    <path d="M438 510 C432 512 428 518 426 526 M438 510 C444 512 450 518 452 526" fill="none" stroke="#9a9a9a" stroke-width="1"/>
+    <path d="M438 504 C426 500 410 506 402 520 C398 530 398 542 402 552 C410 540 418 530 428 524 C432 522 436 521 438 521 C440 521 444 522 448 524 C458 530 466 540 474 552 C478 542 478 530 474 520 C466 506 450 500 438 504 Z" fill="#efefef" stroke="#6a6a6a" stroke-width="1.1" stroke-linejoin="round"/>
 
     <!-- hat -->
     <use href="#s-hat" fill="url(#felt)"/>
