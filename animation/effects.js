@@ -13,7 +13,7 @@ function initEffects() {
   FX.hc = hc;
   // ---- word letters: measure real glyph advances ----
   const m = makeCanvas(10, 10).getContext('2d');
-  m.font = '600 64px "Cormorant Garamond"';
+  m.font = '700 56px Montserrat';   // same typeface as the post
   const total = m.measureText(WORD).width;
   let acc = -total / 2;
   FX.word = [...WORD].map((ch, k) => {
@@ -160,9 +160,9 @@ function bez(p0, p1, p2, p3, u) {
     v * v * v * p0[1] + 3 * v * v * u * p1[1] + 3 * v * u * u * p2[1] + u * u * u * p3[1]];
 }
 
-function drawGlyph(g, ch, x, y, size, alpha, rotA = 0) {
+function drawGlyph(g, ch, x, y, size, alpha, rotA = 0, sans = false) {
   if (alpha <= 0.01) return;
-  const spr = glyphSprite(ch, '600', 48);
+  const spr = sans ? glyphSprite(ch, '700', 48, 'Montserrat, sans-serif') : glyphSprite(ch, '600', 48);
   const k = size / 48;
   g.save(); g.globalAlpha *= alpha; g.translate(x, y); if (rotA) g.rotate(rotA);
   g.drawImage(spr, -spr.width * k / 2, -spr.height * k / 2, spr.width * k, spr.height * k);
@@ -251,7 +251,7 @@ function drawWorldEffects(g, t, pose, S, L) {
       const p0 = [ph[0], ph[1] - 10];
       let [x, y] = bez(p0, [p0[0] - 60 + L2.k * 20, p0[1] - 300], [slot[0] + (L2.k - 3) * 30, slot[1] + 160], slot, u);
       y += Math.sin(t * 1.6 + L2.k * 0.7) * 5 * u;
-      let size = lerp(18, 64, u), alpha = Math.min(1, (t - e) * 5);
+      let size = lerp(18, 56, u), alpha = Math.min(1, (t - e) * 5);
       // the word melts into the book's pages
       const j = ss(15.3, 16.0, t);
       if (j > 0) {
@@ -264,7 +264,7 @@ function drawWorldEffects(g, t, pose, S, L) {
         alpha *= 1 - ss(0.85, 1, k2); size *= 1 - k2 * 0.6;
       }
       drawGlow(g, x, y, size * 1.4, '#ffcf73', alpha * 0.35);
-      drawGlyph(g, L2.ch, x, y, size, alpha);
+      drawGlyph(g, L2.ch, x, y, size, alpha, 0, true);
     }
   }
 

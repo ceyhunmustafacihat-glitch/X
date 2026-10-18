@@ -43,7 +43,8 @@
 (async function () {
   const params = new URLSearchParams(location.search);
   const canvas = document.getElementById('c');
-  const fams = ['600 40px "Cormorant Garamond"', 'italic 500 40px "Cormorant Garamond"', '500 40px Inter', '600 40px Caveat'];
+  const fams = ['600 40px "Cormorant Garamond"', 'italic 500 40px "Cormorant Garamond"', '500 40px Inter', '600 40px Caveat',
+    '400 40px Montserrat', '700 40px Montserrat', 'italic 400 40px Montserrat', '500 40px Montserrat'];
   await Promise.all(fams.map(f => document.fonts.load(f, 'İnşirah sözlükdeus ğüşıöç')));
   await document.fonts.ready;
   init(canvas);

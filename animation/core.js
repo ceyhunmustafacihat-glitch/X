@@ -81,13 +81,13 @@ function drawGlow(ctx, x, y, r, color, alpha = 1) {
 }
 
 // glowing glyph sprite (letters that float out of the phone)
-function glyphSprite(ch, font, px) {
-  const key = 'g' + ch + font + px;
+function glyphSprite(ch, font, px, family = '"Cormorant Garamond", serif') {
+  const key = 'g' + ch + font + px + family;
   if (Sprites[key]) return Sprites[key];
   const pad = px * 0.9, size = px * 1.4 + pad * 2;
   const c = makeCanvas(size, size), g = c.getContext('2d');
   g.textAlign = 'center'; g.textBaseline = 'middle';
-  g.font = `${font} ${px}px "Cormorant Garamond", serif`;
+  g.font = `${font} ${px}px ${family}`;
   g.shadowColor = 'rgba(246,206,120,0.95)';
   g.shadowBlur = px * 0.45;
   g.fillStyle = '#ffe9b8';

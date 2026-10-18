@@ -1,6 +1,6 @@
 'use strict';
 // End card: gold line-art book, quill and crescent-star drawn on black,
-// then the name and the slogan.
+// then the name, the page's motto and its handle.
 
 function strokeReveal(g, path, len, k) {
   if (k <= 0) return;
@@ -125,8 +125,18 @@ function renderLogo(g, t) {
     g.fillStyle = '#efe4cc';
     g.font = 'italic 500 58px "Cormorant Garamond"';
     const y = cy + 450 + (1 - ks) * 16;
-    g.fillText('Bir kelimeyle başlar,', cx, y);
-    g.fillText('bir dünya değişir.', cx, y + 74);
+    g.fillText('“Türk dili, Türk milletinin', cx, y);
+    g.fillText('kalbidir, zihnidir.”', cx, y + 74);
+    g.restore();
+  }
+  // the page's handle
+  const kh = ss(TL.slogan + 0.7, TL.slogan + 1.5, t);
+  if (kh > 0) {
+    g.save();
+    g.globalAlpha = kh * 0.8;
+    g.textAlign = 'center'; g.fillStyle = GOLD;
+    g.font = '500 30px Montserrat';
+    spacedText(g, '@sozlukdeus', cx + 3, cy + 640, 6);
     g.restore();
   }
   // a slow light sweep across the emblem

@@ -3,7 +3,7 @@
 
 const FEED = {
   sx: 104, sy: 54, sw: 872, sh: 1880,      // screen rect
-  postH: 1420, mediaY: 112, mediaH: 1090,
+  postH: 1480, mediaY: 112, mediaH: 1163,   // 3:4 media, like the page's posts
   K: 11,                                    // index of the sözlükdeus post
   landY: 236                                // where that post's top settles on screen
 };
@@ -36,6 +36,13 @@ function iconHeart(g, x, y, s) {
 }
 function iconBubble(g, x, y, s) { g.beginPath(); g.arc(x, y, s * 0.5, 0.9, TAU + 0.5); g.lineTo(x + s * 0.55, y + s * 0.55); g.closePath(); g.stroke(); }
 function iconPlane(g, x, y, s) { g.beginPath(); g.moveTo(x - s * 0.5, y - s * 0.1); g.lineTo(x + s * 0.55, y - s * 0.5); g.lineTo(x + s * 0.1, y + s * 0.55); g.lineTo(x - 0.05 * s, y + 0.05 * s); g.closePath(); g.stroke(); }
+function iconRepost(g, x, y, s) {
+  g.beginPath(); g.moveTo(x - s * 0.42, y + s * 0.05); g.lineTo(x - s * 0.42, y - s * 0.12); g.quadraticCurveTo(x - s * 0.42, y - s * 0.3, x - s * 0.22, y - s * 0.3); g.lineTo(x + s * 0.38, y - s * 0.3);
+  g.moveTo(x + s * 0.22, y - s * 0.46); g.lineTo(x + s * 0.4, y - s * 0.3); g.lineTo(x + s * 0.22, y - s * 0.14);
+  g.moveTo(x + s * 0.42, y - s * 0.05); g.lineTo(x + s * 0.42, y + s * 0.12); g.quadraticCurveTo(x + s * 0.42, y + s * 0.3, x + s * 0.22, y + s * 0.3); g.lineTo(x - s * 0.38, y + s * 0.3);
+  g.moveTo(x - s * 0.22, y + s * 0.46); g.lineTo(x - s * 0.4, y + s * 0.3); g.lineTo(x - s * 0.22, y + s * 0.14);
+  g.stroke();
+}
 function iconMark(g, x, y, s) { g.beginPath(); g.moveTo(x - s * 0.35, y - s * 0.5); g.lineTo(x + s * 0.35, y - s * 0.5); g.lineTo(x + s * 0.35, y + s * 0.5); g.lineTo(x, y + s * 0.22); g.lineTo(x - s * 0.35, y + s * 0.5); g.closePath(); g.stroke(); }
 
 // ---- junk media (deliberately loud and samey) ----
@@ -118,88 +125,277 @@ function drawJunk(g, idx, x, y, w, h, t) {
 
 const FEED_NAMES = ['gundem.tv', 'komik.anlar', 'firsat.market', 'lezzet.durağı', 'ayse.vlog', 'sok.haber', 'dans.akımı', 'kedi.dünyası'];
 
-// ---- the sözlükdeus post (media area) ----
+// ---- the sözlükdeus post (media area), in the page's own template ----
+// A dark, cinematic photo-like painting; the word in quotes; "Sözlük"; a definition
+// with a bar on its left; an example sentence; the open-book mark at the bottom.
+
+// lucide-style open book (24x24 viewbox), the page's avatar mark
+const BOOK_ICON = [new Path2D('M12 7v14'),
+  new Path2D('M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z')];
+function drawBookIcon(g, cx, cy, size, color = '#ffffff', lw = 1.8) {
+  g.save();
+  g.translate(cx - size / 2, cy - size / 2); g.scale(size / 24, size / 24);
+  g.strokeStyle = color; g.lineWidth = lw; g.lineCap = 'round'; g.lineJoin = 'round';
+  for (const p of BOOK_ICON) g.stroke(p);
+  g.restore();
+}
+
+// ridge line for a mountain layer (deterministic fractal noise, sharpened peaks)
+function ridge(u, seed, oct = 5) {
+  let v = 0, a = 1, f = 1, n = 0;
+  for (let i = 0; i < oct; i++) {
+    const r = 1 - Math.abs(noise1(u * 3 * f + seed * 13.7 + i * 7.1));
+    v += r * r * a; n += a; a *= 0.5; f *= 2.1;
+  }
+  return v / n;
+}
+
+// "İnşirah": dawn breaking through heavy clouds behind layered mountains, mirrored in a still lake
+function paintInsirah(PW, PH) {
+  const c = makeCanvas(PW, PH), g = c.getContext('2d');
+  const R = mulberry32(404);
+  const hz = PH * 0.6;                       // horizon / lake line
+  const sunX = PW * 0.6, sunY = PH * 0.505;
+  const blur = px => (g.filter = px > 0 ? `blur(${(px * PW).toFixed(1)}px)` : 'none');
+  // sky
+  let gr = g.createLinearGradient(0, 0, 0, hz);
+  gr.addColorStop(0, '#0d1119'); gr.addColorStop(0.3, '#1f2533'); gr.addColorStop(0.55, '#4f4650');
+  gr.addColorStop(0.75, '#b5774a'); gr.addColorStop(0.9, '#eeb36d'); gr.addColorStop(1, '#ffdca0');
+  g.fillStyle = gr; g.fillRect(0, 0, PW, hz + 4);
+  // sun glow
+  g.globalCompositeOperation = 'screen';
+  for (const [r, a] of [[0.9, 0.35], [0.45, 0.45], [0.18, 0.7], [0.06, 0.95]]) {
+    gr = g.createRadialGradient(sunX, sunY, 0, sunX, sunY, PW * r);
+    gr.addColorStop(0, `rgba(255,222,160,${a})`); gr.addColorStop(1, 'rgba(255,170,90,0)');
+    g.fillStyle = gr; g.fillRect(0, 0, PW, hz + 4);
+  }
+  g.globalCompositeOperation = 'source-over';
+  // cloud masses: soft dark bodies, parted around the sun, with sunlit undersides
+  const clouds = [];
+  for (let i = 0; i < 26; i++) {
+    const x = R() * PW * 1.3 - PW * 0.15, y = PH * (0.03 + Math.pow(R(), 1.3) * 0.38);
+    const d = Math.hypot((x - sunX) / PW, (y - sunY) / PH * 1.8);
+    clouds.push({ x, y, rx: PW * (0.16 + R() * 0.28), ry: PH * (0.035 + R() * 0.05), open: clamp(d * 2.3 - 0.3), d });
+  }
+  blur(0.035);
+  for (const cl of clouds) {
+    g.fillStyle = `rgba(20,23,32,${0.75 * cl.open})`;
+    g.beginPath(); g.ellipse(cl.x, cl.y, cl.rx, cl.ry, 0, 0, TAU); g.fill();
+  }
+  blur(0.012);
+  g.globalCompositeOperation = 'screen';
+  for (const cl of clouds) {
+    const lit = clamp(1.1 - cl.d * 1.5);
+    g.fillStyle = `rgba(255,178,104,${0.45 * lit * cl.open})`;
+    g.beginPath(); g.ellipse(cl.x + (sunX - cl.x) * 0.05, cl.y + cl.ry * 0.65, cl.rx * 0.75, cl.ry * 0.28, 0, 0, TAU); g.fill();
+  }
+  g.globalCompositeOperation = 'source-over';
+  blur(0.005);
+  for (let i = 0; i < 160; i++) {          // texture in the cloud bodies
+    const cl = clouds[(R() * clouds.length) | 0];
+    g.fillStyle = `rgba(${R() < 0.5 ? '12,14,20' : '70,62,70'},${0.18 * cl.open})`;
+    g.beginPath(); g.ellipse(cl.x + (R() - 0.5) * cl.rx * 1.6, cl.y + (R() - 0.5) * cl.ry * 1.4, cl.rx * (0.1 + R() * 0.2), cl.ry * (0.2 + R() * 0.3), 0, 0, TAU); g.fill();
+  }
+  // crepuscular rays fanning up through the gaps
+  blur(0.01);
+  g.globalCompositeOperation = 'screen';
+  for (let i = 0; i < 18; i++) {
+    const a0 = -Math.PI + 0.35 + i * 0.135 + (R() - 0.5) * 0.05, wdt = 0.015 + R() * 0.03;
+    g.fillStyle = `rgba(255,214,150,${0.04 + R() * 0.07})`;
+    g.beginPath(); g.moveTo(sunX, sunY);
+    g.lineTo(sunX + Math.cos(a0) * PW * 1.5, sunY + Math.sin(a0) * PW * 1.5);
+    g.lineTo(sunX + Math.cos(a0 + wdt) * PW * 1.5, sunY + Math.sin(a0 + wdt) * PW * 1.5);
+    g.closePath(); g.fill();
+  }
+  g.globalCompositeOperation = 'source-over';
+  blur(0);
+  // backlit mountain layers with glowing valley mist between them
+  const layers = [
+    { base: 0.545, amp: 0.13, col: '#a07e72', seed: 1, oct: 4 },
+    { base: 0.565, amp: 0.11, col: '#6b5359', seed: 2, oct: 5 },
+    { base: 0.585, amp: 0.085, col: '#3a2f37', seed: 3, oct: 5, trees: 0.006 },
+    { base: 0.6, amp: 0.05, col: '#17141b', seed: 4, oct: 5, trees: 0.01 }
+  ];
+  for (const L of layers) {
+    // mist glowing in the valley before this layer
+    gr = g.createLinearGradient(0, PH * (L.base - L.amp * 0.6), 0, PH * L.base);
+    gr.addColorStop(0, 'rgba(255,196,130,0)'); gr.addColorStop(1, 'rgba(255,196,130,0.38)');
+    g.fillStyle = gr; g.fillRect(0, PH * (L.base - L.amp * 0.6), PW, PH * L.amp * 0.6);
+    const pts = [];
+    for (let i = 0; i <= 220; i++) {
+      const u = i / 220;
+      pts.push([u * PW, PH * (L.base - L.amp * ridge(u * 1.2, L.seed, L.oct) * (0.65 + 0.35 * Math.sin(u * 3 + L.seed)))]);
+    }
+    const p = new Path2D(); p.moveTo(0, hz + 2); pts.forEach(q => p.lineTo(q[0], q[1])); p.lineTo(PW, hz + 2); p.closePath();
+    g.fillStyle = L.col; g.fill(p);
+    g.save(); g.clip(p);
+    // haze thinning towards the foot, warmer near the sun
+    gr = g.createLinearGradient(0, PH * (L.base - L.amp), 0, hz);
+    gr.addColorStop(0, 'rgba(255,190,130,0.0)'); gr.addColorStop(1, 'rgba(255,190,130,0.16)');
+    g.fillStyle = gr; g.fillRect(0, 0, PW, PH);
+    gr = g.createRadialGradient(sunX, sunY, 0, sunX, sunY, PW * 0.5);
+    gr.addColorStop(0, 'rgba(255,200,140,0.35)'); gr.addColorStop(1, 'rgba(255,200,140,0)');
+    g.fillStyle = gr; g.fillRect(0, 0, PW, PH);
+    // gullies / rock texture
+    g.lineWidth = Math.max(1, PW * 0.0012);
+    for (let i = 0; i < 260; i++) {
+      const idx = (R() * 220) | 0, q = pts[idx], len = PH * L.amp * (0.2 + R() * 0.6);
+      g.strokeStyle = R() < 0.6 ? 'rgba(0,0,0,0.12)' : 'rgba(255,210,170,0.06)';
+      g.beginPath(); g.moveTo(q[0], q[1] + 2); g.lineTo(q[0] + (R() - 0.5) * len * 0.5, q[1] + len); g.stroke();
+    }
+    g.restore();
+    // rim light where the sun grazes the ridge
+    g.save();
+    blur(0.0015);
+    for (let i = 1; i < pts.length; i++) {
+      const q0 = pts[i - 1], q = pts[i];
+      const k = clamp(1 - Math.abs(q[0] - sunX) / (PW * 0.35));
+      if (k <= 0.02) continue;
+      g.strokeStyle = `rgba(255,214,150,${0.75 * k * k})`; g.lineWidth = PW * 0.0025;
+      g.beginPath(); g.moveTo(q0[0], q0[1]); g.lineTo(q[0], q[1]); g.stroke();
+    }
+    blur(0);
+    g.restore();
+    if (L.trees) {
+      g.fillStyle = L.col;
+      for (let i = 0; i < 700; i++) {
+        const idx = (R() * 220) | 0, q = pts[idx], h = PH * L.trees * (0.6 + R() * 0.9);
+        g.beginPath(); g.moveTo(q[0], q[1] - h); g.lineTo(q[0] + h * 0.2, q[1] + 1); g.lineTo(q[0] - h * 0.2, q[1] + 1); g.closePath(); g.fill();
+      }
+    }
+  }
+  // lake: a soft, darker mirror of everything above the horizon
+  g.save();
+  g.beginPath(); g.rect(0, hz, PW, PH - hz); g.clip();
+  g.filter = `blur(${(PW * 0.004).toFixed(1)}px)`;
+  g.translate(0, hz * 2); g.scale(1, -1);
+  g.drawImage(c, 0, 0);
+  g.restore();
+  gr = g.createLinearGradient(0, hz, 0, PH);
+  gr.addColorStop(0, 'rgba(14,12,16,0.35)'); gr.addColorStop(0.45, 'rgba(10,10,14,0.7)'); gr.addColorStop(1, 'rgba(6,6,9,0.92)');
+  g.fillStyle = gr; g.fillRect(0, hz, PW, PH - hz);
+  // ripples and the sun's glittering path
+  g.globalCompositeOperation = 'screen';
+  for (let i = 0; i < 420; i++) {
+    const v = R(), y = hz + 3 + Math.pow(v, 1.5) * (PH - hz);
+    const spread = PW * (0.02 + Math.pow(v, 1.1) * 0.2);
+    const x = sunX + (R() + R() - 1) * spread, len = PW * (0.006 + R() * 0.04) * (1 - v * 0.4);
+    g.fillStyle = `rgba(255,${196 + (R() * 50) | 0},140,${(0.7 - v * 0.6) * (0.3 + R() * 0.7)})`;
+    g.fillRect(x - len / 2, y, len, Math.max(1, PH * 0.0016));
+  }
+  g.globalCompositeOperation = 'source-over';
+  g.strokeStyle = 'rgba(0,0,0,0.25)'; g.lineWidth = 1;
+  for (let i = 0; i < 70; i++) { const y = hz + Math.pow(R(), 1.3) * (PH - hz); g.beginPath(); g.moveTo(0, y); g.lineTo(PW, y + (R() - 0.5) * 3); g.stroke(); }
+  // dark shoreline with reeds in the foreground
+  blur(0.002);
+  g.fillStyle = '#07070a';
+  g.beginPath(); g.moveTo(0, PH);
+  for (let i = 0; i <= 40; i++) { const u = i / 40; g.lineTo(u * PW, PH * (0.93 + 0.035 * Math.sin(u * 5.3 + 1) + 0.02 * noise1(u * 9))); }
+  g.lineTo(PW, PH); g.closePath(); g.fill();
+  g.strokeStyle = '#07070a'; g.lineWidth = Math.max(1.2, PW * 0.0018);
+  for (let i = 0; i < 90; i++) {
+    const x = R() * PW, base = PH * (0.94 + 0.03 * Math.sin(x / PW * 5.3 + 1)), hh = PH * (0.02 + R() * 0.05);
+    g.beginPath(); g.moveTo(x, base); g.quadraticCurveTo(x + (R() - 0.5) * hh * 0.4, base - hh * 0.6, x + (R() - 0.5) * hh * 0.5, base - hh); g.stroke();
+  }
+  blur(0);
+  // the page's look: darkened for white type, vignette, a touch of grain
+  g.fillStyle = 'rgba(6,7,10,0.3)'; g.fillRect(0, 0, PW, PH);
+  gr = g.createRadialGradient(PW / 2, PH * 0.5, PW * 0.35, PW / 2, PH * 0.5, PH * 0.78);
+  gr.addColorStop(0, 'rgba(0,0,0,0)'); gr.addColorStop(1, 'rgba(0,0,0,0.6)');
+  g.fillStyle = gr; g.fillRect(0, 0, PW, PH);
+  const img = g.getImageData(0, 0, PW, PH), d = img.data;
+  for (let i = 0; i < d.length; i += 4) { const n = (R() - 0.5) * 12; d[i] += n; d[i + 1] += n; d[i + 2] += n; }
+  g.putImageData(img, 0, 0);
+  return c;
+}
+
+// rich text: runs of {t, b} wrapped to maxW; returns lines of runs
+function wrapRuns(g, runs, maxW, font, boldFont) {
+  const words = [];
+  for (const r of runs) for (const [i, w] of r.t.split(' ').entries()) {
+    if (i > 0) words.push({ sp: true });
+    if (w) words.push({ t: w, b: r.b });
+  }
+  const lines = [[]]; let lw = 0;
+  const width = w => { g.font = w.b ? boldFont : font; return g.measureText(w.t).width; };
+  g.font = font; const spW = g.measureText(' ').width;
+  for (const w of words) {
+    if (w.sp) { if (lines[lines.length - 1].length) lw += spW; continue; }
+    const ww = width(w);
+    if (lw + ww > maxW && lines[lines.length - 1].length) { lines.push([]); lw = 0; }
+    const L = lines[lines.length - 1];
+    if (L.length) L.push({ t: ' ', b: false, w: spW });
+    L.push(Object.assign({ w: ww }, w)); lw += ww + (L.length > 1 ? 0 : 0);
+    lw = L.reduce((s2, r) => s2 + r.w, 0);
+  }
+  return lines;
+}
+function drawRunLine(g, line, x, y, font, boldFont, align = 'left') {
+  const total = line.reduce((s2, r) => s2 + r.w, 0);
+  let cx = align === 'center' ? x - total / 2 : x;
+  g.textAlign = 'left';
+  for (const r of line) { g.font = r.b ? boldFont : font; g.fillText(r.t, cx, y); cx += r.w; }
+}
+
+const POST_ART = {};
 function drawSozlukPost(g, x, y, w, h, t) {
+  const k = 1.6;  // paint at higher resolution so the transition zoom stays crisp
+  if (!POST_ART.c) POST_ART.c = paintInsirah(Math.round(w * k), Math.round(h * k));
   g.save(); g.beginPath(); g.rect(x, y, w, h); g.clip();
-  g.fillStyle = '#09090b'; g.fillRect(x, y, w, h);
+  g.drawImage(POST_ART.c, x, y, w, h);
+  // a slow breath of light from the sun (the post is a video)
+  g.globalCompositeOperation = 'screen';
+  drawGlow(g, x + w * 0.6, y + h * 0.545, w * (0.5 + 0.04 * Math.sin(t * 1.3)), '#ffcf8a', 0.18 + 0.05 * Math.sin(t * 0.9));
+  g.globalCompositeOperation = 'source-over';
   const cx = x + w / 2;
-  let gr = g.createRadialGradient(cx, y + h * 0.45, 40, cx, y + h * 0.45, h * 0.75);
-  gr.addColorStop(0, 'rgba(60,44,18,0.55)'); gr.addColorStop(1, 'rgba(0,0,0,0)');
-  g.fillStyle = gr; g.fillRect(x, y, w, h);
-  // fine gold dust
-  const R = mulberry32(77);
-  for (let i = 0; i < 70; i++) {
-    const px = x + R() * w, py = y + R() * h, s = R();
-    const tw = 0.4 + 0.6 * Math.abs(Math.sin(t * (0.6 + s) + i));
-    g.fillStyle = rgb('#e8c27a', 0.12 + 0.25 * s * tw);
-    g.fillRect(px, py, 1.5 + s * 1.5, 1.5 + s * 1.5);
-  }
-  // double frame + corner ornaments
-  g.strokeStyle = rgb(GOLD, 0.85); g.lineWidth = 2.2;
-  g.strokeRect(x + 34, y + 34, w - 68, h - 68);
-  g.strokeStyle = rgb(GOLD, 0.4); g.lineWidth = 1;
-  g.strokeRect(x + 46, y + 46, w - 92, h - 92);
-  g.fillStyle = rgb(GOLD);
-  for (const [ox, oy] of [[34, 34], [w - 34, 34], [34, h - 34], [w - 34, h - 34]]) {
-    g.save(); g.translate(x + ox, y + oy); g.rotate(Math.PI / 4); g.fillRect(-7, -7, 14, 14); g.restore();
-  }
-  // book icon
-  const by = y + 150;
-  g.strokeStyle = rgb(GOLD); g.lineWidth = 2.5; g.lineJoin = 'round';
-  g.beginPath(); g.moveTo(cx, by + 26); g.quadraticCurveTo(cx - 30, by + 10, cx - 62, by + 18); g.lineTo(cx - 62, by - 18); g.quadraticCurveTo(cx - 30, by - 26, cx, by - 10); g.closePath(); g.stroke();
-  g.beginPath(); g.moveTo(cx, by + 26); g.quadraticCurveTo(cx + 30, by + 10, cx + 62, by + 18); g.lineTo(cx + 62, by - 18); g.quadraticCurveTo(cx + 30, by - 26, cx, by - 10); g.closePath(); g.stroke();
-  g.beginPath(); g.moveTo(cx, by - 10); g.lineTo(cx, by + 26); g.stroke();
-  // label
+  g.fillStyle = '#ffffff';
+  g.shadowColor = 'rgba(0,0,0,0.55)'; g.shadowBlur = 10; g.shadowOffsetY = 2;
   g.textAlign = 'center'; g.textBaseline = 'alphabetic';
-  g.fillStyle = rgb(GOLD, 0.9); g.font = '600 30px "Cormorant Garamond"';
-  spacedText(g, 'GÜNÜN KELİMESİ', cx + 5, y + 238, 9);
   // the word
-  const wy = y + 470;
-  g.font = '600 178px "Cormorant Garamond"';
-  gr = g.createLinearGradient(x, wy - 150, x, wy + 20);
-  gr.addColorStop(0, '#f8e3a8'); gr.addColorStop(0.5, '#e0b562'); gr.addColorStop(1, '#a8772c');
-  g.fillStyle = gr;
-  g.shadowColor = 'rgba(230,180,90,0.45)'; g.shadowBlur = 30;
-  g.fillText('İnşirah', cx, wy);
-  g.shadowBlur = 0;
-  // shimmer sweep
-  const sweep = ((t - TL.postStop - 0.2) % 2.6) / 2.6;
+  const wy = y + h * 0.297 + 22;
+  g.font = '700 60px Montserrat';
+  g.fillText('“İnşirah”', cx, wy);
+  // shimmer sweep across the word
   if (t > TL.postStop) {
-    const sx = x - 300 + sweep * (w + 600);
-    // draw the sweep only inside the glyphs
-    const T = layer('shimmer', w, 240);
+    const sweep = ((t - TL.postStop - 0.2) % 2.6) / 2.6;
+    const T = layer('shimmer', w, 120);
     T.g.font = g.font; T.g.textAlign = 'center'; T.g.fillStyle = '#fff';
-    T.g.fillText('İnşirah', w / 2, 200);
+    T.g.fillText('“İnşirah”', w / 2, 90);
     T.g.globalCompositeOperation = 'source-in';
-    const sg2 = T.g.createLinearGradient(sx - x - 120, 0, sx - x + 120, 0);
-    sg2.addColorStop(0, 'rgba(255,250,230,0)'); sg2.addColorStop(0.5, 'rgba(255,250,230,0.85)'); sg2.addColorStop(1, 'rgba(255,250,230,0)');
-    T.g.fillStyle = sg2; T.g.fillRect(0, 0, w, 240);
-    g.globalCompositeOperation = 'lighter';
-    g.drawImage(T.c, x, wy - 200);
-    g.globalCompositeOperation = 'source-over';
+    const sx = -300 + sweep * (w + 600);
+    const sg2 = T.g.createLinearGradient(sx - 110, 0, sx + 110, 0);
+    sg2.addColorStop(0, 'rgba(255,214,150,0)'); sg2.addColorStop(0.5, 'rgba(255,214,150,0.9)'); sg2.addColorStop(1, 'rgba(255,214,150,0)');
+    T.g.fillStyle = sg2; T.g.fillRect(0, 0, w, 120);
+    g.save(); g.shadowBlur = 0; g.shadowOffsetY = 0; g.globalCompositeOperation = 'source-atop';
+    g.drawImage(T.c, x, wy - 90);
+    g.restore();
   }
-  g.fillStyle = rgb(CREAM, 0.6); g.font = 'italic 500 40px "Cormorant Garamond"';
-  g.fillText('in·şi·rah  ·  isim', cx, wy + 72);
-  // divider
-  const dy = wy + 140;
-  g.strokeStyle = rgb(GOLD, 0.7); g.lineWidth = 1.5;
-  g.beginPath(); g.moveTo(cx - 220, dy); g.lineTo(cx - 22, dy); g.moveTo(cx + 22, dy); g.lineTo(cx + 220, dy); g.stroke();
-  g.save(); g.translate(cx, dy); g.rotate(Math.PI / 4); g.fillStyle = rgb(GOLD); g.fillRect(-6, -6, 12, 12); g.restore();
-  // meaning
-  g.fillStyle = rgb(CREAM, 0.95); g.font = '500 60px "Cormorant Garamond"';
-  g.fillText('Ferahlık, iç açılması;', cx, dy + 104);
-  g.fillText('gönül açılması.', cx, dy + 176);
-  g.fillStyle = rgb(CREAM, 0.55); g.font = 'italic 400 38px "Cormorant Garamond"';
-  g.fillText('“Sabahın ilk ışığı içime inşirah verdi.”', cx, dy + 262);
-  // footer: star · quill · crescent + name
-  const fy = y + h - 110;
-  g.fillStyle = rgb(GOLD, 0.85);
-  drawStar(g, cx - 70, fy - 6, 9, 4);
-  g.strokeStyle = rgb(GOLD, 0.85); g.lineWidth = 2;
-  g.beginPath(); g.moveTo(cx - 12, fy + 8); g.quadraticCurveTo(cx + 2, fy - 12, cx + 16, fy - 22); g.stroke();
-  g.beginPath(); g.arc(cx + 70, fy - 6, 11, 0, TAU); g.arc(cx + 75, fy - 9, 9, 0, TAU, true); g.fill('evenodd');
-  g.font = '500 30px "Cormorant Garamond"'; g.fillStyle = rgb(GOLD, 0.75);
-  spacedText(g, 'sözlükdeus', cx + 4, fy + 60, 6);
+  g.font = 'italic 400 21px Montserrat';
+  g.fillStyle = 'rgba(255,255,255,0.85)';
+  g.fillText('Sözlük', cx, wy + 34);
+  // definition with the bar on its left
+  g.fillStyle = '#ffffff';
+  const df = '400 27px Montserrat', dfb = '700 27px Montserrat';
+  const defLines = wrapRuns(g, [{ t: 'Arapça kökenli bir kelime olup ', b: false }, { t: '"iç açılması, ferahlık"', b: true }, { t: ' demektir.', b: false }], w * 0.76, df, dfb);
+  const dy0 = y + h * 0.448 - (defLines.length - 1) * 19;
+  defLines.forEach((ln, i) => drawRunLine(g, ln, x + w * 0.135, dy0 + i * 38, df, dfb));
+  g.shadowBlur = 0; g.shadowOffsetY = 0;
+  g.fillStyle = 'rgba(255,255,255,0.9)';
+  g.fillRect(x + w * 0.103, dy0 - 46, 2.5, (defLines.length - 1) * 38 + 72);
+  g.shadowBlur = 10; g.shadowOffsetY = 2;
+  // example sentence
+  const ef = '400 30px Montserrat', efb = '700 30px Montserrat';
+  const exLines = wrapRuns(g, [{ t: '"Sabahın ilk ışığı, daralmış gönlüme ', b: false }, { t: 'inşirah', b: true }, { t: ' verdi."', b: false }], w * 0.74, ef, efb);
+  exLines.forEach((ln, i) => drawRunLine(g, ln, cx, y + h * 0.645 + i * 40, ef, efb, 'center'));
+  g.shadowBlur = 0; g.shadowOffsetY = 0;
+  // the page's mark
+  drawBookIcon(g, cx, y + h * 0.935, 58, '#ffffff', 1.5);
+  // muted-video badge
+  g.fillStyle = 'rgba(30,30,34,0.75)'; g.beginPath(); g.arc(x + w - 44, y + h - 46, 24, 0, TAU); g.fill();
+  g.strokeStyle = '#fff'; g.fillStyle = '#fff'; g.lineWidth = 2.2;
+  const mx = x + w - 50, my = y + h - 46;
+  g.beginPath(); g.moveTo(mx - 9, my - 4); g.lineTo(mx - 4, my - 4); g.lineTo(mx + 3, my - 10); g.lineTo(mx + 3, my + 10); g.lineTo(mx - 4, my + 4); g.lineTo(mx - 9, my + 4); g.closePath(); g.fill();
+  g.beginPath(); g.moveTo(mx + 8, my - 5); g.lineTo(mx + 16, my + 5); g.moveTo(mx + 16, my - 5); g.lineTo(mx + 8, my + 5); g.stroke();
   g.restore();
 }
 
@@ -212,13 +408,11 @@ function drawStar(g, x, y, r, inner = 0.45) {
   g.closePath(); g.fill();
 }
 
-// mini avatar logo for the post header
+// avatar: black circle with the white open book (the page's profile picture)
 function drawAvatarLogo(g, x, y, r) {
-  g.fillStyle = '#0b0b0d'; g.beginPath(); g.arc(x, y, r, 0, TAU); g.fill();
-  g.strokeStyle = rgb(GOLD); g.lineWidth = 2; g.beginPath(); g.arc(x, y, r - 1, 0, TAU); g.stroke();
-  g.lineWidth = 1.8;
-  g.beginPath(); g.moveTo(x, y + 9); g.quadraticCurveTo(x - 9, y + 4, x - 17, y + 7); g.lineTo(x - 17, y - 5); g.quadraticCurveTo(x - 9, y - 9, x, y - 3); g.closePath(); g.stroke();
-  g.beginPath(); g.moveTo(x, y + 9); g.quadraticCurveTo(x + 9, y + 4, x + 17, y + 7); g.lineTo(x + 17, y - 5); g.quadraticCurveTo(x + 9, y - 9, x, y - 3); g.closePath(); g.stroke();
+  g.fillStyle = '#050506'; g.beginPath(); g.arc(x, y, r, 0, TAU); g.fill();
+  g.strokeStyle = 'rgba(255,255,255,0.18)'; g.lineWidth = 1.5; g.beginPath(); g.arc(x, y, r, 0, TAU); g.stroke();
+  drawBookIcon(g, x, y, r * 1.05, '#ffffff', 1.9);
 }
 
 function drawPost(g, idx, top, t, junkFilter) {
@@ -231,10 +425,12 @@ function drawPost(g, idx, top, t, junkFilter) {
     const R = mulberry32(idx * 13);
     g.fillStyle = `hsl(${(R() * 360) | 0},55%,55%)`; g.beginPath(); g.arc(x + 64, top + 56, 34, 0, TAU); g.fill();
   }
-  g.fillStyle = isS ? '#f1e6cf' : '#e8e8ea'; g.font = '600 32px Inter'; g.textAlign = 'left';
-  g.fillText(isS ? 'sözlükdeus' : FEED_NAMES[idx % 8], x + 116, top + 52);
-  g.fillStyle = 'rgba(230,230,235,0.5)'; g.font = '400 24px Inter';
-  g.fillText(isS ? 'Önerilen · Günün kelimesi' : (idx % 3 === 0 ? 'Sponsorlu' : 'Önerilen'), x + 116, top + 84);
+  g.fillStyle = '#eeeef0'; g.font = '600 32px Inter'; g.textAlign = 'left';
+  g.fillText(isS ? 'sozlukdeus' : FEED_NAMES[idx % 8], x + 116, top + 52);
+  g.fillStyle = 'rgba(230,230,235,0.75)'; g.font = '400 24px Inter';
+  if (isS) {
+    g.fillText('♫  sozlukdeus · Orijinal ses', x + 116, top + 86);
+  } else g.fillText(idx % 3 === 0 ? 'Sponsorlu' : 'Önerilen', x + 116, top + 84);
   g.fillStyle = 'rgba(230,230,235,0.8)';
   for (let k = 0; k < 3; k++) { g.beginPath(); g.arc(x + w - 70 + k * 14, top + 56, 3.5, 0, TAU); g.fill(); }
   // media
@@ -246,18 +442,32 @@ function drawPost(g, idx, top, t, junkFilter) {
   // actions
   const ay = my + F.mediaH + 62;
   g.strokeStyle = '#eceaf0'; g.lineWidth = 3.4; g.lineJoin = 'round'; g.lineCap = 'round';
-  iconHeart(g, x + 52, ay, 40); iconBubble(g, x + 130, ay, 40); iconPlane(g, x + 206, ay, 40); iconMark(g, x + w - 52, ay, 40);
+  g.fillStyle = '#eceaf0'; g.font = '600 28px Inter'; g.textAlign = 'left';
+  const R2 = mulberry32(idx * 7 + 3);
+  const counts = isS ? ['2.418', '96', '312', '1.204'] : [`${(R2() * 90 + 3).toFixed(1)} B`, `${(R2() * 900) | 0}`, `${(R2() * 300) | 0}`, `${(R2() * 2000) | 0}`];
+  let ix = x + 46;
+  const icons = [iconHeart, iconBubble, iconRepost, iconPlane];
+  icons.forEach((fn, i) => {
+    fn(g, ix, ay, 40);
+    g.fillText(counts[i], ix + 30, ay + 10);
+    ix += 62 + g.measureText(counts[i]).width + 20;
+  });
+  iconMark(g, x + w - 52, ay, 40);
   // caption
-  g.fillStyle = '#eceaf0'; g.font = '600 28px Inter';
-  g.fillText(isS ? '2.418 beğenme' : `${(mulberry32(idx)() * 90 + 3).toFixed(1)} B beğenme`, x + 30, ay + 70);
   g.font = '400 28px Inter';
   if (isS) {
-    g.fillStyle = '#eceaf0';
-    g.fillText('sözlükdeus  Bir kelime, bir kapı. Kaydet, unutma ✦', x + 30, ay + 112);
+    g.font = '600 28px Inter'; g.fillStyle = '#eceaf0';
+    g.fillText('sozlukdeus', x + 30, ay + 76);
+    const nw = g.measureText('sozlukdeus ').width;
+    g.font = '400 28px Inter';
+    g.fillText('Sözlüğümüzden yeni bir kelime: “inşirah”.', x + 30 + nw, ay + 76);
+    g.fillText('Arapça kökenli bu sözcük, “iç açılması”…', x + 30, ay + 114);
+    g.fillStyle = 'rgba(236,234,240,0.55)';
+    g.fillText(' devamı', x + 30 + g.measureText('Arapça kökenli bu sözcük, “iç açılması”…').width, ay + 114);
   } else {
     g.fillStyle = 'rgba(236,234,240,0.55)';
-    rr(g, x + 30, ay + 92, 520 - (idx % 3) * 90, 24, 12); g.fill();
-    rr(g, x + 30, ay + 130, 340 + (idx % 2) * 80, 24, 12); g.fill();
+    rr(g, x + 30, ay + 62, 520 - (idx % 3) * 90, 24, 12); g.fill();
+    rr(g, x + 30, ay + 100, 340 + (idx % 2) * 80, 24, 12); g.fill();
   }
 }
 
@@ -335,7 +545,7 @@ function renderFeed(g, t) {
   const push = ss(TL.postStop, TL.feed[1], t) * 0.05 + easeIn(inv(10.75, 11.45, t)) * 1.4;
   const enter = 1 - easeOut(inv(5.45, 5.95, t));
   const sc = 1 + push + enter * 0.35;
-  const fx = W / 2, fy = lerp(H / 2, F.sy + F.landY + F.mediaY + 470 - 60, ss(10.6, 11.2, t));
+  const fx = W / 2, fy = lerp(H / 2, F.sy + F.landY + F.mediaY + F.mediaH * 0.297, ss(10.6, 11.2, t));
   g.save();
   g.translate(fx, fy); g.scale(sc, sc); g.translate(-fx, -fy);
 
@@ -368,7 +578,7 @@ function renderFeed(g, t) {
   }
   g.globalAlpha = 1;
   // status + app bars (fixed)
-  g.fillStyle = 'rgba(12,12,15,0.96)'; g.fillRect(F.sx, F.sy, F.sw, 190);
+  g.fillStyle = '#0c0c0f'; g.fillRect(F.sx, F.sy, F.sw, 190);
   g.fillStyle = '#e8e8ea'; g.font = '600 30px Inter'; g.textAlign = 'left';
   g.fillText('03:47', F.sx + 70, F.sy + 52);
   g.fillRect(F.sx + F.sw - 120, F.sy + 32, 48, 22); g.fillRect(F.sx + F.sw - 70, F.sy + 38, 4, 10);
