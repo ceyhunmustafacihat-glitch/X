@@ -78,3 +78,53 @@ node render/render.mjs --encode-only 1   # yalnızca sesi ya da kodlamayı deği
 - Logo, şiar ve kullanıcı adı ekranın orta bölümünde. Reels arayüzünün kapladığı alt %20'lik kısma önemli içerik yerleştirilmedi.
 - İlk 0,7 saniye siyahtan açılıyor. Kapak olarak 10. saniyedeki paylaşım karesini seçebilirsiniz.
 - Müzik tamamen bu proje için sentezlendi; telif sorunu yoktur.
+
+---
+
+# sözlükdeus — “Uyanış” (karanlıktan aydınlığa)
+
+Instagram Reels için ikinci bir 9:16 (1080 × 1920), 31,5 saniyelik 2D animasyon. Altyazı, konuşma balonu ya da açıklama yazısı yok; hikâye tamamen görsel.
+Ekranda görünen tek yazı, telefondaki gerçek Instagram arayüzü ve sayfanın kendi gönderileridir.
+
+**Video:** [`output/sozlukdeus_uyanis_reels.mp4`](output/sozlukdeus_uyanis_reels.mp4) (H.264, 30 fps, AAC 48 kHz)
+
+Karakterler verilen iki çizime göre koddan çizildi:
+- **Ork (öncesi):** kel, yumurta biçimli kafa, yana açılan sivri kulaklar, yüzündeki yara izleri, sivri dişli sırıtış, omuz zırhı, göğüs kayışı ve ucunda üç dişli bıçak olan, kitap amblemli protez kolluk.
+- **Bilge (sayfanın yüzü):** ucu kıvrık sivri şapka, uzun gri saçlar, beline inen beyaz sakal, koyu cübbe ve tepesinde açık kitap olan asa. Sayfanın profil görseli telefonda avatar olarak kullanıldı (`uyanis/assets/avatar.jpg`).
+
+| Zaman | Görüntü | Ses |
+|---|---|---|
+| 0–3,8 sn | Rutubetli, soğuk taş oda. Kafatasları, kemikler, örümcek ağları, zincirler, paslı kılıç, sinekler. Ork, kaba tahtadan tahtında çökmüş, telefonda kaydırıyor. Gözleri kırmızı yanıyor, ekranın renkli titrek ışığı yüzüne vuruyor. | Uğursuz, düşük drone, ağır kalp atışı, damlayan su, sinek vızıltısı. |
+| 3,8–6,2 sn | Yüz yakın planı: ağzı aval aval açık, boş ve kırmızı bakışlar. | Telefondan boğuk kavga, çığlık ve patlama sesleri. |
+| 6,2–9,7 sn | Telefonun içi: kavga, patlama, çığlık atan yüzler, kaza, kafes dövüşü, siren. Gittikçe hızlanan, bulanıklaşan bir akış (kullanıcı adları bile yok, yalnızca gürültü). | Hızlanan kaydırma, sesler üst üste biner. |
+| 9,15–12,5 sn | sozlukdeus gönderisi (“Abadi”) gelir ve başparmak durur. Diğer içerikler kararır, gönderinin üzerinden sıcak bir ışık geçer. Ork avatara dokunur, profil açılır: “Türk dili, Türk milletinin kalbidir, zihnidir.” ve üç gönderi (Abadi, Aba, Ab). | Ani sessizlik, yumuşak bir vuruş, merak uyandıran çelesta notaları. |
+| 12,5–14,6 sn | Yüz yakın planı, artık telefonun altın ışığıyla aydınlanmış: kaşlar kalkıyor, ağız kapanıyor, gözlerde sayfanın yansıması var. | Yavaşça yükselen piyano arpeji. |
+| 14,6–21,5 sn | Bilge, odanın arkasında duman ve ışıktan belirir; asasını eğip açık avucuyla telefonu gösterir, asadaki kitaptan telefona altın ışık akar. Telefondan yayılan ışık halkası odayı dönüştürür: taş duvar sıcak sıvaya, gece sabaha, kemikler toza dönüşüp kaybolur, kılıç ışık parçacıklarına ayrılıp orkun kucağında açık bir kitaba dönüşür, protezdeki bıçak tüy kaleme dönüşür. Kırmızı gözler sakin kahverengiye döner, beden dikleşir, yüz yumuşar. | Sıcak koro, yükselen yaylılar ve arp arpejleri (Re majör), ışıltılar, kuş sesleri. |
+| 20,9–23,3 sn | Bilge başıyla onaylar ve ışık zerreciklerine dönüşerek kaybolur. | Derin, yumuşak bir çan, yukarı süzülen ışıltı. |
+| 23,6–26,6 sn | Orta plan: dönüşmüş ork, sabah ışığında gülümseyerek pencereye bakıyor. Kucağında kitap, kolunda tüy kalem, telefonun arkasında sayfanın kitap işareti. | Sıcak piyano teması. |
+| 26,6–28,9 sn | Telefonda sozlukdeus profili; “Takip Et”e dokunur, düğme “Takiptesin” olur, takipçi 21'den 22'ye çıkar. | Dokunuş ve ince bir çan sesi. |
+| 28,9–31,5 sn | Aydınlık, düzenli, kitaplarla dolu oda; kamera yavaşça uzaklaşır, siyaha geçiş. | Re majör kapanış akoru. |
+
+## Yapı
+
+```
+uyanis/
+  index.html   önizleme oynatıcısı (animation/core.js ve animation/fonts kullanılıyor)
+  timeline.js  görüntü ve sesin ortak zaman çizelgesi
+  orc.js       ork: beden, kafa, ifade (çene, kaş, göz kapağı, kırmızılık, vahşilik, gülümseme), bıçak/tüy kalem, kucaktaki kitap
+  wizard.js    bilge: şapka, saç, sakal, cübbe, asa, işaret eden el
+  room.js      odanın iki hâli (karanlık in / aydınlık çalışma odası) ve dönüşen nesneler
+  phone.js     telefon: şiddet dolu akış, sozlukdeus gönderisi ve profili, POV başparmak
+  story.js     pozlar, bilge, kamera ve ışıklar (zamanın saf fonksiyonları)
+  main.js      ışık haritası, dönüşüm maskesi, büyü efektleri, çekim geçişleri, renk düzenleme
+  compose.py   müzik ve ses efektleri sentezi
+  render.mjs   kare kare render + ffmpeg
+```
+
+```bash
+python3 uyanis/compose.py          # output/uyanis_soundtrack.wav
+node uyanis/render.mjs             # output/sozlukdeus_uyanis_reels.mp4
+```
+Playwright'ın kendi Chromium'u yoksa `CHROMIUM_PATH=/yol/chromium` ile başka bir Chromium gösterilebilir.
+
+Not: Videoda kullanıcı adı ekran görüntüsündeki gibi **sozlukdeus** olarak yazıldı.
