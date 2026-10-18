@@ -1,173 +1,286 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" width="1080" height="1080">
-  <!-- sözlükdeus profil görseli: asasının ucunda açık kitap taşıyan bilge -->
+  <!-- sözlükdeus profil görseli: asasının ucundaki kürede açık kitap parlayan bilge.
+       Tek ışık kaynağı küredir; gölgeler taramayla, ışık alan kenarlar ince parlak çizgiyle verilir. -->
   <defs>
-    <radialGradient id="bg" cx="0.62" cy="0.3" r="0.85">
-      <stop offset="0" stop-color="#262626"/>
-      <stop offset="0.45" stop-color="#121212"/>
-      <stop offset="1" stop-color="#030303"/>
+    <style>
+      @font-face { font-family: 'Cormorant Garamond'; font-style: italic;
+        src: url('../animation/fonts/CormorantGaramond-italic-latin-ext.woff2') format('woff2'); }
+      @font-face { font-family: 'Cormorant Garamond'; font-style: italic;
+        src: url('../animation/fonts/CormorantGaramond-italic-latin.woff2') format('woff2'); }
+      .harf { font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif; font-style: italic; fill: #fff; }
+    </style>
+
+    <radialGradient id="bg" cx="704" cy="208" r="900" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#2e2e2e"/>
+      <stop offset="0.35" stop-color="#151515"/>
+      <stop offset="1" stop-color="#040404"/>
     </radialGradient>
-    <radialGradient id="glow" cx="700" cy="215" r="260" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#ffffff" stop-opacity="0.55"/>
-      <stop offset="0.3" stop-color="#ffffff" stop-opacity="0.16"/>
-      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    <radialGradient id="halo" cx="704" cy="208" r="330" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fff" stop-opacity="0.5"/>
+      <stop offset="0.25" stop-color="#fff" stop-opacity="0.14"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
     </radialGradient>
-    <linearGradient id="robe" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#4a4a4a"/>
-      <stop offset="1" stop-color="#151515"/>
+
+    <!-- materials, all lit from the upper right -->
+    <linearGradient id="robe" x1="0.9" y1="0" x2="0.1" y2="1">
+      <stop offset="0" stop-color="#4c4c4c"/>
+      <stop offset="0.5" stop-color="#2a2a2a"/>
+      <stop offset="1" stop-color="#0e0e0e"/>
     </linearGradient>
-    <linearGradient id="robeLit" x1="1" y1="0" x2="0" y2="0.6">
-      <stop offset="0" stop-color="#6e6e6e"/>
-      <stop offset="1" stop-color="#262626"/>
-    </linearGradient>
-    <linearGradient id="hat" x1="1" y1="0" x2="0" y2="0.3">
-      <stop offset="0" stop-color="#6a6a6a"/>
-      <stop offset="0.55" stop-color="#3a3a3a"/>
+    <linearGradient id="sleeve" x1="1" y1="0" x2="0" y2="0.8">
+      <stop offset="0" stop-color="#777"/>
+      <stop offset="0.6" stop-color="#3a3a3a"/>
       <stop offset="1" stop-color="#1c1c1c"/>
     </linearGradient>
-    <linearGradient id="brim" x1="1" y1="0" x2="0" y2="0">
-      <stop offset="0" stop-color="#7a7a7a"/>
-      <stop offset="1" stop-color="#262626"/>
+    <linearGradient id="hat" x1="1" y1="0.2" x2="0" y2="0.4">
+      <stop offset="0" stop-color="#727272"/>
+      <stop offset="0.5" stop-color="#3c3c3c"/>
+      <stop offset="1" stop-color="#191919"/>
     </linearGradient>
-    <linearGradient id="beard" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#f4f4f4"/>
-      <stop offset="0.6" stop-color="#cfcfcf"/>
-      <stop offset="1" stop-color="#8a8a8a"/>
+    <linearGradient id="brim" x1="1" y1="0" x2="0" y2="0.2">
+      <stop offset="0" stop-color="#858585"/>
+      <stop offset="0.55" stop-color="#454545"/>
+      <stop offset="1" stop-color="#1c1c1c"/>
     </linearGradient>
-    <linearGradient id="hair" x1="1" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#c8c8c8"/>
+    <linearGradient id="beard" x1="0.8" y1="0" x2="0.2" y2="1">
+      <stop offset="0" stop-color="#f6f6f6"/>
+      <stop offset="0.55" stop-color="#c6c6c6"/>
+      <stop offset="1" stop-color="#6e6e6e"/>
+    </linearGradient>
+    <linearGradient id="hairR" x1="0" y1="0" x2="0.3" y2="1">
+      <stop offset="0" stop-color="#d4d4d4"/>
+      <stop offset="1" stop-color="#6a6a6a"/>
+    </linearGradient>
+    <linearGradient id="hairL" x1="1" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8e8e8e"/>
+      <stop offset="1" stop-color="#3a3a3a"/>
+    </linearGradient>
+    <linearGradient id="skin" x1="1" y1="0" x2="0" y2="0.6">
+      <stop offset="0" stop-color="#bdbdbd"/>
       <stop offset="1" stop-color="#5a5a5a"/>
     </linearGradient>
-    <linearGradient id="face" x1="1" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#b9b9b9"/>
-      <stop offset="1" stop-color="#5e5e5e"/>
-    </linearGradient>
-    <linearGradient id="faceShade" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#000" stop-opacity="0.85"/>
+    <linearGradient id="brimShadow" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#000" stop-opacity="0.9"/>
       <stop offset="1" stop-color="#000" stop-opacity="0"/>
     </linearGradient>
     <linearGradient id="wood" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="#2a2a2a"/>
-      <stop offset="0.6" stop-color="#8a8a8a"/>
+      <stop offset="0" stop-color="#1e1e1e"/>
+      <stop offset="0.55" stop-color="#5a5a5a"/>
+      <stop offset="0.85" stop-color="#9a9a9a"/>
+      <stop offset="1" stop-color="#4a4a4a"/>
+    </linearGradient>
+    <linearGradient id="fog" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#050505" stop-opacity="0"/>
+      <stop offset="1" stop-color="#050505" stop-opacity="0.95"/>
+    </linearGradient>
+    <linearGradient id="ring" x1="1" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#e6e6e6"/>
+      <stop offset="0.5" stop-color="#7a7a7a"/>
       <stop offset="1" stop-color="#3a3a3a"/>
     </linearGradient>
-    <radialGradient id="orb" cx="0.4" cy="0.35" r="0.75">
-      <stop offset="0" stop-color="#1e1e1e"/>
+
+    <!-- the crystal -->
+    <radialGradient id="glass" cx="0.42" cy="0.38" r="0.7">
+      <stop offset="0" stop-color="#3c3c3c"/>
+      <stop offset="0.65" stop-color="#121212"/>
       <stop offset="1" stop-color="#000"/>
     </radialGradient>
-    <filter id="soft" x="-1" y="-1" width="3" height="3"><feGaussianBlur stdDeviation="18"/></filter>
-    <clipPath id="frame"><circle cx="500" cy="500" r="472"/></clipPath>
+    <radialGradient id="core" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#fff" stop-opacity="0.45"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="glassRim" x1="1" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff"/>
+      <stop offset="0.6" stop-color="#bbb"/>
+      <stop offset="1" stop-color="#555"/>
+    </linearGradient>
+
+    <pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(38)">
+      <line x1="0" y1="0" x2="0" y2="6" stroke="#000" stroke-width="1.7"/>
+    </pattern>
+    <pattern id="hatchFine" width="4.5" height="4.5" patternUnits="userSpaceOnUse" patternTransform="rotate(-52)">
+      <line x1="0" y1="0" x2="0" y2="4.5" stroke="#000" stroke-width="1"/>
+    </pattern>
+
+    <filter id="soft" x="-1" y="-1" width="3" height="3"><feGaussianBlur stdDeviation="16"/></filter>
+    <filter id="bloom" x="-0.5" y="-0.5" width="2" height="2">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="mist" x="-0.5" y="-0.5" width="2" height="2"><feGaussianBlur stdDeviation="26"/></filter>
+
+    <clipPath id="frame"><circle cx="500" cy="500" r="466"/></clipPath>
+
+    <!-- silhouettes reused for fills, hatching and outlines -->
+    <path id="robeShape" d="M86 1000 C116 842 176 704 276 642 C326 610 366 586 390 540 L480 540 C504 586 542 608 586 624 C646 660 706 742 762 832 C794 886 814 946 832 1000 Z"/>
+    <path id="sleeveShape" d="M498 622 C560 606 628 582 674 548 C694 560 716 578 736 598 C718 650 694 704 680 772 C642 764 594 726 562 694 C540 672 518 650 498 622 Z"/>
+    <path id="hatShape" d="M336 400 C352 330 366 262 362 206 C360 168 346 136 294 102 C354 116 398 160 422 222 C446 284 500 346 536 392 Z"/>
+    <path id="beardShape" d="M384 478 C372 540 362 630 372 720 C382 790 400 850 414 880 C420 900 432 912 446 914 C440 896 446 860 462 820 C478 780 488 750 492 710 C502 630 494 540 484 478 C476 500 462 512 446 508 C436 504 428 504 420 508 C404 512 390 500 384 478 Z"/>
   </defs>
 
   <rect width="1000" height="1000" fill="url(#bg)"/>
 
   <g clip-path="url(#frame)">
-    <!-- light from the staff -->
-    <circle cx="700" cy="215" r="300" fill="url(#glow)"/>
-    <g fill="#ffffff">
-      <circle cx="180" cy="230" r="1.6" opacity="0.5"/><circle cx="260" cy="150" r="1.2" opacity="0.4"/>
-      <circle cx="150" cy="380" r="1.1" opacity="0.35"/><circle cx="560" cy="110" r="1.4" opacity="0.5"/>
-      <circle cx="860" cy="390" r="1.3" opacity="0.4"/><circle cx="820" cy="110" r="1.8" opacity="0.55"/>
-      <circle cx="600" cy="330" r="1.2" opacity="0.45"/><circle cx="880" cy="250" r="1" opacity="0.4"/>
-      <circle cx="230" cy="300" r="0.9" opacity="0.3"/><circle cx="780" cy="330" r="1.4" opacity="0.5"/>
+    <circle cx="704" cy="208" r="330" fill="url(#halo)"/>
+    <g fill="#fff">
+      <circle cx="180" cy="236" r="1.5" opacity="0.45"/><circle cx="262" cy="160" r="1.1" opacity="0.35"/>
+      <circle cx="146" cy="388" r="1" opacity="0.3"/><circle cx="560" cy="112" r="1.3" opacity="0.5"/>
+      <circle cx="868" cy="396" r="1.2" opacity="0.4"/><circle cx="214" cy="470" r="0.9" opacity="0.25"/>
+      <circle cx="610" cy="340" r="1.1" opacity="0.4"/><circle cx="886" cy="250" r="1" opacity="0.45"/>
     </g>
 
-    <!-- robe / cloak -->
-    <path d="M90 1000 C120 840 180 700 280 640 C330 610 368 588 392 540 L478 540 C502 588 540 610 584 626 C644 660 704 740 760 830 C792 884 812 944 830 1000 Z" fill="url(#robe)"/>
-    <path d="M280 645 C230 720 200 820 190 1000" fill="none" stroke="#000" stroke-opacity="0.5" stroke-width="3"/>
-    <path d="M280 640 C330 610 368 588 392 540" fill="none" stroke="#8a8a8a" stroke-width="2"/>
-    <!-- cloak edge falling from the shoulders -->
-    <path d="M330 640 C300 760 300 880 320 1000" fill="none" stroke="#5a5a5a" stroke-width="2"/>
-    <path d="M560 640 C600 760 610 880 600 1000" fill="none" stroke="#5a5a5a" stroke-width="2"/>
-    <path d="M335 645 C360 760 380 880 400 1000 L520 1000 C535 880 548 760 555 645 Z" fill="#000" fill-opacity="0.35"/>
-
-    <!-- long hair behind the shoulders -->
-    <path d="M350 412 C336 470 318 530 300 590 C288 630 296 668 330 684 C322 660 330 640 344 620 C340 646 352 668 372 676 C378 620 390 560 404 500 L404 412 Z" fill="url(#hair)"/>
-    <path d="M512 412 C528 470 548 530 564 584 C576 624 568 656 540 670 C546 648 540 630 528 614 C530 640 520 660 502 668 C494 612 480 556 466 500 L466 412 Z" fill="url(#hair)"/>
-    <g fill="none" stroke="#4a4a4a" stroke-width="1.6" stroke-linecap="round">
-      <path d="M346 450 C330 520 312 580 306 650"/><path d="M366 470 C352 540 340 600 336 660"/><path d="M384 480 C372 560 364 620 362 668"/>
-      <path d="M520 450 C538 510 552 560 556 630"/><path d="M500 470 C514 530 526 590 528 650"/><path d="M484 480 C496 560 504 620 506 660"/>
+    <!-- letters drifting up from the book: the dictionary's words taking flight -->
+    <g class="harf" filter="url(#bloom)">
+      <text x="572" y="128" font-size="64" opacity="0.42" transform="rotate(-14 572 128)">ö</text>
+      <text x="826" y="372" font-size="72" opacity="0.5" transform="rotate(12 826 372)">ş</text>
+      <text x="586" y="262" font-size="50" opacity="0.32" transform="rotate(-8 586 262)">ğ</text>
+      <text x="874" y="470" font-size="46" opacity="0.26" transform="rotate(10 874 470)">ü</text>
+      <text x="512" y="190" font-size="40" opacity="0.26" transform="rotate(6 512 190)">ç</text>
     </g>
+
+    <!-- hair behind the shoulders: shadow side left, lit side right -->
+    <path d="M350 412 C336 470 318 530 300 590 C288 630 296 668 330 684 C322 660 330 640 344 620 C340 646 352 668 372 676 C378 620 390 560 404 500 L404 412 Z" fill="url(#hairL)" stroke="#060606" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M512 412 C528 470 548 530 564 584 C576 624 568 656 540 670 C546 648 540 630 528 614 C530 640 520 660 502 668 C494 612 480 556 466 500 L466 412 Z" fill="url(#hairR)" stroke="#060606" stroke-width="2.5" stroke-linejoin="round"/>
+
+    <g fill="none" stroke-linecap="round">
+      <path d="M346 450 C330 520 312 580 306 650" stroke="#1e1e1e" stroke-width="1.6"/><path d="M366 470 C352 540 340 600 336 660" stroke="#1e1e1e" stroke-width="1.6"/>
+      <path d="M384 480 C372 560 364 620 362 668" stroke="#1e1e1e" stroke-width="1.6"/>
+      <path d="M520 450 C538 510 552 560 556 630" stroke="#4a4a4a" stroke-width="1.6"/><path d="M500 470 C514 530 526 590 528 650" stroke="#4a4a4a" stroke-width="1.6"/>
+      <path d="M484 480 C496 560 504 620 506 660" stroke="#4a4a4a" stroke-width="1.6"/>
+      <path d="M514 420 C532 480 552 540 566 590" stroke="#f2f2f2" stroke-width="1.8"/>
+    </g>
+
+    <!-- robe -->
+    <use href="#robeShape" fill="url(#robe)"/>
+    <path d="M86 1000 C116 842 176 704 276 642 C302 760 304 880 322 1000 Z" fill="url(#hatch)" opacity="0.55"/>
+    <path d="M336 646 C360 760 380 880 400 1000 L522 1000 C536 880 548 760 556 646 Z" fill="#000" opacity="0.3"/>
+    <path d="M336 646 C360 760 380 880 400 1000 L522 1000 C536 880 548 760 556 646 Z" fill="url(#hatchFine)" opacity="0.35"/>
+    <g fill="none" stroke-linecap="round">
+      <path d="M330 640 C300 760 300 880 320 1000" stroke="#0a0a0a" stroke-width="2.5"/>
+      <path d="M560 640 C600 760 610 880 600 1000" stroke="#0a0a0a" stroke-width="2.5"/>
+      <path d="M566 650 C606 760 616 880 608 1000" stroke="#8a8a8a" stroke-width="1.5" opacity="0.7"/>
+      <path d="M250 700 C226 780 212 880 208 1000" stroke="#0a0a0a" stroke-width="1.8" opacity="0.7"/>
+      <path d="M586 624 C646 660 706 742 762 832" stroke="#bcbcbc" stroke-width="2.2"/>
+    </g>
+    <use href="#robeShape" fill="none" stroke="#060606" stroke-width="3" stroke-linejoin="round"/>
 
     <!-- raised sleeve -->
-    <path d="M500 625 C560 610 630 585 676 552 L734 600 C716 650 690 700 676 770 C640 760 590 720 560 690 C540 672 520 650 500 625 Z" fill="url(#robeLit)"/>
-    <path d="M676 552 L734 600" fill="none" stroke="#9a9a9a" stroke-width="2.5" stroke-linecap="round"/>
-    <path d="M520 640 C580 640 640 610 690 572" fill="none" stroke="#1a1a1a" stroke-width="2.5"/>
-    <path d="M560 690 C610 690 660 660 706 612" fill="none" stroke="#1a1a1a" stroke-width="2"/>
-    <path d="M676 770 C690 700 716 650 734 600" fill="none" stroke="#8a8a8a" stroke-width="2"/>
-
-    <!-- staff -->
-    <path d="M712 1000 C716 900 706 820 710 740 C714 640 702 520 706 420 C708 360 700 320 702 292" fill="none" stroke="url(#wood)" stroke-width="22" stroke-linecap="round"/>
-    <path d="M716 1000 C720 900 710 820 714 740 C718 640 706 520 710 420 C712 360 704 320 706 300" fill="none" stroke="#bdbdbd" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
-    <g fill="none" stroke="#1e1e1e" stroke-width="2" stroke-linecap="round">
-      <path d="M700 470 C705 476 712 476 716 470"/><path d="M702 800 C708 806 716 806 720 800"/>
-      <path d="M699 380 C704 386 711 386 715 380"/>
+    <use href="#sleeveShape" fill="url(#sleeve)"/>
+    <path d="M498 622 C540 672 600 730 680 772 C660 720 610 690 560 660 Z" fill="url(#hatch)" opacity="0.45"/>
+    <g fill="none" stroke-linecap="round">
+      <path d="M522 640 C582 640 640 610 690 572" stroke="#141414" stroke-width="2.2"/>
+      <path d="M560 690 C612 690 662 660 708 614" stroke="#141414" stroke-width="2"/>
+      <path d="M498 622 C560 606 628 582 674 548" stroke="#d4d4d4" stroke-width="2.4"/>
+      <path d="M736 598 C718 650 694 704 680 772" stroke="#a8a8a8" stroke-width="2"/>
     </g>
-    <!-- crook: gnarled wood cradling the book -->
-    <circle cx="704" cy="208" r="84" fill="#fff" opacity="0.35" filter="url(#soft)"/>
+    <use href="#sleeveShape" fill="none" stroke="#060606" stroke-width="3" stroke-linejoin="round"/>
+
+    <!-- staff shaft -->
+    <path d="M712 1004 C716 900 706 820 710 740 C714 640 702 520 706 420 C708 360 700 322 704 292" fill="none" stroke="#060606" stroke-width="27" stroke-linecap="round"/>
+    <path d="M712 1004 C716 900 706 820 710 740 C714 640 702 520 706 420 C708 360 700 322 704 292" fill="none" stroke="url(#wood)" stroke-width="21" stroke-linecap="round"/>
+    <path d="M717 1000 C721 900 711 820 715 740 C719 640 707 520 711 420 C713 360 706 324 709 300" fill="none" stroke="#e4e4e4" stroke-width="1.8" stroke-linecap="round" opacity="0.75"/>
+    <g fill="none" stroke="#0e0e0e" stroke-width="1.8" stroke-linecap="round">
+      <path d="M699 470 C705 477 712 477 717 469"/><path d="M702 800 C708 807 716 807 721 799"/>
+      <path d="M699 382 C704 388 711 388 716 380"/><path d="M704 680 C706 700 704 720 706 736"/>
+      <path d="M700 420 C702 440 700 452 701 462"/><path d="M706 860 C708 880 707 900 709 920"/>
+    </g>
+
+
+    <!-- crook: two branches of the staff grow up and hold the crystal -->
     <g fill="none" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M704 300 C664 292 630 262 626 220 C622 172 650 136 690 124 C702 120 708 110 700 100 C692 92 680 98 684 108" stroke="#6a6a6a" stroke-width="13"/>
-      <path d="M704 300 C746 294 780 262 784 218 C788 176 766 142 730 128 C720 124 716 112 726 106 C734 102 740 110 734 116" stroke="#5a5a5a" stroke-width="11"/>
-      <path d="M700 296 C662 286 634 258 631 220 C628 176 654 142 692 130" stroke="#e0e0e0" stroke-width="2.2"/>
-      <path d="M710 296 C748 288 776 258 778 218 C780 182 762 152 732 138" stroke="#a8a8a8" stroke-width="2"/>
-      <path d="M632 254 C614 262 606 280 612 296" stroke="#5a5a5a" stroke-width="7"/>
-      <path d="M778 176 C796 166 806 148 800 132" stroke="#4e4e4e" stroke-width="6"/>
-      <path d="M698 330 C690 320 688 308 696 300 M712 336 C720 324 720 310 712 302" stroke="#2e2e2e" stroke-width="8"/>
-    </g>
-    <!-- the emblem: sözlükdeus open book -->
-    <circle cx="704" cy="208" r="70" fill="url(#orb)" stroke="#ffffff" stroke-width="3.5"/>
-    <circle cx="704" cy="208" r="62" fill="none" stroke="#ffffff" stroke-opacity="0.25" stroke-width="1"/>
-    <g transform="translate(704 210)" fill="none" stroke="#ffffff" stroke-width="5" stroke-linejoin="round" stroke-linecap="round">
-      <path d="M0 -20 C-10 -30 -26 -33 -40 -28 L-40 24 C-26 19 -10 21 0 30 Z"/>
-      <path d="M0 -20 C10 -30 26 -33 40 -28 L40 24 C26 19 10 21 0 30 Z"/>
+      <path id="branchL" d="M704 300 C662 292 628 262 624 220 C620 172 650 134 690 122 C702 118 708 108 700 98 C692 90 680 96 684 106"/>
+      <path id="branchR" d="M706 300 C748 294 782 262 786 218 C790 176 768 140 730 126 C720 122 716 110 726 104 C734 100 740 108 734 114"/>
+      <use href="#branchL" stroke="#060606" stroke-width="17"/>
+      <use href="#branchR" stroke="#060606" stroke-width="15"/>
+      <use href="#branchL" stroke="#4a4a4a" stroke-width="12"/>
+      <use href="#branchR" stroke="#5e5e5e" stroke-width="10"/>
+      <path d="M626 258 C610 266 602 284 608 300" stroke="#060606" stroke-width="10"/>
+      <path d="M626 258 C610 266 602 284 608 300" stroke="#4a4a4a" stroke-width="6"/>
+      <path d="M782 176 C800 166 808 148 802 132" stroke="#060606" stroke-width="9"/>
+      <path d="M782 176 C800 166 808 148 802 132" stroke="#6a6a6a" stroke-width="5"/>
+      <path d="M708 296 C750 288 776 258 779 218 C782 182 764 150 734 136" stroke="#f0f0f0" stroke-width="1.8"/>
+      <path d="M700 294 C664 284 636 258 632 222" stroke="#bdbdbd" stroke-width="1.5"/>
     </g>
 
-    <!-- hand gripping the staff -->
-    <path d="M684 548 C690 532 724 528 734 540 C740 556 738 584 728 600 C716 610 694 606 686 594 C680 580 680 562 684 548 Z" fill="#9a9a9a"/>
-    <g fill="none" stroke="#3a3a3a" stroke-width="2" stroke-linecap="round">
-      <path d="M690 556 C702 552 718 552 732 556"/><path d="M688 570 C702 566 718 566 734 570"/><path d="M688 584 C702 580 718 580 732 584"/>
+    <!-- the crystal with the sözlükdeus book glowing inside -->
+    <circle cx="704" cy="208" r="88" fill="#fff" opacity="0.4" filter="url(#soft)"/>
+    <circle cx="704" cy="208" r="64" fill="url(#glass)"/>
+    <circle cx="704" cy="210" r="52" fill="url(#core)"/>
+    <g transform="translate(704 211)" fill="none" stroke="#fff" stroke-width="5" stroke-linejoin="round" stroke-linecap="round" filter="url(#bloom)">
+      <path d="M0 -19 C-10 -29 -25 -32 -38 -27 L-38 23 C-25 18 -10 20 0 29 Z"/>
+      <path d="M0 -19 C10 -29 25 -32 38 -27 L38 23 C25 18 10 20 0 29 Z"/>
     </g>
-    <path d="M686 552 C680 560 682 574 694 578" fill="none" stroke="#d0d0d0" stroke-width="2" stroke-linecap="round"/>
+    <circle cx="704" cy="208" r="64" fill="none" stroke="url(#glassRim)" stroke-width="3"/>
+    <path d="M662 186 C668 166 684 152 704 148" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity="0.55"/>
+    <!-- tendrils wrapping in front of the glass -->
+    <g fill="none" stroke-linecap="round">
+      <path d="M640 252 C668 270 712 276 748 262 C760 257 770 248 774 240" stroke="#060606" stroke-width="9"/>
+      <path d="M640 252 C668 270 712 276 748 262 C760 257 770 248 774 240" stroke="#5a5a5a" stroke-width="5"/>
+      <path d="M700 270 C722 270 744 264 760 254" stroke="#e8e8e8" stroke-width="1.3" opacity="0.8"/>
+    </g>
+
+    <!-- hand: fingers wrapped round the staff, lit by the crystal -->
+    <path d="M676 556 C680 540 696 534 712 538 L716 604 C702 608 688 602 682 592 C676 580 674 568 676 556 Z" fill="#6e6e6e" stroke="#060606" stroke-width="2.5"/>
+    <g stroke="#060606" stroke-width="2.2">
+      <rect x="694" y="542" width="44" height="15" rx="7.5" fill="#b2b2b2"/>
+      <rect x="696" y="556" width="44" height="15" rx="7.5" fill="#a6a6a6"/>
+      <rect x="696" y="570" width="42" height="15" rx="7.5" fill="#999"/>
+      <rect x="694" y="584" width="38" height="14" rx="7" fill="#8a8a8a"/>
+    </g>
+    <path d="M690 548 C700 532 718 528 730 534" fill="none" stroke="#060606" stroke-width="7" stroke-linecap="round"/>
+    <path d="M690 548 C700 532 718 528 730 534" fill="none" stroke="#c4c4c4" stroke-width="3.5" stroke-linecap="round"/>
+    <path d="M736 548 C740 556 740 568 738 576" fill="none" stroke="#efefef" stroke-width="1.6" stroke-linecap="round"/>
 
     <!-- face -->
-    <path d="M382 410 C378 450 384 500 404 520 C420 534 444 534 462 520 C482 500 488 450 484 410 Z" fill="url(#face)"/>
-    <path d="M382 410 L484 410 L484 470 L382 470 Z" fill="url(#faceShade)"/>
-    <!-- brows, eyes, nose -->
-    <path d="M394 448 C408 438 424 440 432 448 C420 446 406 448 394 454 Z" fill="#e8e8e8"/>
-    <path d="M472 448 C460 438 444 440 438 448 C450 446 462 448 474 454 Z" fill="#e8e8e8"/>
-    <path d="M404 458 C410 454 420 454 426 458" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round"/>
-    <path d="M444 458 C450 454 460 454 466 458" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round"/>
-    <path d="M435 452 C438 470 444 486 446 494 C442 498 434 498 428 494" fill="none" stroke="#2a2a2a" stroke-width="2.2" stroke-linecap="round"/>
-    <path d="M394 476 C398 490 404 500 410 504" fill="none" stroke="#3a3a3a" stroke-width="1.5"/>
-    <path d="M474 476 C470 490 466 500 460 504" fill="none" stroke="#3a3a3a" stroke-width="1.5"/>
+    <path d="M382 410 C378 450 384 500 404 520 C420 534 444 534 462 520 C482 500 488 450 484 410 Z" fill="url(#skin)" stroke="#060606" stroke-width="2.5"/>
+    <path d="M382 410 C378 450 384 480 392 500 C400 470 400 440 404 412 Z" fill="url(#hatchFine)" opacity="0.6"/>
+    <path d="M382 410 L484 410 L484 468 L382 468 Z" fill="url(#brimShadow)"/>
+    <path d="M394 448 C408 436 424 438 433 448 C420 446 406 448 392 456 Z" fill="#e4e4e4" stroke="#060606" stroke-width="1"/>
+    <path d="M474 448 C460 436 444 438 437 448 C450 446 462 448 476 456 Z" fill="#f2f2f2" stroke="#060606" stroke-width="1"/>
+    <path d="M404 459 C410 455 420 455 426 459" fill="none" stroke="#050505" stroke-width="2.6" stroke-linecap="round"/>
+    <path d="M444 459 C450 455 460 455 466 459" fill="none" stroke="#050505" stroke-width="2.6" stroke-linecap="round"/>
+    <path d="M436 452 C439 470 445 486 447 494 C443 498 435 498 429 494" fill="none" stroke="#151515" stroke-width="2.2" stroke-linecap="round"/>
+    <path d="M440 456 C443 470 447 482 449 490" fill="none" stroke="#e0e0e0" stroke-width="1.2" stroke-linecap="round"/>
+    <path d="M396 474 C399 488 404 498 410 504" fill="none" stroke="#2a2a2a" stroke-width="1.4"/>
+    <path d="M474 474 C471 488 466 498 460 504" fill="none" stroke="#2a2a2a" stroke-width="1.4"/>
+    <path d="M478 430 C482 450 482 470 478 490" fill="none" stroke="#d6d6d6" stroke-width="1.6" stroke-linecap="round"/>
 
     <!-- beard and moustache -->
-    <path d="M384 478 C372 540 362 630 372 720 C382 790 400 850 414 880 C420 900 432 912 446 914 C440 896 446 860 462 820 C478 780 488 750 492 710 C502 630 494 540 484 478 C476 500 462 512 446 508 C436 504 428 504 420 508 C404 512 390 500 384 478 Z" fill="url(#beard)"/>
-    <path d="M434 500 C420 494 400 500 390 520 C406 512 420 512 434 516 C448 512 462 512 478 520 C468 500 448 494 434 500 Z" fill="#f8f8f8"/>
-    <g fill="none" stroke="#8a8a8a" stroke-width="1.6" stroke-linecap="round">
-      <path d="M400 530 C394 600 398 680 414 760"/>
-      <path d="M418 528 C414 610 418 700 426 820"/>
-      <path d="M436 530 C436 620 436 720 428 860"/>
-      <path d="M454 528 C460 610 456 700 444 800"/>
-      <path d="M470 532 C478 600 474 670 462 740"/>
-      <path d="M388 560 C380 620 382 680 396 740"/>
-      <path d="M482 560 C488 620 484 680 474 720"/>
+    <use href="#beardShape" fill="url(#beard)"/>
+    <path d="M384 478 C372 540 362 630 372 720 C382 790 400 850 414 880 C404 820 392 740 392 660 C392 600 396 540 404 504 C394 500 388 492 384 478 Z" fill="url(#hatchFine)" opacity="0.4"/>
+    <g fill="none" stroke="#7a7a7a" stroke-width="1.5" stroke-linecap="round">
+      <path d="M400 530 C394 600 398 680 414 760"/><path d="M418 528 C414 610 418 700 426 820"/>
+      <path d="M436 530 C436 620 436 720 430 862"/><path d="M454 528 C460 610 456 700 446 800"/>
+      <path d="M470 532 C478 600 474 670 464 740"/><path d="M388 560 C380 620 382 680 396 740"/>
+      <path d="M482 560 C488 620 484 680 476 720"/>
     </g>
-    <g fill="none" stroke="#ffffff" stroke-width="1.2" stroke-linecap="round" opacity="0.8">
-      <path d="M410 540 C406 600 410 660 420 720"/><path d="M446 540 C450 610 448 680 438 760"/>
+    <g fill="none" stroke="#fff" stroke-width="1.3" stroke-linecap="round">
+      <path d="M462 540 C470 610 468 680 456 760" opacity="0.9"/><path d="M446 540 C450 610 448 680 440 770" opacity="0.6"/>
+      <path d="M484 478 C494 540 502 630 492 710" stroke-width="2" opacity="0.9"/>
     </g>
+    <use href="#beardShape" fill="none" stroke="#060606" stroke-width="2.6" stroke-linejoin="round"/>
+    <path d="M434 500 C420 494 400 500 390 522 C406 512 420 512 434 517 C448 512 462 512 478 522 C468 500 448 494 434 500 Z" fill="#f6f6f6" stroke="#060606" stroke-width="2"/>
 
     <!-- hat -->
-    <path d="M338 400 C352 330 366 262 362 206 C360 166 344 134 296 104 C352 118 396 160 420 222 C444 284 498 346 534 392 Z" fill="url(#hat)"/>
-    <path d="M362 206 C360 166 344 134 296 104" fill="none" stroke="#9a9a9a" stroke-width="2" stroke-linecap="round"/>
-    <path d="M296 104 C352 118 396 160 420 222 C444 284 498 346 534 392" fill="none" stroke="#b0b0b0" stroke-width="2.5" stroke-linecap="round"/>
-    <path d="M372 210 C380 250 400 290 420 330" fill="none" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round"/>
-    <path d="M346 372 C390 384 470 384 522 372 L528 384 C470 398 390 398 344 386 Z" fill="#1a1a1a"/>
-    <ellipse cx="432" cy="402" rx="206" ry="30" transform="rotate(-3 432 402)" fill="url(#brim)"/>
-    <path d="M228 410 C300 434 560 430 636 390" fill="none" stroke="#c4c4c4" stroke-width="2" stroke-linecap="round" opacity="0.8"/>
-    <path d="M232 396 C300 378 560 368 634 386" fill="none" stroke="#111" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+    <use href="#hatShape" fill="url(#hat)"/>
+    <path d="M336 400 C352 330 366 262 362 206 C360 168 346 136 294 102 C340 140 372 210 390 300 C400 340 404 370 410 398 Z" fill="url(#hatch)" opacity="0.6"/>
+    <path d="M372 212 C382 254 402 292 420 332" fill="none" stroke="#0e0e0e" stroke-width="2" stroke-linecap="round"/>
+    <path d="M296 104 C354 118 398 160 422 222 C446 284 500 346 536 392" fill="none" stroke="#dcdcdc" stroke-width="2.4" stroke-linecap="round"/>
+    <use href="#hatShape" fill="none" stroke="#060606" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M346 372 C390 384 470 384 524 372 L530 386 C470 400 390 400 344 388 Z" fill="#141414" stroke="#060606" stroke-width="2"/>
+    <ellipse cx="432" cy="402" rx="206" ry="30" transform="rotate(-3 432 402)" fill="url(#brim)" stroke="#060606" stroke-width="3"/>
+    <path d="M228 398 C300 382 420 376 520 378" fill="none" stroke="url(#hatch)" stroke-width="10" opacity="0.5"/>
+    <path d="M520 422 C570 418 612 404 634 390" fill="none" stroke="#e8e8e8" stroke-width="2" stroke-linecap="round"/>
+    <path d="M470 376 C540 372 600 376 632 386" fill="none" stroke="#bdbdbd" stroke-width="1.6" stroke-linecap="round"/>
+
+    <!-- ground mist -->
+    <rect x="0" y="780" width="1000" height="220" fill="url(#fog)"/>
+    <ellipse cx="300" cy="960" rx="260" ry="40" fill="#8a8a8a" opacity="0.18" filter="url(#mist)"/>
+    <ellipse cx="760" cy="940" rx="220" ry="34" fill="#8a8a8a" opacity="0.14" filter="url(#mist)"/>
   </g>
 
-  <!-- classic double ring -->
-  <circle cx="500" cy="500" r="472" fill="none" stroke="#bdbdbd" stroke-width="3"/>
-  <circle cx="500" cy="500" r="460" fill="none" stroke="#6a6a6a" stroke-width="1.2"/>
+  <!-- frame: brightest where the crystal faces it -->
+  <circle cx="500" cy="500" r="466" fill="none" stroke="#060606" stroke-width="6"/>
+  <circle cx="500" cy="500" r="470" fill="none" stroke="url(#ring)" stroke-width="2.4"/>
+  <circle cx="500" cy="500" r="458" fill="none" stroke="url(#ring)" stroke-width="1" opacity="0.5"/>
 </svg>
