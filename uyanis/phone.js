@@ -47,7 +47,7 @@ function paintBg(kind, w, h) {
     drawGlow(g, 270, 60, 140, '#c98a3a', 0.55);
     g.fillStyle = '#3a2a1c'; g.fillRect(0, 250, 300, 150);
     for (let i = 0; i < 6; i++) { g.fillStyle = `rgba(0,0,0,${0.15 + R() * 0.1})`; g.fillRect(0, 262 + i * 22, 300, 2); }
-    g.save(); g.translate(150, 345); g.rotate(-0.06);
+    g.save(); g.translate(78, 400); g.scale(0.72, 0.72); g.rotate(-0.06); g.globalAlpha = 0.75;
     for (let i = 0; i < 7; i++) { g.fillStyle = i % 2 ? '#d9c8a0' : '#cdb98e'; g.fillRect(-90, -40 - i * 4, 190, 60); }
     g.fillStyle = '#e6d6b0'; g.fillRect(-90, -72, 190, 56);
     g.restore();
@@ -463,7 +463,7 @@ function thumbPos(t) {
       const k = (t - f + 0.18) / 0.42;
       if (k > 0 && k < 1) { y -= Math.sin(k * Math.PI) * 300 * (k < 0.5 ? 1 : 1); lift = Math.sin(k * Math.PI); }
     }
-    const toTap = ss(TL.tap - 0.6, TL.tap - 0.1, t) * (1 - ss(TL.tap + 0.2, TL.tap + 0.7, t));
+    const toTap = ss(TL.tap - 0.4, TL.tap - 0.08, t) * (1 - ss(TL.tap + 0.12, TL.tap + 0.45, t));
     const av = povScreenToFrame(L, 50, FEEDP.landY + 50);
     x = lerp(x, av[0] + 40, toTap); y = lerp(y, av[1] + 60, toTap);
     lift = Math.max(lift, toTap * (1 - win(TL.tap - 0.06, TL.tap, TL.tap + 0.04, TL.tap + 0.12, t)) * 0.4);

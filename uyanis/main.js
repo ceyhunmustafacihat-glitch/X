@@ -186,7 +186,7 @@ function drawEmissive(g, t, cam, P, rv, k) {
   }
   // candle on the shelf (lit room)
   if (rv > 0.3) {
-    const c = S(308, 930);
+    const c = S(80, 930);
     const fl = 1 + 0.08 * Math.sin(t * 17) + 0.05 * Math.sin(t * 29);
     drawGlow(g, c[0], c[1], 150 * z * fl, '#ffb050', 0.5 * ss(0.3, 0.7, rv));
     g.globalAlpha = ss(0.3, 0.7, rv); g.fillStyle = '#fff2c0';

@@ -200,7 +200,6 @@ function drawBladeArm(g, P, G, C) {
   g.fillStyle = gr; g.fill(cuff); g.strokeStyle = '#cfcfcf'; g.lineWidth = 2.4; g.stroke(cuff);
   strokeLine(g, [[-62, -16], [60, -22]], 1.6, '#8a8a8a', 0.8);
   strokeLine(g, [[-64, 36], [64, 32]], 1.6, '#8a8a8a', 0.8);
-  drawOpenBook(g, 0, 8, 46, '#e8e8e8', 2.4);
   g.restore();
 }
 

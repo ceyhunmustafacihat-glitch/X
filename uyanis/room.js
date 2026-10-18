@@ -180,7 +180,7 @@ function drawShelf(g, w) {
     g.beginPath(); g.moveTo(x + 247, y - 50); g.lineTo(x + 250, y - 56); g.stroke(); g.globalAlpha = 1;
   } else {
     const cols = ['#8e2f2a', '#2f4a6e', '#3d6a4a', '#a8792f', '#5a3a6a', '#2a2a2a', '#9a5a2a', '#3a5a7a'];
-    let bx = x + 10;
+    let bx = x + 40;
     for (let i = 0; i < 8; i++) {
       const bw = 20 + (i * 7) % 12, bh = 76 + (i * 13) % 30;
       g.fillStyle = cols[i]; g.fillRect(bx, y - bh, bw, bh);
@@ -188,7 +188,7 @@ function drawShelf(g, w) {
       bx += bw + 2;
     }
     // candle (its flame is drawn in the emissive pass)
-    g.fillStyle = '#efe3c6'; rr(g, x + 236, y - 62, 24, 62, 3); g.fill();
+    g.fillStyle = '#efe3c6'; rr(g, x + 8, y - 62, 24, 62, 3); g.fill();
     // a small plant
     g.fillStyle = '#9a5a3a'; rr(g, x + 268, y - 44, 30, 44, 5); g.fill();
     g.strokeStyle = '#4f7a3a'; g.lineWidth = 5; g.lineCap = 'round';
