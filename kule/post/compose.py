@@ -28,8 +28,9 @@ W, H, FPS = config.W, config.H, config.FPS
 NF = int(round(config.DURATION * FPS))
 FR = os.path.join(config.BUILD, "frames")
 FONTS = os.path.join(config.ROOT, "assets", "fonts")
-GOLD = np.array([201, 164, 96]) / 255
-GOLD_HI = np.array([236, 208, 146]) / 255
+# on-screen text: plain, corporate - one flat white, one sans-serif, no glow
+GOLD = np.array([240, 240, 238]) / 255
+GOLD_HI = GOLD
 IVORY = np.array([238, 233, 222]) / 255
 LIB_LAST = int(round(T.LIB_END * FPS))           # first city frame
 CITY_LAST = int(round(39.7 * FPS))
@@ -178,7 +179,7 @@ def counter_layer(t):
     s = f"{v:,}".replace(",", ".")
     lay = layer()
     d = ImageDraw.Draw(lay)
-    fn = font("Montserrat-300.ttf", 112)
+    fn = font("Montserrat-500.ttf", 96)
     slot = max(d.textlength(str(k), font=fn) for k in range(10))
     dot = d.textlength(".", font=fn)
     full = "1.756.396"
@@ -191,8 +192,7 @@ def counter_layer(t):
         d.text((x + wdt / 2, y), c, font=fn, fill=tuple(int(c_ * 255) for c_ in IVORY) + (255,), anchor="ms")
     m = Image.new("L", (W, H), 0)
     dm = ImageDraw.Draw(m)
-    dm.line([W / 2 - 90, y + 40, W / 2 + 90, y + 40], fill=255, width=2)
-    tracked(dm, (W / 2, y + 112), "SÖZCÜK", font("Montserrat-500.ttf", 38), 255, 16)
+    tracked(dm, (W / 2, y + 78), "SÖZCÜK", font("Montserrat-500.ttf", 36), 255, 8)
     g = gold_fill(np.asarray(m, np.float32) / 255, y0=y + 40, y1=y + 120)
     lay.alpha_composite(g)
     return lay
@@ -241,9 +241,9 @@ def measure_layer(t, f):
     a176 = smooth((t - T.TEXT_176) / 0.6)
     a59 = smooth((t - T.TEXT_59) / 0.6)
     t1 = Image.new("L", (W, H), 0)
-    tracked(ImageDraw.Draw(t1), (cx, cy - 118), "176 METRE", font("Montserrat-300.ttf", 76), 255, 12)
+    tracked(ImageDraw.Draw(t1), (cx, cy - 112), "176 METRE", font("Montserrat-500.ttf", 64), 255, 6)
     t2 = Image.new("L", (W, H), 0)
-    tracked(ImageDraw.Draw(t2), (cx, cy - 52), "YAKLAŞIK 59 KAT", font("Montserrat-500.ttf", 34), 255, 11)
+    tracked(ImageDraw.Draw(t2), (cx, cy - 56), "YAKLAŞIK 59 KAT", font("Montserrat-500.ttf", 34), 255, 6)
     mask = np.asarray(m, np.float32) / 255 * 0.9 + np.asarray(t1, np.float32) / 255 * a176 + np.asarray(t2, np.float32) / 255 * a59
     lay = gold_fill(np.clip(mask, 0, 1), y0=cy - 190, y1=cy)
     glow = lay.filter(ImageFilter.GaussianBlur(10))
@@ -257,7 +257,7 @@ def tag_layer():
     global _TAG
     if _TAG is None:
         m = Image.new("L", (W, H), 0)
-        tracked(ImageDraw.Draw(m), (W / 2, 940), "Her kelimede yeni bir dünya.", font("Montserrat-300.ttf", 44), 255, 4)
+        tracked(ImageDraw.Draw(m), (W / 2, 940), "Her kelimede yeni bir dünya.", font("Montserrat-500.ttf", 40), 255, 2)
         tm = json.load(open(os.path.join(config.BUILD, "voice", "timing.json"), encoding="utf-8"))
         _TAG = (np.asarray(m, np.float32) / 255, tm[-1]["end"] - 1.65)   # as the line is spoken
     return _TAG
@@ -268,10 +268,31 @@ def logo_frame(t):
     tag, t_in = tag_layer()
     img = np.zeros((H, W, 3), np.float32) + 0.006
     ta = smooth((t - t_in) / 0.6) * 0.9
-    glow = cv2.GaussianBlur(tag, (0, 0), 10) * 0.3
-    img = img + (glow[..., None] * GOLD * 0.6) * ta
     img = img * (1 - (tag * ta)[..., None]) + IVORY * (tag * ta)[..., None]
     return img * (1 - smooth((t - 41.72) / 0.28) * 0.15)
+
+
+CAPTIONS = [  # (start, end, text): the arithmetic, spelled out for viewers watching muted
+    (14.8, 18.6, "1 SÖZCÜK = 1 KÂĞIT"),
+    (20.2, 23.35, "HER KÂĞIT 0,1 MM"),
+]
+_CAP = {}
+
+
+def caption(img, t):
+    for t0, t1, text in CAPTIONS:
+        a = smooth((t - t0) / 0.35) * (1 - smooth((t - (t1 - 0.35)) / 0.35))
+        if a <= 0:
+            continue
+        if text not in _CAP:
+            m = Image.new("L", (W, H), 0)
+            tracked(ImageDraw.Draw(m), (W / 2, 1400), text, font("Montserrat-500.ttf", 46), 255, 5)
+            m = np.asarray(m, np.float32) / 255
+            _CAP[text] = (m, cv2.GaussianBlur(m, (0, 0), 6) * 0.7)
+        m, sh = _CAP[text]
+        img = img * (1 - (sh * a)[..., None])
+        img = img * (1 - (m * a)[..., None]) + GOLD * (m * a)[..., None]
+    return img
 
 
 # ------------------------------------------------------------------ frame
@@ -293,6 +314,7 @@ def frame(f):
     if t > T.BLACK - 0.25:
         k = min(k, 1 - smooth((t - (T.BLACK - 0.25)) / 0.3))
     img = img * k + 0.006 * (1 - k)
+    img = caption(img, t)
     # counter
     c0, c1 = T.COUNTER
     if c0 - 0.3 < t < c1 + 1.0:
@@ -308,7 +330,8 @@ def frame(f):
         lays, _ = measure_layer(t, f)
         if lays:
             out = 1 - smooth((t - (T.SUMMIT_CUT - 0.45)) / 0.4)
-            img = over(img, lays[1], 0.5 * out)
+            sh = cv2.GaussianBlur(np.asarray(lays[0], np.float32)[..., 3] / 255, (0, 0), 5) * 0.6
+            img = img * (1 - (sh * out)[..., None])
             img = over(img, lays[0], out)
     return img
 
