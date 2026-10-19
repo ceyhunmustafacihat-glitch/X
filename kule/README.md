@@ -1,15 +1,15 @@
 # Bir Kelimeden Gökdelene
 
-Instagram Reels için 9:16, 42 saniyelik, Türkçe seslendirmeli sinematik kısa film.
+Instagram Reels için 9:16, 42 saniyelik sinematik kısa film. Videoda anlatıcı yok: ses yalnızca müzik ve efektlerden oluşuyor, hikâyeyi ekran yazıları taşıyor.
 Bir sözlüğün metnindeki **1.756.396 sözcük**, her biri 0,1 mm kalınlığındaki ayrı kâğıtlara yazılıp üst üste konursa
 **175,64 m** yükseklikte, yani yaklaşık **59 katlı** bir gökdelen boyunda bir kule oluşur.
 
 | Dosya | İçerik |
 |---|---|
-| `output/sozlukdeus_bir_kelimeden_gokdelene.mp4` | Nihai video. 1080 × 1920, 24 fps, 42 sn, H.264 High (~16 Mb/s, 84 MB), AAC 320 kb/s, −14 LUFS, gerçek tepe −1 dBFS, açılıp kapatılabilen Türkçe altyazı izi |
-| `output/seslendirme.wav` | Yalnızca anlatım, video zaman çizelgesine hizalı (48 kHz, 24 bit) |
+| `output/sozlukdeus_bir_kelimeden_gokdelene.mp4` | Nihai video. 1080 × 1920, 24 fps, 42 sn, H.264 High (~16 Mb/s, 84 MB), AAC 320 kb/s, −14 LUFS. Ses yalnızca müzik ve efektler |
+| `output/seslendirme.wav` | Hazırlanan Türkçe anlatım (videoda kullanılmıyor). Geri eklemek için `config.py` içinde `NARRATION_IN_MIX = True` yapın, `score.py` ve `post/compose.py` dosyalarını yeniden çalıştırın |
 | `output/muzik.wav`, `output/efektler.wav` | Müzik ve ses efekti stem'leri |
-| `output/altyazi_tr.srt` | Anlatımın altyazısı (SRT) |
+| `output/altyazi_tr.srt` | Anlatımın metni (SRT, anlatım kullanılırsa) |
 | `docs/kesitler.jpg`, `docs/kesitler/` | Videodan 12 kesit |
 
 ## Nasıl üretildi (gerçekten kullanılan araçlar)
@@ -19,7 +19,7 @@ Bu ortamda GPU ya da metinden video veya müzik üreten bir yapay zekâ servisi 
 - **Görüntü:** Blender 5.2 (Python `bpy` modülü), Cycles yol izleme (CPU). Fiziksel ışık, hacimsel ay ışığı huzmeleri, gerçek alan derinliği (diyafram, odak mesafesi), 180° obtüratörle hareket bulanıklığı ve OpenImageDenoise kullanıldı. Bütün sahneler `kule/blender/` içinde prosedürel olarak kuruluyor. Kâğıt bükülmesi, sayfa çevirme ve kapak açılması her alt-karede hesaplanıyor, bu yüzden hareket bulanıklığı da doğru.
 - **Yazılar:** Görüntüdeki bütün okunabilir metinler (sözlük sayfaları, kâğıtlardaki kelimeler, cilt yaldızı, sayaç, ölçü yazıları, logo) gerçek fontlarla (EB Garamond, Cormorant Garamond, Montserrat, OFL lisanslı) ve doğru Türkçe karakterlerle dizildi. Hiçbiri yapay zekâ tarafından "çizilmedi". Sözlük maddeleri bu film için yazıldı ve Türk alfabesi sırasına göre dizildi.
 - **Seslendirme:** Yerel sinirsel TTS, Piper `tr_TR-fahrettin-medium` (erkek ses, sherpa-onnx ile). Model her seferinde biraz farklı okuduğu için her öbekten 14'e kadar deneme üretildi. Whisper ile geri okunup amaçlanan metne en yakın olan deneme seçildi. Cümleler öbek öbek sentezlendi, duraklamalar elle yerleştirildi, sayılar yazıyla verildi. Ses perdesi formantlar korunarak 1,3 yarım ton kalınlaştırıldı, ardından EQ ve kompresyon uygulandı. Bütün öbekler Whisper'da amaçlanan metinle %97–100 örtüşüyor.
-- **Müzik ve efektler:** `kule/score.py` her şeyi sıfırdan sentezliyor: piyano, yaylılar, alçak yaylı ostinato, bakır ve koro, davullar, rüzgâr, kâğıt foley'si (hışırtı, sayfa, kapak gıcırtısı, kâğıt konması) ve şehir ambiyansı. Örnek (sample) kullanılmadı, telif sorunu yok. Anlatım her zaman önde, müzik ve efektler onun altında yaklaşık −6 dB bastırılıyor (ducking).
+- **Müzik ve efektler:** `kule/score.py` her şeyi sıfırdan sentezliyor: piyano, yaylılar, alçak yaylı ostinato, bakır ve koro, davullar, rüzgâr, kâğıt foley'si (hışırtı, sayfa, kapak gıcırtısı, kâğıt konması) ve şehir ambiyansı. Örnek (sample) kullanılmadı, telif sorunu yok. Anlatım açılırsa, müzik ve efektler onun altında yaklaşık −6 dB bastırılır (ducking).
 - **Ekran yazıları:** Sade ve kurumsal: tek yazı tipi (Montserrat), düz beyaz renk, okunurluk için yalnızca hafif gölge. Hesap ekranda adım adım okunur, böylece videoyu sessiz izleyen de anlar: **1.756.396 SÖZCÜK → 1 SÖZCÜK = 1 KÂĞIT → HER KÂĞIT 0,1 MM → 176 METRE / YAKLAŞIK 59 KAT**.
 - **Kurgu ve renk:** `kule/post/compose.py` kareleri lineer EXR'dan okuyor. Pozlama, bloom, ACES ton eşleme, siyah-antrasit-kırık beyaz palet, toz zerreleri, vinyet ve film greni ekliyor. Ardından tipografiyi bindiriyor ve ffmpeg ile kodluyor.
 
@@ -41,7 +41,7 @@ Bu ortamda GPU ya da metinden video veya müzik üreten bir yapay zekâ servisi 
 - **Kulenin tabanı:** Yükseklik birebir doğru (1.756.396 × 0,1 mm = 175,64 m). Kütüphanedeki yığın gerçek A4 boyutunda. Şehirdeki kulenin tabanı ise A4'ün 20 katı (4,2 × 5,9 m) olarak büyütüldü. Gerçek A4 genişliğinde bir sütun, iki yapının birlikte göründüğü mesafeden birkaç pikselden ince kalırdı. Brifte de belirtildiği gibi bu görsel bir düşünce deneyi.
 - **Kat yüksekliği:** 59 kat × 2,98 m = 176 m. Gökdelen bu ölçüyle modellendi.
 - **Çözünürlük:** Sahneler 648 × 1152'de path-trace edilip 1080 × 1920'ye Lanczos ile büyütüldü. GPU'suz, 4 çekirdekli bu ortamda kütüphane sahnesi kare başına yaklaşık 30 sn, şehir sahnesi yaklaşık 17 sn sürdü. Toplam render yaklaşık 7,5 saat. 2160 × 3840 ana render bu donanımda pratik değildi. Daha güçlü bir makinede `--scale` değeri artırılarak (1.0 = 1080p, 2.0 = 4K) aynı proje doğrudan yüksek çözünürlükte render edilebilir.
-- **Bilinen küçük kusurlar:** Kütüphanedeki yığın 23. saniye civarında alttan bakışla kısa ve kalın görünüyor. Şehirdeki kule uzaktan kâğıt katmanlarını göstermiyor, düz açık renkli bir sütun gibi duruyor. Birinci cildin kapağı ay ışığında açık renk görünüyor (koyu kumaş ve altın yaldız amaçlanmıştı). Whisper son miksteki "gökdelen"i bir yerde "gök denen" diye yazıyor, kulakla dinleyip kontrol etmek iyi olur.
+- **Bilinen küçük kusurlar:** Kütüphanedeki yığın 23. saniye civarında alttan bakışla kısa ve kalın görünüyor. Şehirdeki kule uzaktan kâğıt katmanlarını göstermiyor, düz açık renkli bir sütun gibi duruyor. Birinci cildin kapağı ay ışığında açık renk görünüyor (koyu kumaş ve altın yaldız amaçlanmıştı).
 - **Ses:** Anlatım yerel bir TTS modeliyle üretildi. Doğal ve anlaşılır, ancak profesyonel bir seslendirme sanatçısının nüansını taşımıyor. Yayından önce dinlenmesi önerilir. `output/seslendirme.wav` gerçek bir sesle kolayca değiştirilebilir (zaman çizelgesi `kule/config.py` içinde).
 - **Rakam:** 1.756.396, TDK *Türkçe Sözlük* 12. baskısının (2023) metnindeki toplam sözcük sayısıdır, farklı madde sayısı değildir. Sözlükte 82.135 madde başı vardır. Video bu ayrımı korur ve sayacın altında "SÖZCÜK" yazar.
 

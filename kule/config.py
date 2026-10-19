@@ -13,6 +13,10 @@ OUT = os.path.join(ROOT, "output")
 # No brand lettering or spoken brand name: the film carries only the story.
 
 FPS = 24
+
+# The narration is synthesised and kept as a stem, but the final film carries only
+# music and effects; the story is told by the on-screen text.
+NARRATION_IN_MIX = False
 DURATION = 42.0
 W, H = 1080, 1920
 

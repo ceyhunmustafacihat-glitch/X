@@ -541,12 +541,15 @@ def main():
     assert vsr == SR
     voice = voice[:n]
     voice = np.pad(voice, (0, n - len(voice)))
-    ve = voice_env(voice)
-    duck = 1 - 0.5 * ve                                  # about -6 dB under the narration
-    duck_fx = 1 - 0.45 * ve
     mus_n = mus / (np.abs(mus).max() + 1e-9)
     fx_n = fx / (np.abs(fx).max() + 1e-9)
-    mix = np.vstack([voice, voice]) * 1.0 + mus_n * 0.42 * duck + fx_n * 0.3 * duck_fx
+    if config.NARRATION_IN_MIX:
+        ve = voice_env(voice)
+        duck = 1 - 0.5 * ve                              # about -6 dB under the narration
+        duck_fx = 1 - 0.45 * ve
+        mix = np.vstack([voice, voice]) * 1.0 + mus_n * 0.42 * duck + fx_n * 0.3 * duck_fx
+    else:
+        mix = mus_n * 0.62 + fx_n * 0.38
     # soft-knee peak safety
     pk = np.abs(mix).max()
     mix = np.tanh(mix / pk * 1.1) / np.tanh(1.1) * 0.95

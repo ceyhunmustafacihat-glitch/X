@@ -370,13 +370,15 @@ def main():
     audio = os.path.join(config.BUILD, "audio", "mix_master.wav")
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", os.path.join(config.BUILD, "audio", "mix_premaster.wav"),
                     "-af", "loudnorm=I=-14:TP=-1.0:LRA=11", "-ar", "48000", "-c:a", "pcm_s24le", audio], check=True)
+    subs = ["-i", sub] if config.NARRATION_IN_MIX else []
+    smap = ["-map", "2:s", "-c:s", "mov_text", "-metadata:s:s:0", "language=tur"] if config.NARRATION_IN_MIX else []
     cmd = ["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}", "-r", str(FPS), "-i", "-",
-           "-i", audio, "-i", sub,
-           "-map", "0:v", "-map", "1:a", "-map", "2:s",
-           "-c:v", "libx264", "-preset", "slow", "-crf", "15", "-tune", "film", "-profile:v", "high", "-level", "4.2",
+           "-i", audio, *subs,
+           "-map", "0:v", "-map", "1:a", *smap,
+           "-c:v", "libx264", "-preset", "slower", "-tune", "film", "-profile:v", "high", "-level", "4.2",
            "-pix_fmt", "yuv420p", "-color_primaries", "bt709", "-color_trc", "bt709", "-colorspace", "bt709",
-           "-maxrate", "40M", "-bufsize", "60M", "-g", "48",
-           "-c:a", "aac", "-b:a", "320k", "-c:s", "mov_text", "-metadata:s:s:0", "language=tur",
+           "-crf", "18", "-maxrate", "16M", "-bufsize", "32M", "-g", "48",
+           "-c:a", "aac", "-b:a", "320k",
            "-metadata:s:a:0", "language=tur", "-movflags", "+faststart", "-shortest", a.out]
     p = subprocess.Popen(cmd, stdin=subprocess.PIPE)
     for f in range(NF):
