@@ -1,0 +1,23 @@
+1
+00:00:01,550 --> 00:00:04,139
+Bir sözlük... ne kadar yükselebilir?
+
+2
+00:00:05,200 --> 00:00:13,163
+Türk Dil Kurumunun 2023 yılında yayımladığı Türkçe Sözlük'ün metninde, tam 1.756.396 sözcük bulunuyor.
+
+3
+00:00:13,500 --> 00:00:18,132
+Şimdi hayal edin. Her sözcüğü, ayrı bir kâğıda yazdığımızı düşünün.
+
+4
+00:00:20,000 --> 00:00:25,278
+Her biri yalnızca onda bir milimetre kalınlığında olan bu kâğıtları üst üste koyduğumuzda...
+
+5
+00:00:29,150 --> 00:00:34,563
+Yaklaşık 176 metreye ulaşırız. Yani, 59 katlı bir gökdelen kadar!
+
+6
+00:00:37,200 --> 00:00:42,023
+Bir dil... sandığınızdan çok daha büyük. Her kelimede yeni bir dünya.
