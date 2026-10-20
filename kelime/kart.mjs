@@ -92,5 +92,12 @@ fs.writeFileSync(path.join(outDir, `${slug}.svg`), svg);
 await page.setContent(`<body style="margin:0">${svg}</body>`);
 await page.evaluate(() => document.fonts.ready);
 await page.locator('svg').first().screenshot({ path: path.join(outDir, `${slug}.png`) });
+// Canva için: PDF içe aktarılınca yazılar düzenlenebilir kalır; arka plan ayrıca yazısız PNG.
+// SVG filtresi yazıyı resme çevirdiği için PDF'de gölge yok (Canva'da Efektler → Gölge ile eklenir)
+await page.addStyleTag({ content: '@page{size:1080px 1440px;margin:0} svg{display:block}' });
+await page.evaluate(() => document.getElementById('yazi').removeAttribute('filter'));
+await page.pdf({ path: path.join(outDir, `${slug}.pdf`), width: `${W}px`, height: `${H}px`, printBackground: true });
+await page.evaluate(() => document.getElementById('yazi').remove());
+await page.locator('svg').first().screenshot({ path: path.join(outDir, `${slug}-arkaplan.png`) });
 await browser.close();
-console.log(`output/kelime/${slug}.svg, output/kelime/${slug}.png`);
+console.log(`output/kelime/${slug}.{svg,png,pdf} + ${slug}-arkaplan.png`);
