@@ -34,9 +34,9 @@ export function mountains(W, pts, base) {
       return `<path d="M${f(p.x)} ${f(p.y)}L${f(r.x)} ${f(r.y)}L${f(foot.x)} ${f(foot.y)}Z" fill="${color}" opacity="${op}"/>`;
     }).join(''),
     // yüksek zirvelere tırtıklı kar başlığı
-    snow: (color, op) => {
+    snow: (color, op, range = 60) => {
       const top = Math.min(...peaks.map((o) => o.p.y));
-      return peaks.filter((o) => o.p.y < top + 60).map(({ p, l, r }) => {
+      return peaks.filter((o) => o.p.y < top + range).map(({ p, l, r }) => {
         const a = lerp(p, l, 0.24), b = lerp(p, r, 0.2);
         const m1 = lerp(a, b, 0.33), m2 = lerp(a, b, 0.66);
         return `<path d="M${f(p.x)} ${f(p.y)}L${f(b.x)} ${f(b.y)}L${f(m2.x)} ${f(m2.y - 10)}L${f(m1.x + 6)} ${f(m1.y + 8)}L${f(a.x)} ${f(a.y)}Z" fill="${color}" opacity="${op}"/>`;
