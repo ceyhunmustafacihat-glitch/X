@@ -22,23 +22,24 @@ const fontCss = ['normal', 'italic'].flatMap((style) => [['latin-ext', latinExt]
 const browser = await chromium.launch();
 const page = await browser.newPage({ viewport: { width: W, height: H } });
 await page.setContent(`<style>${fontCss}</style><body style="margin:0"></body>`);
-await page.evaluate(() => Promise.all(['800 70px Montserrat', '700 32px Montserrat', '400 32px Montserrat', 'italic 400 25px Montserrat']
+await page.evaluate(() => Promise.all(['800 70px Montserrat', '700 32px Montserrat', '500 32px Montserrat', 'italic 500 25px Montserrat']
   .map((f) => document.fonts.load(f, 'Şğİıöçü'))));
 
 const textLayer = await page.evaluate(({ W, H, kelime, tanim, ornek }) => {
   const g = document.createElement('canvas').getContext('2d');
   const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  const font = (px, b) => `${b ? 700 : 400} ${px}px Montserrat`;
+  const font = (px, b) => `${b ? 700 : 500} ${px}px Montserrat`;
 
   // kalın/normal parçaları kelime kelime satırlara böl
   function wrap(runs, px, maxW) {
     const words = runs.flatMap((r) => r.t.split(' ').filter(Boolean).map((t) => ({ t, b: !!r.b })));
     g.font = font(px); const sp = g.measureText(' ').width;
     const lines = [[]]; let w = 0;
+    lines.widths = [0];
     for (const wd of words) {
       g.font = font(px, wd.b); const ww = g.measureText(wd.t).width;
-      if (lines.at(-1).length && w + sp + ww > maxW) { lines.push([]); w = 0; }
-      w += (lines.at(-1).length ? sp : 0) + ww; lines.at(-1).push(wd);
+      if (lines.at(-1).length && w + sp + ww > maxW) { lines.push([]); lines.widths.push(0); w = 0; }
+      w += (lines.at(-1).length ? sp : 0) + ww; lines.at(-1).push(wd); lines.widths[lines.length - 1] = w;
     }
     return lines;
   }
@@ -48,40 +49,53 @@ const textLayer = await page.evaluate(({ W, H, kelime, tanim, ornek }) => {
       const t = (i ? ' ' : '') + wd.t;
       if (runs.length && runs.at(-1).b === wd.b) runs.at(-1).t += t; else runs.push({ t, b: wd.b });
     });
-    return runs.map((r) => `<tspan font-weight="${r.b ? 700 : 400}">${esc(r.t)}</tspan>`).join('');
+    return runs.map((r) => `<tspan font-weight="${r.b ? 700 : 500}">${esc(r.t)}</tspan>`).join('');
   };
 
-  const out = [];
+  const out = [], halo = [];
+  // yazı bloklarının arkasına yumuşak, kenarsız koyu hale
+  const addHalo = (x, y, rx, ry, op) => halo.push(`<ellipse cx="${Math.round(x)}" cy="${Math.round(y)}" rx="${Math.round(rx)}" ry="${Math.round(ry)}" fill="url(#hale)" opacity="${op}"/>`);
   const cx = W / 2;
   const wy = Math.round(H * 0.297 + 26);
   out.push(`<text x="${cx}" y="${wy}" text-anchor="middle" font-size="70" font-weight="800" letter-spacing="-0.6">“${esc(kelime)}”</text>`);
-  out.push(`<text x="${cx}" y="${wy + 40}" text-anchor="middle" font-size="25" font-style="italic" fill-opacity="0.85">Sözlük</text>`);
+  out.push(`<text x="${cx}" y="${wy + 40}" text-anchor="middle" font-size="25" font-style="italic" font-weight="500" fill-opacity="0.9">Sözlük</text>`);
+  addHalo(cx, wy - 6, 300, 120, 0.75);
 
   const dl = wrap(tanim, 32, W * 0.76), dLH = 44;
   const dy0 = Math.round(H * 0.448 - (dl.length - 1) * dLH / 2);
   out.push(`<rect x="${Math.round(W * 0.103)}" y="${dy0 - 52}" width="3" height="${(dl.length - 1) * dLH + 82}" fill-opacity="0.9"/>`);
   dl.forEach((ln, i) => out.push(`<text x="${Math.round(W * 0.135)}" y="${dy0 + i * dLH}" font-size="32">${tspans(ln)}</text>`));
+  const dW = Math.max(...dl.widths);
+  addHalo(W * 0.135 + dW / 2, dy0 - 12 + (dl.length - 1) * dLH / 2, dW / 2 + 170, dl.length * dLH / 2 + 80, 0.8);
 
   const el = wrap(ornek, 35, W * 0.76), eLH = 47;
   const ey0 = Math.round(H * 0.66 - (el.length - 1) * eLH / 2);
   el.forEach((ln, i) => out.push(`<text x="${cx}" y="${ey0 + i * eLH}" text-anchor="middle" font-size="35">${tspans(ln)}</text>`));
+  const eW = Math.max(...el.widths);
+  addHalo(cx, ey0 - 12 + (el.length - 1) * eLH / 2, eW / 2 + 170, el.length * eLH / 2 + 85, 0.85);
 
   // sayfanın işareti: açık kitap
   const s = 68 / 24;
   out.push(`<g transform="translate(${cx - 34} ${Math.round(H * 0.935) - 34}) scale(${s.toFixed(4)})" fill="none" stroke="#fff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
   <path d="M12 6.5C9.5 4.8 6 4.3 2.5 5.2V18.6C6 17.8 9.5 18.3 12 20"/><path d="M12 6.5C14.5 4.8 18 4.3 21.5 5.2V18.6C18 17.8 14.5 18.3 12 20"/><path d="M12 6.5V20"/></g>`);
-  return out.join('\n');
+  return { text: out.join('\n'), halo: halo.join('\n') };
 }, { W, H, kelime: word.kelime, tanim: word.tanim, ornek: word.ornek });
 
 const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
 <title>${word.kelime} — sözlükdeus</title>
 <style>${fontCss}</style>
-<defs><filter id="golge" x="-10%" y="-30%" width="120%" height="160%"><feDropShadow dx="0" dy="2" stdDeviation="5" flood-color="#000" flood-opacity="0.55"/></filter></defs>
+<defs>
+<filter id="golge" x="-10%" y="-30%" width="120%" height="160%"><feDropShadow dx="0" dy="1" stdDeviation="1.5" flood-color="#000" flood-opacity="0.7"/><feDropShadow dx="0" dy="3" stdDeviation="9" flood-color="#000" flood-opacity="0.55"/></filter>
+<radialGradient id="hale"><stop offset="0" stop-color="#000" stop-opacity="0.55"/><stop offset="0.55" stop-color="#000" stop-opacity="0.32"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+</defs>
 <g id="arka-plan">
 ${word.sahne(W, H)}
 </g>
+<g id="okunurluk">
+${textLayer.halo}
+</g>
 <g id="yazi" font-family="Montserrat, sans-serif" fill="#fff" filter="url(#golge)" xml:space="preserve">
-${textLayer}
+${textLayer.text}
 </g>
 </svg>
 `;
