@@ -33,13 +33,22 @@ const textLayer = await page.evaluate(({ W, H, kelime, tanim, ornek }) => {
   const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   const font = (px, b) => `${b ? 700 : 400} ${px}px Montserrat`;
 
-  // kalın/normal parçaları kelime kelime satırlara böl
+  // kalın/normal parçaları kelime kelime satırlara böl; aralarında boşluk olmayan
+  // parçalar ("giysi" + ".") tek kelime sayılır
   function wrap(runs, px, maxW) {
-    const words = runs.flatMap((r) => r.t.split(' ').filter(Boolean).map((t) => ({ t, b: !!r.b })));
+    const words = []; let cur = null;
+    for (const r of runs) {
+      r.t.split(' ').forEach((seg, j) => {
+        if (j > 0) cur = null;
+        if (!seg) return;
+        if (!cur) words.push(cur = []);
+        cur.push({ t: seg, b: !!r.b });
+      });
+    }
     g.font = font(px); const sp = g.measureText(' ').width;
     const lines = [[]]; let w = 0;
     for (const wd of words) {
-      g.font = font(px, wd.b); const ww = g.measureText(wd.t).width;
+      const ww = wd.reduce((s, p) => { g.font = font(px, p.b); return s + g.measureText(p.t).width; }, 0);
       if (lines.at(-1).length && w + sp + ww > maxW) { lines.push([]); w = 0; }
       w += (lines.at(-1).length ? sp : 0) + ww; lines.at(-1).push(wd);
     }
@@ -47,10 +56,10 @@ const textLayer = await page.evaluate(({ W, H, kelime, tanim, ornek }) => {
   }
   const tspans = (line) => {
     const runs = [];
-    line.forEach((wd, i) => {
-      const t = (i ? ' ' : '') + wd.t;
-      if (runs.length && runs.at(-1).b === wd.b) runs.at(-1).t += t; else runs.push({ t, b: wd.b });
-    });
+    line.forEach((wd, i) => wd.forEach((p, k) => {
+      const t = (i && !k ? ' ' : '') + p.t;
+      if (runs.length && runs.at(-1).b === p.b) runs.at(-1).t += t; else runs.push({ t, b: p.b });
+    }));
     return runs.map((r) => `<tspan font-weight="${r.b ? 700 : 400}">${esc(r.t)}</tspan>`).join('');
   };
 
