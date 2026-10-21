@@ -14,6 +14,7 @@ const logo = (bg) => {
   const size = S * 0.46, s = size / 24, x = (S - size) / 2, y = S / 2 - s * 12.15; // çizimin dikey ortası 12.15
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${S}" height="${S}" viewBox="0 0 ${S} ${S}">
 <rect width="${S}" height="${S}" fill="${bg}"/>
+<circle cx="${S / 2}" cy="${S / 2}" r="${S * 0.36}" fill="none" stroke="#ffffff" stroke-width="${(S * 0.009).toFixed(1)}"/>
 <g transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) scale(${s.toFixed(4)})" fill="none" stroke="#ffffff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
 <path d="M12 6.5C9.5 4.8 6 4.3 2.5 5.2V18.6C6 17.8 9.5 18.3 12 20"/><path d="M12 6.5C14.5 4.8 18 4.3 21.5 5.2V18.6C18 17.8 14.5 18.3 12 20"/><path d="M12 6.5V20"/>
 </g>
