@@ -1,6 +1,7 @@
 // Instagram profil logoları: ince yuvarlak çerçeve içinde çizgi işaret, tek renk zemin.
 //   node kelime/logo/logo.mjs            ->  output/logo/logo-<renk>.svg + .png (sözlükdeus, kitap)
 //   node kelime/logo/logo.mjs sinema     ->  output/logo/sinema/sinema-<renk>.svg + .png (klaket)
+//   node kelime/logo/logo.mjs kitap      ->  output/logo/kitap/kitap-<renk>.svg + .png (kitaplık)
 import { chromium } from 'playwright';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -22,6 +23,15 @@ const ISARETLER = {
     cizim: '<path d="M3.5 10.5H20.5V19A1 1 0 0 1 19.5 20H4.5A1 1 0 0 1 3.5 19Z"/><path d="M3.5 13.5H20.5"/>' +
       '<path d="M6.5 13.5L8 10.5M10.5 13.5L12 10.5M14.5 13.5L16 10.5M18.5 13.5L20 10.5"/>' +
       '<path d="M3.5 10.5L20 6.4L19.3 3.5L2.8 7.6Z"/><path d="M7.6 9.3L8.9 5.9M11.8 8.3L13.1 4.9M16 7.3L17.3 3.9"/>',
+  },
+  // kitaplık: rafta iki dik kitap ve onlara yaslanmış üçüncüsü
+  kitap: {
+    dosya: 'kitap', klasor: 'kitap', cy: 12.25,
+    renkler: { siyah: '#0f0d0b', yesil: '#13261d', kahve: '#2a1d14' },
+    cizim: '<path d="M2.5 20H21.5"/>' +
+      '<rect x="4.3" y="7" width="3.8" height="13" rx="0.5"/><path d="M4.3 9.3H8.1M4.3 16.8H8.1"/>' +
+      '<rect x="8.6" y="4.5" width="4" height="15.5" rx="0.5"/><path d="M8.6 7H12.6M8.6 16.8H12.6"/>' +
+      '<path d="M16.8 20L12.7 8.72L15.9 7.56L20 18.84Z"/><path d="M13.49 10.88L16.69 9.72M15.71 16.99L18.91 15.83"/>',
   },
 };
 
