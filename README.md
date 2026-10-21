@@ -78,3 +78,39 @@ node render/render.mjs --encode-only 1   # yalnızca sesi ya da kodlamayı deği
 - Logo, şiar ve kullanıcı adı ekranın orta bölümünde. Reels arayüzünün kapladığı alt %20'lik kısma önemli içerik yerleştirilmedi.
 - İlk 0,7 saniye siyahtan açılıyor. Kapak olarak 10. saniyedeki paylaşım karesini seçebilirsiniz.
 - Müzik tamamen bu proje için sentezlendi; telif sorunu yoktur.
+
+---
+
+# William Golding — bilgilendirici dikey video
+
+**Video:** [`output/william_golding.mp4`](output/william_golding.mp4)
+9:16 dikey (1080 × 1920), 30 fps, yaklaşık 2 dk 51 sn. Seslendirme yok, yalnızca hafif enstrümantal bir fon müziği var. Filigran ya da logo yok.
+
+Düz renkli, illüstratör tarzı çizimlerin hepsi koddan üretildi. Hazır görsel kullanılmadı.
+
+| Zaman | Bölüm | İçerik |
+|---|---|---|
+| 0:00 | Açılış | Adada gün batımı, deniz kabuğu, gözlük ve sinek. “William Golding, 1911–1993” |
+| 0:07 | Doğum ve aile | İngiltere haritası: Newquay (19 Eylül 1911), ardından Marlborough. Baba Alec, anne Mildred, ağabey José |
+| 0:34 | Çocukluk ve gençlik | Mezarlığın yanındaki ev ve mahzen korkusu, kavgalar, 8 yaşında ödül kitabı, 1921'de Marlborough Grammar School |
+| 1:04 | Oxford yılları | Doğa Bilimlerinden İngiliz Dili ve Edebiyatına geçiş, Dora olayı, Mollie Evans ve Ann Brookfield |
+| 1:35 | Öğretmenlik yılları | Öğrencileri gözlemlemesi, okul gezisinde savunan ve saldıran iki grup |
+| 1:47 | II. Dünya Savaşı | Kraliyet Donanması (er, subaylık, teğmen), Bismarck operasyonu, iyimserliğin sönmesi |
+| 2:13 | Savaş sonrası | “Strangers from Within”, retler, Faber & Faber, Charles Monteith, “Lord of the Flies” |
+| 2:43 | Kapanış | 19 Eylül 1911 – 19 Haziran 1993, Newquay → Perranarworthal |
+
+```
+golding/
+  index.html   önizleme oynatıcısı
+  core.js      zamanlama, renk paleti, altyazı kartları, bölüm başlıkları
+  art.js       karakterler, nesneler, mekânlar, İngiltere haritası
+  scenes.js    sahneler ve metinler
+  main.js      sahne geçişleri, kâğıt dokusu, vinyet
+  music.py     fon müziğinin sentezi (output/william_golding_music.wav)
+  render.mjs   kare kare render ve MP4 kodlama
+```
+
+```bash
+python3 golding/music.py
+node golding/render.mjs
+```

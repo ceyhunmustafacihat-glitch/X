@@ -3,3 +3,5 @@ node_modules/
 /render/tmp/
 *.pyc
 __pycache__/
+/render/frames_golding/
+/output/william_golding_music.wav
