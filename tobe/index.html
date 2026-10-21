@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>To Be: İngilizce Ders</title>
+<link rel="stylesheet" href="../animation/fonts/fonts.css">
+<style>
+  html, body { margin: 0; background: #1f1d24; color: #f3e9d8; font-family: Inter, sans-serif; }
+  #stage { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 16px; }
+  canvas { display: block; background: #FBF5EA; }
+  body:not(.render) canvas { width: min(96vw, 1280px); height: auto; aspect-ratio: 16 / 9; }
+  body.render #stage { padding: 0; }
+  body.render #ui { display: none; }
+  #ui { display: flex; gap: 10px; align-items: center; width: min(96vw, 1280px); }
+  #ui button { background: #2b2933; color: #f3e9d8; border: 1px solid #4a4656; border-radius: 6px; padding: 6px 14px; font: inherit; cursor: pointer; }
+  #ui input { flex: 1; accent-color: #F28C28; }
+  #time { font-variant-numeric: tabular-nums; min-width: 4.5em; text-align: right; font-size: 13px; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <canvas id="c" width="1920" height="1080"></canvas>
+  <div id="ui">
+    <button id="play">▶︎ Oynat</button>
+    <input id="scrub" type="range" min="0" max="1" step="0.0333" value="0">
+    <span id="time">0.00 s</span>
+  </div>
+  <audio id="audio" src="../output/to_be_soundtrack.wav" preload="auto"></audio>
+</div>
+<script src="engine.js"></script>
+<script src="scenes.js"></script>
+<script>
+(async function () {
+  const params = new URLSearchParams(location.search);
+  const canvas = document.getElementById('c');
+  const fams = ['500 40px Inter', '400 40px Montserrat', '500 40px Montserrat', '600 40px Montserrat', '700 40px Montserrat',
+    '800 40px Montserrat', '900 40px Montserrat', 'italic 500 40px Montserrat', '600 40px Caveat'];
+  await Promise.all(fams.map(f => document.fonts.load(f, 'Türkçe İngilizce ğüşıöç ĞÜŞİÖÇ')));
+  await document.fonts.ready;
+  init(canvas);
+  window.renderAt = t => { renderFrame(t); return true; };
+  window.lesson = () => ({ duration: TOTAL, sfx: sfxList(), scenes: SCENES.map(s => [s.title, s.start, s.dur]) });
+  window.animReady = true;
+  if (params.has('render')) { document.body.classList.add('render'); return; }
+  if (params.has('t')) { renderFrame(parseFloat(params.get('t'))); return; }
+
+  const audio = document.getElementById('audio');
+  const scrub = document.getElementById('scrub'), timeEl = document.getElementById('time'), btn = document.getElementById('play');
+  scrub.max = TOTAL;
+  let playing = false, t0 = 0, start = 0;
+  const show = t => { renderFrame(t); scrub.value = t; timeEl.textContent = t.toFixed(2) + ' s'; };
+  function loop(now) {
+    if (!playing) return;
+    let t = audio.readyState >= 2 && !audio.paused ? audio.currentTime : t0 + (now - start) / 1000;
+    if (t >= TOTAL) { playing = false; btn.textContent = '▶︎ Oynat'; t = TOTAL - 0.001; }
+    show(t);
+    if (playing) requestAnimationFrame(loop);
+  }
+  btn.onclick = () => {
+    playing = !playing;
+    btn.textContent = playing ? '❚❚ Durdur' : '▶︎ Oynat';
+    if (playing) {
+      t0 = parseFloat(scrub.value); if (t0 >= TOTAL - 0.05) t0 = 0;
+      start = performance.now();
+      audio.currentTime = t0; audio.play().catch(() => {});
+      requestAnimationFrame(loop);
+    } else audio.pause();
+  };
+  scrub.oninput = () => { playing = false; audio.pause(); btn.textContent = '▶︎ Oynat'; show(parseFloat(scrub.value)); };
+  show(4);
+})();
+</script>
+</body>
+</html>
