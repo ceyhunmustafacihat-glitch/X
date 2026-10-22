@@ -2,6 +2,7 @@
 //   node kelime/logo/logo.mjs            ->  output/logo/logo-<renk>.svg + .png (sözlükdeus, kitap)
 //   node kelime/logo/logo.mjs sinema     ->  output/logo/sinema/sinema-<renk>.svg + .png (klaket)
 //   node kelime/logo/logo.mjs kitap      ->  output/logo/kitap/kitap-<renk>.svg + .png (kitaplık)
+//   node kelime/logo/logo.mjs satranc    ->  output/logo/satranc/satranc-<renk>.svg + .png (at)
 import { chromium } from 'playwright';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -32,6 +33,17 @@ const ISARETLER = {
       '<rect x="4.3" y="7" width="3.8" height="13" rx="0.5"/><path d="M4.3 9.3H8.1M4.3 16.8H8.1"/>' +
       '<rect x="8.6" y="4.5" width="4" height="15.5" rx="0.5"/><path d="M8.6 7H12.6M8.6 16.8H12.6"/>' +
       '<path d="M16.8 20L12.7 8.72L15.9 7.56L20 18.84Z"/><path d="M13.49 10.88L16.69 9.72M15.71 16.99L18.91 15.83"/>',
+  },
+  // satranç atı: kaide, sola bakan baş, kulak, yele çizgisi ve göz
+  satranc: {
+    dosya: 'satranc', klasor: 'satranc', cy: 11.65,
+    renkler: { siyah: '#0f0d0b', yesil: '#1b3123', kahve: '#2e2016' },
+    cizim: '<g transform="translate(1.2 0)">' +
+      '<rect x="6.3" y="17.8" width="11.4" height="2.7" rx="0.6"/>' +
+      '<path d="M16.2 17.8C16.8 14 17.2 10.5 15.8 7.2C14.8 4.9 12.6 3.8 10.8 4L10.2 2.8L9.4 4.4C7.6 5.2 5.8 7.3 4.6 10.2L4.2 11.6' +
+      'C4.1 12.4 4.6 12.9 5.4 12.8L7.6 12.2C8.6 11.9 9.6 11.6 10.3 11.2C9.6 13.2 8.2 15.4 8 17.8Z"/>' +
+      '<path d="M13.4 6.4C14.6 8.6 14.8 11.2 14.3 13.8"/>' +
+      '<circle cx="9.2" cy="7.6" r="0.55" fill="#ffffff" stroke="none"/></g>',
   },
 };
 
