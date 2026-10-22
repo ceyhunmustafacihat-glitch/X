@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1080" viewBox="0 0 1080 1080">
+<rect width="1080" height="1080" fill="#1e1533"/>
+<circle cx="540" cy="540" r="388.8" fill="none" stroke="#ffffff" stroke-width="9.7"/>
+<g transform="translate(291.6 299.9) scale(20.7000)" fill="none" stroke="#ffffff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+<defs><mask id="halkaArka" maskUnits="userSpaceOnUse" x="-6" y="-6" width="36" height="36"><rect x="-6" y="-6" width="36" height="36" fill="#fff"/><circle cx="12" cy="12" r="6.1" fill="#000"/></mask><mask id="gezegenKes" maskUnits="userSpaceOnUse" x="-6" y="-6" width="36" height="36"><rect x="-6" y="-6" width="36" height="36" fill="#fff"/><path d="M21.5 12A9.5 3 0 0 1 2.5 12" stroke="#000" stroke-width="3.6" fill="none"/></mask></defs><g transform="rotate(-18 12 12)"><circle cx="12" cy="12" r="5.2" mask="url(#gezegenKes)"/><path d="M2.5 12A9.5 3 0 0 1 21.5 12" mask="url(#halkaArka)"/><path d="M21.5 12A9.5 3 0 0 1 2.5 12"/></g><path d="M19.6 1.8Q19.6 4 21.8 4Q19.6 4 19.6 6.2Q19.6 4 17.4 4Q19.6 4 19.6 1.8Z" fill="#ffffff" stroke-width="0.6"/><circle cx="4.2" cy="19.4" r="0.6" fill="#ffffff" stroke="none"/>
+</g>
+</svg>

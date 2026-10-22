@@ -4,6 +4,7 @@
 //   node kelime/logo/logo.mjs kitap      ->  output/logo/kitap/kitap-<renk>.svg + .png (kitaplık)
 //   node kelime/logo/logo.mjs satranc    ->  output/logo/satranc/satranc-<renk>.svg + .png (piyon)
 //   node kelime/logo/logo.mjs ingilizce  ->  output/logo/ingilizce/ingilizce-<renk>.svg + .png (bayrak)
+//   node kelime/logo/logo.mjs astronomi  ->  output/logo/astronomi/astronomi-<renk>.svg + .png (halkalı gezegen)
 import { chromium } from 'playwright';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -51,6 +52,18 @@ const ISARETLER = {
     cizim: '<rect x="1" y="6.5" width="22" height="11" rx="1"/>' +
       '<path d="M10.5 6.5V10.5H1M13.5 6.5V10.5H23M10.5 17.5V13.5H1M13.5 17.5V13.5H23"/>' +
       '<path d="M1.7 6.85L9 10.5M22.3 6.85L15 10.5M1.7 17.15L9 13.5M22.3 17.15L15 13.5"/>',
+  },
+  // astronomi: halkalı gezegen (halkanın arkası gezegenin ardında, önü üstünden geçer), ışıltı ve yıldız
+  astronomi: {
+    dosya: 'astronomi', klasor: 'astronomi', cy: 11.6,
+    renkler: { siyah: '#0f0d0b', lacivert: '#0f1630', mor: '#1e1533' },
+    cizim: '<defs>' +
+      '<mask id="halkaArka" maskUnits="userSpaceOnUse" x="-6" y="-6" width="36" height="36"><rect x="-6" y="-6" width="36" height="36" fill="#fff"/><circle cx="12" cy="12" r="6.1" fill="#000"/></mask>' +
+      '<mask id="gezegenKes" maskUnits="userSpaceOnUse" x="-6" y="-6" width="36" height="36"><rect x="-6" y="-6" width="36" height="36" fill="#fff"/><path d="M21.5 12A9.5 3 0 0 1 2.5 12" stroke="#000" stroke-width="3.6" fill="none"/></mask>' +
+      '</defs><g transform="rotate(-18 12 12)">' +
+      '<circle cx="12" cy="12" r="5.2" mask="url(#gezegenKes)"/>' +
+      '<path d="M2.5 12A9.5 3 0 0 1 21.5 12" mask="url(#halkaArka)"/><path d="M21.5 12A9.5 3 0 0 1 2.5 12"/></g>' +
+      '<path d="M19.6 1.8Q19.6 4 21.8 4Q19.6 4 19.6 6.2Q19.6 4 17.4 4Q19.6 4 19.6 1.8Z" fill="#ffffff" stroke-width="0.6"/><circle cx="4.2" cy="19.4" r="0.6" fill="#ffffff" stroke="none"/>',
   },
 };
 
