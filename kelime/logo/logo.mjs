@@ -3,6 +3,7 @@
 //   node kelime/logo/logo.mjs sinema     ->  output/logo/sinema/sinema-<renk>.svg + .png (klaket)
 //   node kelime/logo/logo.mjs kitap      ->  output/logo/kitap/kitap-<renk>.svg + .png (kitaplık)
 //   node kelime/logo/logo.mjs satranc    ->  output/logo/satranc/satranc-<renk>.svg + .png (piyon)
+//   node kelime/logo/logo.mjs ingilizce  ->  output/logo/ingilizce/ingilizce-<renk>.svg + .png (EN balonu)
 import { chromium } from 'playwright';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -42,6 +43,13 @@ const ISARETLER = {
       '<rect x="8.09" y="9.23" width="7.82" height="1.84" rx="0.92"/>' +
       '<path d="M9.93 11.07C9.7 13.83 8.78 16.36 6.94 18.66H17.06C15.22 16.36 14.3 13.83 14.07 11.07"/>' +
       '<rect x="5.45" y="18.66" width="13.1" height="3.1" rx="0.69"/>',
+  },
+  // İngilizce: kuyruklu konuşma balonu içinde çizgiyle "EN"
+  ingilizce: {
+    dosya: 'ingilizce', klasor: 'ingilizce', cy: 12.15,
+    renkler: { siyah: '#0f0d0b', lacivert: '#141c2b', bordo: '#3a1016' },
+    cizim: '<path d="M5.5 4.5H18.5A2.5 2.5 0 0 1 21 7V14A2.5 2.5 0 0 1 18.5 16.5H10L6.5 19.8V16.5H5.5A2.5 2.5 0 0 1 3 14V7A2.5 2.5 0 0 1 5.5 4.5Z"/>' +
+      '<path d="M10.4 8H7.2V13H10.4M7.2 10.5H9.8"/><path d="M12.6 13V8L16.8 13V8"/>',
   },
 };
 
