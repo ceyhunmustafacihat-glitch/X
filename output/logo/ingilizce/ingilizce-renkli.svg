@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1080" viewBox="0 0 1080 1080">
+<rect width="1080" height="1080" fill="#0b1633"/>
+
+<g transform="translate(216.0 216.0) scale(27.0000)" fill="none" stroke="#ffffff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+<defs><clipPath id="bayrak"><rect x="1" y="6.5" width="22" height="11" rx="1"/></clipPath></defs><g clip-path="url(#bayrak)" stroke="none"><rect x="1" y="6.5" width="22" height="11" fill="#2a4fa8"/><path d="M1 6.5L23 17.5M23 6.5L1 17.5" stroke="#ffffff" stroke-width="2.2"/><path d="M1 6.5L23 17.5M23 6.5L1 17.5" stroke="#c8102e" stroke-width="0.75"/><rect x="1" y="10.17" width="22" height="3.67" fill="#ffffff"/><rect x="10.17" y="6.5" width="3.67" height="11" fill="#ffffff"/><rect x="1" y="10.9" width="22" height="2.2" fill="#c8103e"/><rect x="10.9" y="6.5" width="2.2" height="11" fill="#c8103e"/></g>
+</g>
+</svg>
