@@ -70,14 +70,10 @@ const ISARETLER = {
 // Renkli sürümler: anahtar adı renkler içinde değer olarak verilir; zemin S × S'lik SVG parçası,
 // cizim verilirse işaretin düz renkli illüstrasyon hâli çizgi çizimin yerine geçer.
 const RENKLI = {
-  // düz renk uzay zemini; gezegen düz renkli illüstrasyon: gölge yüzü, bantlar, altın halka, ay ve yıldızlar
+  // düz renk uzay zemini; gezegen düz renkli illüstrasyon: gölge yüzü, bantlar, altın halka, ışıltı ve ay
   uzay: () => {
-    const star = (x, y, k, c) => `<path d="M${x} ${y - k}Q${x} ${y} ${x + k} ${y}Q${x} ${y} ${x} ${y + k}Q${x} ${y} ${x - k} ${y}Q${x} ${y} ${x} ${y - k}Z" fill="${c}"/>`;
-    const dots = [[250, 330], [330, 250], [780, 300], [820, 700], [300, 760], [700, 830], [460, 230], [880, 520], [200, 560], [640, 190]]
-      .map(([x, y], i) => `<circle cx="${x}" cy="${y}" r="${i % 3 ? 4 : 6}" fill="#cfc8f0"/>`).join('');
     return {
-      zemin: `<rect width="${S}" height="${S}" fill="#1c1842"/>
-${star(250, 250, 16, '#fff1c2')}${star(840, 820, 14, '#fff1c2')}${star(190, 780, 10, '#cfc8f0')}${star(900, 260, 10, '#cfc8f0')}${dots}`,
+      zemin: `<rect width="${S}" height="${S}" fill="#1c1842"/>`,
       cizim: '<defs>' +
         '<mask id="halkaArka" maskUnits="userSpaceOnUse" x="-6" y="-6" width="36" height="36"><rect x="-6" y="-6" width="36" height="36" fill="#fff"/><circle cx="12" cy="12" r="6" fill="#000"/></mask>' +
         '<mask id="gezegenKes" maskUnits="userSpaceOnUse" x="-6" y="-6" width="36" height="36"><rect x="-6" y="-6" width="36" height="36" fill="#fff"/><path d="M21.5 12A9.5 3 0 0 1 2.5 12" stroke="#000" stroke-width="3.4" fill="none"/></mask>' +
