@@ -131,7 +131,7 @@ const RENKLI = {
   // marka işareti: düz uzay mavisi zemin, çerçevesiz, ortada büyük düz renkli gezegen (gölge yüzü, bantlar, altın halka) ışıltı ve ay
   uzay: () => {
     return {
-      zemin: `<rect width="${S}" height="${S}" fill="#13265a"/>`,
+      zemin: `<rect width="${S}" height="${S}" fill="#0c1a40"/>`,
       cerceve: null, olcek: 0.58, cy: 12,
       cizim: '<defs>' +
         '<mask id="halkaArka" maskUnits="userSpaceOnUse" x="-6" y="-6" width="36" height="36"><rect x="-6" y="-6" width="36" height="36" fill="#fff"/><circle cx="12" cy="12" r="5.75" fill="#000"/></mask>' +
