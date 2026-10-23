@@ -70,24 +70,22 @@ const ISARETLER = {
 // Renkli sürümler: anahtar adı renkler içinde değer olarak verilir; zemin S × S'lik SVG parçası,
 // cizim verilirse işaretin düz renkli illüstrasyon hâli çizgi çizimin yerine geçer.
 const RENKLI = {
-  // düz renk uzay zemini; gezegen düz renkli illüstrasyon: gölge yüzü, bantlar, altın halka; dış çerçeve gezegen turuncusu, ışıltı ve ay
+  // marka işareti: düz uzay mavisi zemin, çerçevesiz, ortada büyük düz renkli gezegen (gölge yüzü, bantlar, altın halka) ışıltı ve ay
   uzay: () => {
     return {
-      zemin: `<rect width="${S}" height="${S}" fill="#1c1842"/>`,
-      cerceve: '#f4a259',
+      zemin: `<rect width="${S}" height="${S}" fill="#13265a"/>`,
+      cerceve: null, olcek: 0.58, cy: 12,
       cizim: '<defs>' +
-        '<mask id="halkaArka" maskUnits="userSpaceOnUse" x="-6" y="-6" width="36" height="36"><rect x="-6" y="-6" width="36" height="36" fill="#fff"/><circle cx="12" cy="12" r="6" fill="#000"/></mask>' +
-        '<mask id="gezegenKes" maskUnits="userSpaceOnUse" x="-6" y="-6" width="36" height="36"><rect x="-6" y="-6" width="36" height="36" fill="#fff"/><path d="M21.5 12A9.5 3 0 0 1 2.5 12" stroke="#000" stroke-width="3.4" fill="none"/></mask>' +
+        '<mask id="halkaArka" maskUnits="userSpaceOnUse" x="-6" y="-6" width="36" height="36"><rect x="-6" y="-6" width="36" height="36" fill="#fff"/><circle cx="12" cy="12" r="5.75" fill="#000"/></mask>' +
+        '<mask id="gezegenKes" maskUnits="userSpaceOnUse" x="-6" y="-6" width="36" height="36"><rect x="-6" y="-6" width="36" height="36" fill="#fff"/><path d="M21.5 12A9.5 3 0 0 1 2.5 12" stroke="#000" stroke-width="3.6" fill="none"/></mask>' +
         '<clipPath id="gezegen"><circle cx="12" cy="12" r="5.2"/></clipPath>' +
         '</defs><g transform="rotate(-18 12 12)" stroke="none">' +
         '<g mask="url(#gezegenKes)"><circle cx="12" cy="12" r="5.2" fill="#f4a259"/>' +
         '<g clip-path="url(#gezegen)"><path d="M5 5H19V19H5ZM5.6 11.1A5.4 5.4 0 1 0 16.4 11.1A5.4 5.4 0 1 0 5.6 11.1Z" fill="#d96f45" fill-rule="evenodd"/>' +
         '<rect x="4" y="9.2" width="16" height="1.1" fill="#ffc98a"/><rect x="4" y="13.6" width="16" height="1.3" fill="#c95f3d" opacity="0.8"/>' +
         '</g></g>' +
-        '<path d="M2.5 12A9.5 3 0 0 1 21.5 12" fill="none" stroke="#e8a73f" stroke-width="1.7" stroke-linecap="butt" mask="url(#halkaArka)"/>' +
-        '<path d="M21.5 12A9.5 3 0 0 1 2.5 12" fill="none" stroke="#ffd27a" stroke-width="1.7" stroke-linecap="butt"/></g>' +
-        '<path d="M19.6 1.6Q19.6 4 22 4Q19.6 4 19.6 6.4Q19.6 4 17.2 4Q19.6 4 19.6 1.6Z" fill="#fff1c2" stroke="none"/>' +
-        '<circle cx="4.3" cy="19.2" r="1.1" fill="#cfc8f0" stroke="none"/><circle cx="4" cy="18.9" r="0.35" fill="#a79fd6" stroke="none"/>',
+        '<path d="M2.5 12A9.5 3 0 0 1 21.5 12" fill="none" stroke="#e8a73f" stroke-width="1.9" stroke-linecap="butt" mask="url(#halkaArka)"/>' +
+        '<path d="M21.5 12A9.5 3 0 0 1 2.5 12" fill="none" stroke="#ffd27a" stroke-width="1.9" stroke-linecap="butt"/></g>',
     };
   },
 };
@@ -98,11 +96,11 @@ const outDir = path.resolve(here, '../../output/logo', isaret.klasor);
 
 // daire kırpmada rahat kalsın diye işaret ~%46 genişlikte, çerçeve yarıçapı %36
 const logo = (bg) => {
-  const size = S * 0.46, s = size / 24, x = (S - size) / 2, y = S / 2 - s * isaret.cy;
   const renkli = RENKLI[bg]?.();
+  const size = S * (renkli?.olcek ?? 0.46), s = size / 24, x = (S - size) / 2, y = S / 2 - s * (renkli?.cy ?? isaret.cy);
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${S}" height="${S}" viewBox="0 0 ${S} ${S}">
 ${renkli ? renkli.zemin : `<rect width="${S}" height="${S}" fill="${bg}"/>`}
-<circle cx="${S / 2}" cy="${S / 2}" r="${S * 0.36}" fill="none" stroke="${renkli?.cerceve ?? '#ffffff'}" stroke-width="${(S * 0.009).toFixed(1)}"/>
+${renkli?.cerceve === null ? '' : `<circle cx="${S / 2}" cy="${S / 2}" r="${S * 0.36}" fill="none" stroke="${renkli?.cerceve ?? '#ffffff'}" stroke-width="${(S * 0.009).toFixed(1)}"/>`}
 <g transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) scale(${s.toFixed(4)})" fill="none" stroke="#ffffff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
 ${renkli?.cizim ?? isaret.cizim}
 </g>
