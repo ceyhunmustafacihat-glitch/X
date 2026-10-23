@@ -67,40 +67,30 @@ const ISARETLER = {
   },
 };
 
-// Renkli zeminler: anahtar adı renkler içinde değer olarak verilir; zemin S × S'lik SVG parçası,
-// cizim verilirse işaretin renkli hâli tek renkli çizimin yerine geçer.
-const rng = (seed) => () => ((seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296);
+// Renkli sürümler: anahtar adı renkler içinde değer olarak verilir; zemin S × S'lik SVG parçası,
+// cizim verilirse işaretin düz renkli illüstrasyon hâli çizgi çizimin yerine geçer.
 const RENKLI = {
-  // derin uzay: mor çekirdek, pembe ve camgöbeği nebula, yıldızlar; gezegen sıcak tonlu, halka altın
+  // düz renk uzay zemini; gezegen düz renkli illüstrasyon: gölge yüzü, bantlar, altın halka, ay ve yıldızlar
   uzay: () => {
-    const r = rng(9), stars = [];
-    for (let i = 0; i < 170; i++) {
-      stars.push(`<circle cx="${(r() * S).toFixed(1)}" cy="${(r() * S).toFixed(1)}" r="${(0.8 + r() * 1.9).toFixed(2)}" fill="#ffffff" opacity="${(0.25 + r() * 0.65).toFixed(2)}"/>`);
-    }
-    for (const [x, y, k] of [[214, 252, 14], [862, 236, 10], [176, 760, 9], [892, 812, 12], [420, 150, 7]]) {
-      stars.push(`<path d="M${x} ${y - k}Q${x} ${y} ${x + k} ${y}Q${x} ${y} ${x} ${y + k}Q${x} ${y} ${x - k} ${y}Q${x} ${y} ${x} ${y - k}Z" fill="#fff6dc" opacity="0.9"/>`);
-    }
+    const star = (x, y, k, c) => `<path d="M${x} ${y - k}Q${x} ${y} ${x + k} ${y}Q${x} ${y} ${x} ${y + k}Q${x} ${y} ${x - k} ${y}Q${x} ${y} ${x} ${y - k}Z" fill="${c}"/>`;
+    const dots = [[250, 330], [330, 250], [780, 300], [820, 700], [300, 760], [700, 830], [460, 230], [880, 520], [200, 560], [640, 190]]
+      .map(([x, y], i) => `<circle cx="${x}" cy="${y}" r="${i % 3 ? 4 : 6}" fill="#cfc8f0"/>`).join('');
     return {
-      zemin: `<defs>
-<radialGradient id="uzayZemin" cx="0.5" cy="0.45" r="0.75"><stop offset="0" stop-color="#3b2a7a"/><stop offset="0.45" stop-color="#1a1748"/><stop offset="1" stop-color="#060818"/></radialGradient>
-<radialGradient id="nebula" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#fff" stop-opacity="1"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
-<radialGradient id="pembe" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#d4508f" stop-opacity="0.45"/><stop offset="1" stop-color="#d4508f" stop-opacity="0"/></radialGradient>
-<radialGradient id="camgobegi" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#2fb0d6" stop-opacity="0.35"/><stop offset="1" stop-color="#2fb0d6" stop-opacity="0"/></radialGradient>
-<radialGradient id="sicak" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#f3a06e" stop-opacity="0.35"/><stop offset="1" stop-color="#f3a06e" stop-opacity="0"/></radialGradient>
-</defs>
-<rect width="${S}" height="${S}" fill="url(#uzayZemin)"/>
-<ellipse cx="300" cy="300" rx="420" ry="280" fill="url(#pembe)" transform="rotate(-25 300 300)"/>
-<ellipse cx="800" cy="820" rx="460" ry="300" fill="url(#camgobegi)" transform="rotate(-25 800 820)"/>
-<ellipse cx="540" cy="548" rx="280" ry="280" fill="url(#sicak)"/>
-${stars.join('')}`,
+      zemin: `<rect width="${S}" height="${S}" fill="#1c1842"/>
+${star(250, 250, 16, '#fff1c2')}${star(840, 820, 14, '#fff1c2')}${star(190, 780, 10, '#cfc8f0')}${star(900, 260, 10, '#cfc8f0')}${dots}`,
       cizim: '<defs>' +
-        '<mask id="halkaArka" maskUnits="userSpaceOnUse" x="-6" y="-6" width="36" height="36"><rect x="-6" y="-6" width="36" height="36" fill="#fff"/><circle cx="12" cy="12" r="6.1" fill="#000"/></mask>' +
-        '<mask id="gezegenKes" maskUnits="userSpaceOnUse" x="-6" y="-6" width="36" height="36"><rect x="-6" y="-6" width="36" height="36" fill="#fff"/><path d="M21.5 12A9.5 3 0 0 1 2.5 12" stroke="#000" stroke-width="3.6" fill="none"/></mask>' +
-        '<linearGradient id="gezegenRenk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd59a"/><stop offset="0.55" stop-color="#f08a6c"/><stop offset="1" stop-color="#a8437a"/></linearGradient>' +
-        '</defs><g transform="rotate(-18 12 12)">' +
-        '<circle cx="12" cy="12" r="5.2" fill="url(#gezegenRenk)" stroke="#ffe0bd" mask="url(#gezegenKes)"/>' +
-        '<path d="M2.5 12A9.5 3 0 0 1 21.5 12" stroke="#ffd38a" mask="url(#halkaArka)"/><path d="M21.5 12A9.5 3 0 0 1 2.5 12" stroke="#ffd38a"/></g>' +
-        '<path d="M19.6 1.8Q19.6 4 21.8 4Q19.6 4 19.6 6.2Q19.6 4 17.4 4Q19.6 4 19.6 1.8Z" fill="#fff3c4" stroke="#fff3c4" stroke-width="0.6"/><circle cx="4.2" cy="19.4" r="0.6" fill="#ffffff" stroke="none"/>',
+        '<mask id="halkaArka" maskUnits="userSpaceOnUse" x="-6" y="-6" width="36" height="36"><rect x="-6" y="-6" width="36" height="36" fill="#fff"/><circle cx="12" cy="12" r="6" fill="#000"/></mask>' +
+        '<mask id="gezegenKes" maskUnits="userSpaceOnUse" x="-6" y="-6" width="36" height="36"><rect x="-6" y="-6" width="36" height="36" fill="#fff"/><path d="M21.5 12A9.5 3 0 0 1 2.5 12" stroke="#000" stroke-width="3.4" fill="none"/></mask>' +
+        '<clipPath id="gezegen"><circle cx="12" cy="12" r="5.2"/></clipPath>' +
+        '</defs><g transform="rotate(-18 12 12)" stroke="none">' +
+        '<g mask="url(#gezegenKes)"><circle cx="12" cy="12" r="5.2" fill="#f4a259"/>' +
+        '<g clip-path="url(#gezegen)"><path d="M5 5H19V19H5ZM5.6 11.1A5.4 5.4 0 1 0 16.4 11.1A5.4 5.4 0 1 0 5.6 11.1Z" fill="#d96f45" fill-rule="evenodd"/>' +
+        '<rect x="4" y="9.2" width="16" height="1.1" fill="#ffc98a"/><rect x="4" y="13.6" width="16" height="1.3" fill="#c95f3d" opacity="0.8"/>' +
+        '</g></g>' +
+        '<path d="M2.5 12A9.5 3 0 0 1 21.5 12" fill="none" stroke="#e8a73f" stroke-width="1.7" stroke-linecap="butt" mask="url(#halkaArka)"/>' +
+        '<path d="M21.5 12A9.5 3 0 0 1 2.5 12" fill="none" stroke="#ffd27a" stroke-width="1.7" stroke-linecap="butt"/></g>' +
+        '<path d="M19.6 1.6Q19.6 4 22 4Q19.6 4 19.6 6.4Q19.6 4 17.2 4Q19.6 4 19.6 1.6Z" fill="#fff1c2" stroke="none"/>' +
+        '<circle cx="4.3" cy="19.2" r="1.1" fill="#cfc8f0" stroke="none"/><circle cx="4" cy="18.9" r="0.35" fill="#a79fd6" stroke="none"/>',
     };
   },
 };
