@@ -56,7 +56,7 @@ const ISARETLER = {
   // astronomi: halkalı gezegen (halkanın arkası gezegenin ardında, önü üstünden geçer), ışıltı ve yıldız
   astronomi: {
     dosya: 'astronomi', klasor: 'astronomi', cy: 11.6,
-    renkler: { siyah: '#0f0d0b', lacivert: '#0f1630', mor: '#1e1533' },
+    renkler: { siyah: '#0f0d0b', lacivert: '#0f1630', mor: '#1e1533', uzay: 'uzay' },
     cizim: '<defs>' +
       '<mask id="halkaArka" maskUnits="userSpaceOnUse" x="-6" y="-6" width="36" height="36"><rect x="-6" y="-6" width="36" height="36" fill="#fff"/><circle cx="12" cy="12" r="6.1" fill="#000"/></mask>' +
       '<mask id="gezegenKes" maskUnits="userSpaceOnUse" x="-6" y="-6" width="36" height="36"><rect x="-6" y="-6" width="36" height="36" fill="#fff"/><path d="M21.5 12A9.5 3 0 0 1 2.5 12" stroke="#000" stroke-width="3.6" fill="none"/></mask>' +
@@ -67,6 +67,44 @@ const ISARETLER = {
   },
 };
 
+// Renkli zeminler: anahtar adı renkler içinde değer olarak verilir; zemin S × S'lik SVG parçası,
+// cizim verilirse işaretin renkli hâli tek renkli çizimin yerine geçer.
+const rng = (seed) => () => ((seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296);
+const RENKLI = {
+  // derin uzay: mor çekirdek, pembe ve camgöbeği nebula, yıldızlar; gezegen sıcak tonlu, halka altın
+  uzay: () => {
+    const r = rng(9), stars = [];
+    for (let i = 0; i < 170; i++) {
+      stars.push(`<circle cx="${(r() * S).toFixed(1)}" cy="${(r() * S).toFixed(1)}" r="${(0.8 + r() * 1.9).toFixed(2)}" fill="#ffffff" opacity="${(0.25 + r() * 0.65).toFixed(2)}"/>`);
+    }
+    for (const [x, y, k] of [[214, 252, 14], [862, 236, 10], [176, 760, 9], [892, 812, 12], [420, 150, 7]]) {
+      stars.push(`<path d="M${x} ${y - k}Q${x} ${y} ${x + k} ${y}Q${x} ${y} ${x} ${y + k}Q${x} ${y} ${x - k} ${y}Q${x} ${y} ${x} ${y - k}Z" fill="#fff6dc" opacity="0.9"/>`);
+    }
+    return {
+      zemin: `<defs>
+<radialGradient id="uzayZemin" cx="0.5" cy="0.45" r="0.75"><stop offset="0" stop-color="#3b2a7a"/><stop offset="0.45" stop-color="#1a1748"/><stop offset="1" stop-color="#060818"/></radialGradient>
+<radialGradient id="nebula" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#fff" stop-opacity="1"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+<radialGradient id="pembe" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#d4508f" stop-opacity="0.45"/><stop offset="1" stop-color="#d4508f" stop-opacity="0"/></radialGradient>
+<radialGradient id="camgobegi" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#2fb0d6" stop-opacity="0.35"/><stop offset="1" stop-color="#2fb0d6" stop-opacity="0"/></radialGradient>
+<radialGradient id="sicak" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#f3a06e" stop-opacity="0.35"/><stop offset="1" stop-color="#f3a06e" stop-opacity="0"/></radialGradient>
+</defs>
+<rect width="${S}" height="${S}" fill="url(#uzayZemin)"/>
+<ellipse cx="300" cy="300" rx="420" ry="280" fill="url(#pembe)" transform="rotate(-25 300 300)"/>
+<ellipse cx="800" cy="820" rx="460" ry="300" fill="url(#camgobegi)" transform="rotate(-25 800 820)"/>
+<ellipse cx="540" cy="548" rx="280" ry="280" fill="url(#sicak)"/>
+${stars.join('')}`,
+      cizim: '<defs>' +
+        '<mask id="halkaArka" maskUnits="userSpaceOnUse" x="-6" y="-6" width="36" height="36"><rect x="-6" y="-6" width="36" height="36" fill="#fff"/><circle cx="12" cy="12" r="6.1" fill="#000"/></mask>' +
+        '<mask id="gezegenKes" maskUnits="userSpaceOnUse" x="-6" y="-6" width="36" height="36"><rect x="-6" y="-6" width="36" height="36" fill="#fff"/><path d="M21.5 12A9.5 3 0 0 1 2.5 12" stroke="#000" stroke-width="3.6" fill="none"/></mask>' +
+        '<linearGradient id="gezegenRenk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd59a"/><stop offset="0.55" stop-color="#f08a6c"/><stop offset="1" stop-color="#a8437a"/></linearGradient>' +
+        '</defs><g transform="rotate(-18 12 12)">' +
+        '<circle cx="12" cy="12" r="5.2" fill="url(#gezegenRenk)" stroke="#ffe0bd" mask="url(#gezegenKes)"/>' +
+        '<path d="M2.5 12A9.5 3 0 0 1 21.5 12" stroke="#ffd38a" mask="url(#halkaArka)"/><path d="M21.5 12A9.5 3 0 0 1 2.5 12" stroke="#ffd38a"/></g>' +
+        '<path d="M19.6 1.8Q19.6 4 21.8 4Q19.6 4 19.6 6.2Q19.6 4 17.4 4Q19.6 4 19.6 1.8Z" fill="#fff3c4" stroke="#fff3c4" stroke-width="0.6"/><circle cx="4.2" cy="19.4" r="0.6" fill="#ffffff" stroke="none"/>',
+    };
+  },
+};
+
 const ad = process.argv[2] || 'sozlukdeus';
 const isaret = ISARETLER[ad];
 const outDir = path.resolve(here, '../../output/logo', isaret.klasor);
@@ -74,11 +112,12 @@ const outDir = path.resolve(here, '../../output/logo', isaret.klasor);
 // daire kırpmada rahat kalsın diye işaret ~%46 genişlikte, çerçeve yarıçapı %36
 const logo = (bg) => {
   const size = S * 0.46, s = size / 24, x = (S - size) / 2, y = S / 2 - s * isaret.cy;
+  const renkli = RENKLI[bg]?.();
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${S}" height="${S}" viewBox="0 0 ${S} ${S}">
-<rect width="${S}" height="${S}" fill="${bg}"/>
+${renkli ? renkli.zemin : `<rect width="${S}" height="${S}" fill="${bg}"/>`}
 <circle cx="${S / 2}" cy="${S / 2}" r="${S * 0.36}" fill="none" stroke="#ffffff" stroke-width="${(S * 0.009).toFixed(1)}"/>
 <g transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) scale(${s.toFixed(4)})" fill="none" stroke="#ffffff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
-${isaret.cizim}
+${renkli?.cizim ?? isaret.cizim}
 </g>
 </svg>
 `;
@@ -94,7 +133,7 @@ for (const [renk, bg] of Object.entries(isaret.renkler)) {
   await page.locator('svg').screenshot({ path: path.join(outDir, `${isaret.dosya}-${renk}.png`) });
 }
 // önizleme: profilde görüneceği gibi daire kırpılmış hâller
-await page.setViewportSize({ width: 1260, height: 460 });
+await page.setViewportSize({ width: Object.keys(isaret.renkler).length * 360 + 180, height: 460 });
 await page.setContent(`<body style="margin:0;background:#fff;display:flex;gap:60px;align-items:center;justify-content:center;height:460px;font:500 22px sans-serif">
 ${Object.keys(isaret.renkler).map((renk) => `<div style="text-align:center"><img src="data:image/png;base64,${fs.readFileSync(path.join(outDir, `${isaret.dosya}-${renk}.png`)).toString('base64')}" style="width:300px;height:300px;border-radius:50%;display:block"><p>${renk}</p></div>`).join('')}</body>`);
 await page.screenshot({ path: path.join(outDir, 'onizleme.png') });
