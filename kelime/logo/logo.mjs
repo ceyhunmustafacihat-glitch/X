@@ -6,6 +6,7 @@
 //   node kelime/logo/logo.mjs satranc    ->  output/logo/satranc/satranc-<renk>.svg + .png (piyon)
 //   node kelime/logo/logo.mjs ingilizce  ->  output/logo/ingilizce/ingilizce-<renk>.svg + .png (bayrak)
 //   node kelime/logo/logo.mjs astronomi  ->  output/logo/astronomi/astronomi-<renk>.svg + .png (halkalı gezegen)
+//   node kelime/logo/logo.mjs karakalem  ->  output/logo/karakalem/karakalem-<renk>.svg + .png (kurşun kalem)
 import { chromium } from 'playwright';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -65,6 +66,13 @@ const ISARETLER = {
       '<circle cx="12" cy="12" r="5.2" mask="url(#gezegenKes)"/>' +
       '<path d="M2.5 12A9.5 3 0 0 1 21.5 12" mask="url(#halkaArka)"/><path d="M21.5 12A9.5 3 0 0 1 2.5 12"/></g>' +
       '<path d="M19.6 1.8Q19.6 4 21.8 4Q19.6 4 19.6 6.2Q19.6 4 17.4 4Q19.6 4 19.6 1.8Z" fill="#ffffff" stroke-width="0.6"/><circle cx="4.2" cy="19.4" r="0.6" fill="#ffffff" stroke="none"/>',
+  },
+  // karakalem: çapraz duran açılmış kurşun kalem ve ucundan çıkan akıcı bir çizgi
+  karakalem: {
+    dosya: 'karakalem', klasor: 'karakalem', cy: 12.3,
+    renkler: { siyah: '#0f0d0b', grafit: '#232427', renkli: 'kalem' },
+    cizim: '<g transform="rotate(-45 12 12)"><path d="M7 10.2H19.6V13.8H7L3 12Z"/><path d="M7 10.2V13.8M18 10.2V13.8M4.6 11.3V12.7"/></g>' +
+      '<path d="M5.6 18.4C8 20.6 10.5 17.2 13 19S17.5 20.4 19.6 18.6"/>',
   },
 };
 
@@ -134,6 +142,20 @@ const RENKLI = {
       '<rect x="1" y="10.17" width="22" height="3.67" fill="#f4efe4"/><rect x="10.17" y="6.5" width="3.67" height="11" fill="#f4efe4"/>' +
       '<rect x="1" y="10.9" width="22" height="2.2" fill="#b3142e"/><rect x="10.9" y="6.5" width="2.2" height="11" fill="#b3142e"/></g>',
   }),
+  // kalem: grafit zemin, fildişi gövde ve ahşap uç, grafit gri sivri uç, ucun bıraktığı fildişi çizgi
+  kalem: () => {
+    const bg = '#232427';
+    return {
+      zemin: `<rect width="${S}" height="${S}" fill="${bg}"/>`, cerceve: null, olcek: 0.66, cy: 12.3,
+      cizim: '<g stroke="none" transform="rotate(-45 12 12)">' +
+        '<rect x="7" y="10.2" width="11" height="3.6" fill="#efe3c8"/><rect x="7" y="12" width="11" height="1.8" fill="#cdbb94"/>' +
+        `<rect x="18" y="10.2" width="1.7" height="3.6" fill="#efe3c8"/><rect x="18.5" y="10.2" width="0.3" height="3.6" fill="${bg}"/><rect x="19.1" y="10.2" width="0.3" height="3.6" fill="${bg}"/>` +
+        '<path d="M19.7 10.2H20.4A0.8 0.8 0 0 1 21.2 11V13A0.8 0.8 0 0 1 20.4 13.8H19.7Z" fill="#cdbb94"/>' +
+        '<path d="M7 10.2V13.8L3 12Z" fill="#d9c7a0"/><path d="M7 12V13.8L3 12Z" fill="#bba67c"/>' +
+        '<path d="M4.6 11.28V12.72L3 12Z" fill="#8d8f96"/></g>' +
+        '<path d="M5.4 18.6C8 20.8 10.5 17.3 13 19.1S17.5 20.5 19.8 18.7" stroke="#efe3c8" stroke-width="0.8"/>',
+    };
+  },
   // gezegen: derin çivit zemin, iki tonlu altın gezegen ve halka (halkanın arkası gezegenin ardında) ışıltı ve ay
   uzay: () => {
     return {
