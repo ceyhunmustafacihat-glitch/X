@@ -17,7 +17,7 @@ const S = 1080;
 const ISARETLER = {
   sozlukdeus: {
     dosya: 'logo', klasor: '', cy: 12.15,
-    renkler: { siyah: '#0f0d0b', kahve: '#2a1d14', lacivert: '#141c2b', renkli: 'sozluk' },
+    renkler: { siyah: '#0f0d0b', kahve: '#2a1d14', lacivert: '#141c2b', renkli: 'sozluk', tirnak: 'sozlukTirnak' },
     cizim: '<path d="M12 6.5C9.5 4.8 6 4.3 2.5 5.2V18.6C6 17.8 9.5 18.3 12 20"/><path d="M12 6.5C14.5 4.8 18 4.3 21.5 5.2V18.6C18 17.8 14.5 18.3 12 20"/><path d="M12 6.5V20"/>',
   },
   // klaket: gövde, üst şeritli bant ve sol menteşeden hafif açılmış çizgili kol
@@ -71,16 +71,23 @@ const ISARETLER = {
 // Renkli sürümler: anahtar adı renkler içinde değer olarak verilir; zemin S × S'lik SVG parçası,
 // cizim verilirse işaretin düz renkli illüstrasyon hâli çizgi çizimin yerine geçer.
 const RENKLI = {
-  // sözlük amblemi: derin bordo zemin, tek altın ton; kanat gibi açılan sayfalar ve altında katlı sayfa kenarları
-  sozluk: () => ({
-    zemin: `<rect width="${S}" height="${S}" fill="#2a0e16"/>`, cerceve: null, olcek: 0.6, cy: 13.8,
-    cizim: '<g stroke="none">' +
-      '<path d="M11.6 9.1C9.3 7.6 6.1 7.2 3 8V17.2C6.1 16.5 9.3 16.9 11.6 18.3Z" fill="#d6b06a"/>' +
-      '<path d="M12.4 9.1C14.7 7.6 17.9 7.2 21 8V17.2C17.9 16.5 14.7 16.9 12.4 18.3Z" fill="#c29a55"/></g>' +
-      '<g stroke="#d6b06a" stroke-width="0.55">' +
-      '<path d="M3 18.25C6.1 17.55 9.3 17.95 11.6 19.35M12.4 19.35C14.7 17.95 17.9 17.55 21 18.25"/>' +
-      '<path d="M3 19.3C6.1 18.6 9.3 19 11.6 20.4M12.4 20.4C14.7 19 17.9 18.6 21 19.3"/></g>',
-  }),
+  // sözlük amblemi: derin bordo zemin, tek altın ton; kanat gibi açılan sayfalar ve altında katlı sayfa kenarı.
+  // Küçük profil boyutlarında da seçilsin diye büyük çizilir; 'tirnak' sürümünde üstte kartlardaki gibi açılış tırnağı (“) var.
+  sozluk: (tirnak = false) => {
+    // virgül biçimli tırnak: alttaki yuvarlak ve yukarı kıvrılan kuyruk
+    const mark = (x, y, k = 1.3) => `<path transform="translate(${x} ${y}) scale(${k})" d="M-0.95 0C-0.95 -1.7 -0.1 -2.8 1.05 -3.2L1.2 -2.6` +
+      `C0.35 -2.2 0.05 -1.6 0.1 -0.9A0.95 0.95 0 1 1 -0.95 0Z" fill="#d6b06a"/>`;
+    return {
+      zemin: `<rect width="${S}" height="${S}" fill="#2a0e16"/>`, cerceve: null,
+      olcek: tirnak ? 0.64 : 0.7, cy: tirnak ? 10.6 : 13.3,
+      cizim: '<g stroke="none">' +
+        '<path d="M11.6 9.1C9.3 7.6 6.1 7.2 3 8V17.2C6.1 16.5 9.3 16.9 11.6 18.3Z" fill="#d6b06a"/>' +
+        '<path d="M12.4 9.1C14.7 7.6 17.9 7.2 21 8V17.2C17.9 16.5 14.7 16.9 12.4 18.3Z" fill="#c29a55"/>' +
+        (tirnak ? mark(10.5, 5.9) + mark(13.7, 5.9) : '') + '</g>' +
+        '<path d="M3 18.3C6.1 17.6 9.3 18 11.6 19.4M12.4 19.4C14.7 18 17.9 17.6 21 18.3" stroke="#d6b06a" stroke-width="0.7"/>',
+    };
+  },
+  sozlukTirnak: () => RENKLI.sozluk(true),
   // klaket: perde kırmızısı zemin, siyah gövde, siyah-beyaz çizgili bant ve kol
   klaket: () => {
     const stripes = (y0, h) => [5, 9, 13, 17, 21].map((x) => `<path d="M${x} ${y0}H${x + 2}L${x + 0.6} ${y0 + h}H${x - 1.4}Z" fill="#1d1d21"/>`).join('');
