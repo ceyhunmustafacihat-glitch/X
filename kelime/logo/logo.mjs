@@ -71,14 +71,12 @@ const ISARETLER = {
 // Renkli sürümler: anahtar adı renkler içinde değer olarak verilir; zemin S × S'lik SVG parçası,
 // cizim verilirse işaretin düz renkli illüstrasyon hâli çizgi çizimin yerine geçer.
 const RENKLI = {
-  // sözlük amblemi: derin bordo zemin, tek altın ton; kanat gibi açılan sayfalar, altında katlı
-  // sayfa kenarları ve üstte iç içe iki kareden sekiz köşeli (Selçuklu) yıldız
+  // sözlük amblemi: derin bordo zemin, tek altın ton; kanat gibi açılan sayfalar ve altında katlı sayfa kenarları
   sozluk: () => ({
-    zemin: `<rect width="${S}" height="${S}" fill="#2a0e16"/>`, cerceve: null, olcek: 0.6, cy: 11.45,
+    zemin: `<rect width="${S}" height="${S}" fill="#2a0e16"/>`, cerceve: null, olcek: 0.6, cy: 13.8,
     cizim: '<g stroke="none">' +
       '<path d="M11.6 9.1C9.3 7.6 6.1 7.2 3 8V17.2C6.1 16.5 9.3 16.9 11.6 18.3Z" fill="#d6b06a"/>' +
-      '<path d="M12.4 9.1C14.7 7.6 17.9 7.2 21 8V17.2C17.9 16.5 14.7 16.9 12.4 18.3Z" fill="#c29a55"/>' +
-      '<path d="M12.00 2.40L12.62 3.02L13.48 3.02L13.48 3.88L14.10 4.50L13.48 5.12L13.48 5.98L12.62 5.98L12.00 6.60L11.38 5.98L10.52 5.98L10.52 5.12L9.90 4.50L10.52 3.88L10.52 3.02L11.38 3.02Z" fill="#d6b06a"/></g>' +
+      '<path d="M12.4 9.1C14.7 7.6 17.9 7.2 21 8V17.2C17.9 16.5 14.7 16.9 12.4 18.3Z" fill="#c29a55"/></g>' +
       '<g stroke="#d6b06a" stroke-width="0.55">' +
       '<path d="M3 18.25C6.1 17.55 9.3 17.95 11.6 19.35M12.4 19.35C14.7 17.95 17.9 17.55 21 18.25"/>' +
       '<path d="M3 19.3C6.1 18.6 9.3 19 11.6 20.4M12.4 20.4C14.7 19 17.9 18.6 21 19.3"/></g>',
