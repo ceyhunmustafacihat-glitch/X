@@ -71,7 +71,7 @@ const ISARETLER = {
 // Renkli sürümler: anahtar adı renkler içinde değer olarak verilir; zemin S × S'lik SVG parçası,
 // cizim verilirse işaretin düz renkli illüstrasyon hâli çizgi çizimin yerine geçer.
 const RENKLI = {
-  // açık kitap: koyu bordo zemin, altın kapak kenarı, krem sayfalar, satırlar ve kırmızı ayraç
+  // açık kitap: koyu bordo zemin, altın kapak kenarı, krem sayfalar ve satırlar
   sozluk: () => {
     const lines = (x0, x1) => [8.6, 10.2, 11.8, 13.4, 15].map((y) => `<path d="M${x0} ${y}H${x1}" stroke="#cdb88c" stroke-width="0.55"/>`).join('');
     return {
@@ -81,8 +81,7 @@ const RENKLI = {
         '<path d="M12 6.6C9.4 5 6 4.6 2.6 5.4V18.4C6 17.7 9.4 18.1 12 19.6Z" fill="#f6ead0"/>' +
         '<path d="M12 6.6C14.6 5 18 4.6 21.4 5.4V18.4C18 17.7 14.6 18.1 12 19.6Z" fill="#e9d7b1"/></g>' +
         `<g stroke-linecap="round">${lines(4.3, 10.3)}${lines(13.7, 19.7)}</g>` +
-        '<path d="M12 6.6V19.6" stroke="#c4923f" stroke-width="0.5"/>' +
-        '<path d="M16 5.1V10.6L16.9 9.8L17.8 10.6V5" fill="#c8463c" stroke="none"/>',
+        '<path d="M12 6.6V19.6" stroke="#c4923f" stroke-width="0.5"/>',
     };
   },
   // klaket: perde kırmızısı zemin, siyah gövde, siyah-beyaz çizgili bant ve kol
