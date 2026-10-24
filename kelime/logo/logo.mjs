@@ -71,19 +71,18 @@ const ISARETLER = {
 // Renkli sürümler: anahtar adı renkler içinde değer olarak verilir; zemin S × S'lik SVG parçası,
 // cizim verilirse işaretin düz renkli illüstrasyon hâli çizgi çizimin yerine geçer.
 const RENKLI = {
-  // açık kitap: koyu bordo zemin, altın kapak kenarı, krem sayfalar ve satırlar
-  sozluk: () => {
-    const lines = (x0, x1) => [8.6, 10.2, 11.8, 13.4, 15].map((y) => `<path d="M${x0} ${y}H${x1}" stroke="#cdb88c" stroke-width="0.55"/>`).join('');
-    return {
-      zemin: `<rect width="${S}" height="${S}" fill="#3d1622"/>`, cerceve: null, olcek: 0.6, cy: 12.6,
-      cizim: '<g stroke="none">' +
-        '<path d="M12 7.2C9.2 5.6 5.2 5.2 1.6 6.2V19.4C5.2 18.6 9.2 18.9 12 20.6C14.8 18.9 18.8 18.6 22.4 19.4V6.2C18.8 5.2 14.8 5.6 12 7.2Z" fill="#c4923f"/>' +
-        '<path d="M12 6.6C9.4 5 6 4.6 2.6 5.4V18.4C6 17.7 9.4 18.1 12 19.6Z" fill="#f6ead0"/>' +
-        '<path d="M12 6.6C14.6 5 18 4.6 21.4 5.4V18.4C18 17.7 14.6 18.1 12 19.6Z" fill="#e9d7b1"/></g>' +
-        `<g stroke-linecap="round">${lines(4.3, 10.3)}${lines(13.7, 19.7)}</g>` +
-        '<path d="M12 6.6V19.6" stroke="#c4923f" stroke-width="0.5"/>',
-    };
-  },
+  // sözlük amblemi: derin bordo zemin, tek altın ton; kanat gibi açılan sayfalar, altında katlı
+  // sayfa kenarları ve üstte iç içe iki kareden sekiz köşeli (Selçuklu) yıldız
+  sozluk: () => ({
+    zemin: `<rect width="${S}" height="${S}" fill="#2a0e16"/>`, cerceve: null, olcek: 0.6, cy: 11.45,
+    cizim: '<g stroke="none">' +
+      '<path d="M11.6 9.1C9.3 7.6 6.1 7.2 3 8V17.2C6.1 16.5 9.3 16.9 11.6 18.3Z" fill="#d6b06a"/>' +
+      '<path d="M12.4 9.1C14.7 7.6 17.9 7.2 21 8V17.2C17.9 16.5 14.7 16.9 12.4 18.3Z" fill="#c29a55"/>' +
+      '<path d="M12.00 2.40L12.62 3.02L13.48 3.02L13.48 3.88L14.10 4.50L13.48 5.12L13.48 5.98L12.62 5.98L12.00 6.60L11.38 5.98L10.52 5.98L10.52 5.12L9.90 4.50L10.52 3.88L10.52 3.02L11.38 3.02Z" fill="#d6b06a"/></g>' +
+      '<g stroke="#d6b06a" stroke-width="0.55">' +
+      '<path d="M3 18.25C6.1 17.55 9.3 17.95 11.6 19.35M12.4 19.35C14.7 17.95 17.9 17.55 21 18.25"/>' +
+      '<path d="M3 19.3C6.1 18.6 9.3 19 11.6 20.4M12.4 20.4C14.7 19 17.9 18.6 21 19.3"/></g>',
+  }),
   // klaket: perde kırmızısı zemin, siyah gövde, siyah-beyaz çizgili bant ve kol
   klaket: () => {
     const stripes = (y0, h) => [5, 9, 13, 17, 21].map((x) => `<path d="M${x} ${y0}H${x + 2}L${x + 0.6} ${y0 + h}H${x - 1.4}Z" fill="#1d1d21"/>`).join('');
