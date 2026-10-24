@@ -88,65 +88,68 @@ const RENKLI = {
     };
   },
   sozlukTirnak: () => RENKLI.sozluk(true),
-  // klaket: perde kırmızısı zemin, siyah gövde, siyah-beyaz çizgili bant ve kol
+  // Diğer amblemler sözlükle aynı ilkeyle: derin tek renk zemin, tek vurgu rengi ve onun koyu tonu;
+  // şeritler ve bantlar zemin renginde oyulmuş gibi. Küçük profil boyutlarında seçilsin diye büyük çizilir.
+  // klaket: abanoz zemin, altın gövde, oyma çizgili bant ve açık kol
   klaket: () => {
-    const stripes = (y0, h) => [5, 9, 13, 17, 21].map((x) => `<path d="M${x} ${y0}H${x + 2}L${x + 0.6} ${y0 + h}H${x - 1.4}Z" fill="#1d1d21"/>`).join('');
+    const bg = '#121112';
+    const stripes = (y0, h) => [5, 9, 13, 17, 21].map((x) => `<path d="M${x} ${y0}H${x + 2}L${x + 0.6} ${y0 + h}H${x - 1.4}Z" fill="${bg}"/>`).join('');
     return {
-      zemin: `<rect width="${S}" height="${S}" fill="#7a1520"/>`, cerceve: null, olcek: 0.58, cy: 11.7,
+      zemin: `<rect width="${S}" height="${S}" fill="${bg}"/>`, cerceve: null, olcek: 0.66, cy: 11.7,
       cizim: '<defs><clipPath id="bant"><rect x="3.5" y="10.5" width="17" height="3"/></clipPath><clipPath id="kol"><rect x="3.5" y="7.4" width="17" height="3"/></clipPath></defs>' +
-        '<g stroke="none"><rect x="3.5" y="10.5" width="17" height="9.5" rx="1" fill="#1d1d21"/>' +
-        `<rect x="3.5" y="10.5" width="17" height="3" fill="#f4f1ea"/><g clip-path="url(#bant)">${stripes(10.5, 3)}</g>` +
-        '<rect x="5.6" y="15.4" width="8" height="0.8" rx="0.4" fill="#4a4a52"/><rect x="5.6" y="17.4" width="5.4" height="0.8" rx="0.4" fill="#4a4a52"/>' +
-        `<g transform="rotate(-14 3.5 10.4)"><rect x="3.5" y="7.4" width="17" height="3" fill="#f4f1ea"/><g clip-path="url(#kol)">${stripes(7.4, 3)}</g></g>` +
-        '<circle cx="4.3" cy="10.4" r="0.85" fill="#9a9aa3"/></g>',
+        '<g stroke="none"><rect x="3.5" y="10.5" width="17" height="9.5" rx="1" fill="#c29a55"/>' +
+        `<rect x="3.5" y="10.5" width="17" height="3" fill="#d6b06a"/><g clip-path="url(#bant)">${stripes(10.5, 3)}</g><rect x="3.5" y="13.5" width="17" height="0.45" fill="${bg}"/>` +
+        `<g transform="rotate(-14 3.5 10.4)"><rect x="3.5" y="7.4" width="17" height="3" fill="#d6b06a"/><g clip-path="url(#kol)">${stripes(7.4, 3)}</g></g>` +
+        `<circle cx="4.4" cy="10.3" r="0.7" fill="${bg}"/></g>`,
     };
   },
-  // kitaplık: kütüphane yeşili zemin, kırmızı, mavi ve hardal sırtlı kitaplar, ahşap raf
-  kitaplik: () => ({
-    zemin: `<rect width="${S}" height="${S}" fill="#173d2e"/>`, cerceve: null, olcek: 0.58, cy: 12.85,
-    cizim: '<g stroke="none">' +
-      '<rect x="4.3" y="7" width="3.8" height="13" rx="0.4" fill="#c8553d"/><rect x="4.3" y="8.8" width="3.8" height="0.8" fill="#e8b04b"/><rect x="4.3" y="16.6" width="3.8" height="0.8" fill="#e8b04b"/>' +
-      '<rect x="6.9" y="7" width="1.2" height="13" fill="#a8432f"/>' +
-      '<rect x="8.6" y="4.5" width="4" height="15.5" rx="0.4" fill="#2f6d8c"/><rect x="8.6" y="6.4" width="4" height="0.8" fill="#e8d7b0"/><rect x="8.6" y="16.6" width="4" height="0.8" fill="#e8d7b0"/>' +
-      '<rect x="11.4" y="4.5" width="1.2" height="15.5" fill="#255a74"/>' +
-      '<path d="M16.8 20L12.7 8.72L15.9 7.56L20 18.84Z" fill="#e8b04b"/><path d="M18.85 19.25L14.75 7.97L15.9 7.56L20 18.84Z" fill="#c9922f"/>' +
-      '<path d="M13.38 10.6L16.58 9.44L16.85 10.19L13.65 11.35ZM15.6 16.7L18.8 15.54L19.07 16.29L15.87 17.45Z" fill="#8a5a1c"/>' +
-      '<rect x="2.5" y="20" width="19" height="1.2" rx="0.3" fill="#9a6633"/></g>',
-  }),
-  // piyon: çuha yeşili zemin, fildişi piyon, sağ yarısı tek tonluk gölge
+  // kitaplık: orman yeşili zemin, iki tonlu altın kitaplar, oyma cilt şeritleri ve raf
+  kitaplik: () => {
+    const bg = '#0f2a20';
+    return {
+      zemin: `<rect width="${S}" height="${S}" fill="${bg}"/>`, cerceve: null, olcek: 0.64, cy: 12.85,
+      cizim: '<g stroke="none">' +
+        `<rect x="4.3" y="7" width="3.8" height="13" rx="0.4" fill="#d6b06a"/><rect x="4.3" y="8.8" width="3.8" height="0.6" fill="${bg}"/><rect x="4.3" y="16.6" width="3.8" height="0.6" fill="${bg}"/>` +
+        `<rect x="8.6" y="4.5" width="4" height="15.5" rx="0.4" fill="#c29a55"/><rect x="8.6" y="6.4" width="4" height="0.6" fill="${bg}"/><rect x="8.6" y="16.6" width="4" height="0.6" fill="${bg}"/>` +
+        '<path d="M16.8 20L12.7 8.72L15.9 7.56L20 18.84Z" fill="#d6b06a"/>' +
+        `<path d="M13.38 10.6L16.58 9.44L16.78 10L13.58 11.16ZM15.6 16.7L18.8 15.54L19 16.1L15.8 17.26Z" fill="${bg}"/>` +
+        '<rect x="2.5" y="20.3" width="19" height="1" rx="0.3" fill="#c29a55"/></g>',
+    };
+  },
+  // piyon: ceviz zemin, fildişi piyon, sağ yarısı tek tonluk gölge
   piyon: () => ({
-    zemin: `<rect width="${S}" height="${S}" fill="#234d3b"/>`, cerceve: null, olcek: 0.6, cy: 12.1,
+    zemin: `<rect width="${S}" height="${S}" fill="#24170e"/>`, cerceve: null, olcek: 0.64, cy: 12.1,
     cizim: '<defs><clipPath id="piyon"><circle cx="12" cy="5.55" r="3.1"/><rect x="8.09" y="9.23" width="7.82" height="1.84" rx="0.92"/>' +
       '<path d="M9.93 11.07C9.7 13.83 8.78 16.36 6.94 18.66H17.06C15.22 16.36 14.3 13.83 14.07 11.07Z"/><rect x="5.45" y="18.66" width="13.1" height="3.1" rx="0.69"/></clipPath></defs>' +
-      '<g clip-path="url(#piyon)" stroke="none"><rect x="0" y="0" width="24" height="24" fill="#f3ead8"/><rect x="12.7" y="0" width="12" height="24" fill="#d8c9a8"/>' +
-      '<rect x="0" y="18.66" width="24" height="0.6" fill="#bfae8a"/><circle cx="10.9" cy="4.6" r="0.75" fill="#ffffff" opacity="0.8"/></g>',
+      '<g clip-path="url(#piyon)" stroke="none"><rect x="0" y="0" width="24" height="24" fill="#efe3c8"/><rect x="12.7" y="0" width="12" height="24" fill="#cdbb94"/>' +
+      '<rect x="0" y="18.66" width="24" height="0.5" fill="#24170e"/></g>',
   }),
-  // bayrak: gece laciverti zemin, gerçek renkli Birleşik Krallık bayrağı (2:1, köşeleri yuvarlatılmış)
+  // bayrak: gece laciverti zemin, yumuşatılmış gerçek renklerle Birleşik Krallık bayrağı
   bayrak: () => ({
-    zemin: `<rect width="${S}" height="${S}" fill="#0b1633"/>`, cerceve: null, olcek: 0.6, cy: 12,
+    zemin: `<rect width="${S}" height="${S}" fill="#0b1a3d"/>`, cerceve: null, olcek: 0.66, cy: 12,
     cizim: '<defs><clipPath id="bayrak"><rect x="1" y="6.5" width="22" height="11" rx="1"/></clipPath></defs>' +
-      '<g clip-path="url(#bayrak)" stroke="none"><rect x="1" y="6.5" width="22" height="11" fill="#2a4fa8"/>' +
-      '<path d="M1 6.5L23 17.5M23 6.5L1 17.5" stroke="#ffffff" stroke-width="2.2"/>' +
-      '<path d="M1 6.5L23 17.5M23 6.5L1 17.5" stroke="#c8102e" stroke-width="0.75"/>' +
-      '<rect x="1" y="10.17" width="22" height="3.67" fill="#ffffff"/><rect x="10.17" y="6.5" width="3.67" height="11" fill="#ffffff"/>' +
-      '<rect x="1" y="10.9" width="22" height="2.2" fill="#c8103e"/><rect x="10.9" y="6.5" width="2.2" height="11" fill="#c8103e"/></g>',
+      '<g clip-path="url(#bayrak)" stroke="none"><rect x="1" y="6.5" width="22" height="11" fill="#28479a"/>' +
+      '<path d="M1 6.5L23 17.5M23 6.5L1 17.5" stroke="#f4efe4" stroke-width="2.2"/>' +
+      '<path d="M1 6.5L23 17.5M23 6.5L1 17.5" stroke="#b3142e" stroke-width="0.75"/>' +
+      '<rect x="1" y="10.17" width="22" height="3.67" fill="#f4efe4"/><rect x="10.17" y="6.5" width="3.67" height="11" fill="#f4efe4"/>' +
+      '<rect x="1" y="10.9" width="22" height="2.2" fill="#b3142e"/><rect x="10.9" y="6.5" width="2.2" height="11" fill="#b3142e"/></g>',
   }),
-  // marka işareti: düz uzay mavisi zemin, çerçevesiz, ortada büyük düz renkli gezegen (gölge yüzü, bantlar, altın halka) ışıltı ve ay
+  // gezegen: derin çivit zemin, iki tonlu altın gezegen ve halka (halkanın arkası gezegenin ardında) ışıltı ve ay
   uzay: () => {
     return {
-      zemin: `<rect width="${S}" height="${S}" fill="#0c1a40"/>`,
-      cerceve: null, olcek: 0.58, cy: 12,
+      zemin: `<rect width="${S}" height="${S}" fill="#140f2e"/>`,
+      cerceve: null, olcek: 0.64, cy: 12,
       cizim: '<defs>' +
         '<mask id="halkaArka" maskUnits="userSpaceOnUse" x="-6" y="-6" width="36" height="36"><rect x="-6" y="-6" width="36" height="36" fill="#fff"/><circle cx="12" cy="12" r="5.75" fill="#000"/></mask>' +
         '<mask id="gezegenKes" maskUnits="userSpaceOnUse" x="-6" y="-6" width="36" height="36"><rect x="-6" y="-6" width="36" height="36" fill="#fff"/><path d="M21.5 12A9.5 3 0 0 1 2.5 12" stroke="#000" stroke-width="3.6" fill="none"/></mask>' +
         '<clipPath id="gezegen"><circle cx="12" cy="12" r="5.2"/></clipPath>' +
         '</defs><g transform="rotate(-18 12 12)" stroke="none">' +
-        '<g mask="url(#gezegenKes)"><circle cx="12" cy="12" r="5.2" fill="#f4a259"/>' +
-        '<g clip-path="url(#gezegen)"><path d="M5 5H19V19H5ZM5.6 11.1A5.4 5.4 0 1 0 16.4 11.1A5.4 5.4 0 1 0 5.6 11.1Z" fill="#d96f45" fill-rule="evenodd"/>' +
-        '<rect x="4" y="9.2" width="16" height="1.1" fill="#ffc98a"/><rect x="4" y="13.6" width="16" height="1.3" fill="#c95f3d" opacity="0.8"/>' +
+        '<g mask="url(#gezegenKes)"><circle cx="12" cy="12" r="5.2" fill="#d6b06a"/>' +
+        '<g clip-path="url(#gezegen)"><path d="M5 5H19V19H5ZM5.6 11.1A5.4 5.4 0 1 0 16.4 11.1A5.4 5.4 0 1 0 5.6 11.1Z" fill="#b38a48" fill-rule="evenodd"/>' +
+        '<rect x="4" y="9.2" width="16" height="0.8" fill="#140f2e"/><rect x="4" y="13.6" width="16" height="0.8" fill="#140f2e"/>' +
         '</g></g>' +
-        '<path d="M2.5 12A9.5 3 0 0 1 21.5 12" fill="none" stroke="#e8a73f" stroke-width="1.9" stroke-linecap="butt" mask="url(#halkaArka)"/>' +
-        '<path d="M21.5 12A9.5 3 0 0 1 2.5 12" fill="none" stroke="#ffd27a" stroke-width="1.9" stroke-linecap="butt"/></g>',
+        '<path d="M2.5 12A9.5 3 0 0 1 21.5 12" fill="none" stroke="#b38a48" stroke-width="1.9" stroke-linecap="butt" mask="url(#halkaArka)"/>' +
+        '<path d="M21.5 12A9.5 3 0 0 1 2.5 12" fill="none" stroke="#d6b06a" stroke-width="1.9" stroke-linecap="butt"/></g>',
     };
   },
 };
