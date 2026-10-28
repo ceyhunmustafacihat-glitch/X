@@ -17,13 +17,16 @@ const word = await import(path.join(root, 'kelime/kelimeler', `${slug}.mjs`));
 
 // Montserrat'ı SVG'nin içine gömüyoruz: dosya her tarayıcıda aynı görünür.
 // Illustrator gömülü fontu okumaz; orada bilgisayarda Montserrat kurulu olmalı.
-const fontDir = path.join(root, 'animation/fonts');
+// Sabit ağırlıklı dosyalar (Regular 400, Bold 700, ExtraBold 800, Italic 400) kullanılır ki
+// PDF'de de yazı tipi doğru adıyla ve kalınlığıyla gelsin (değişken dosya Canva'da "Thin" görünüyordu).
+const fontDir = path.join(root, 'kelime/fonts/montserrat');
 const latinExt = 'U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+20A0-20AB, U+2C60-2C7F, U+A720-A7FF';
 const latin = 'U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2212';
-const fontCss = ['normal', 'italic'].flatMap((style) => [['latin-ext', latinExt], ['latin', latin]].map(([sub, range]) => {
-  const b64 = fs.readFileSync(path.join(fontDir, `Montserrat-${style}-${sub}.woff2`)).toString('base64');
-  return `@font-face{font-family:'Montserrat';font-style:${style};font-weight:100 900;src:url(data:font/woff2;base64,${b64}) format('woff2');unicode-range:${range};}`;
-})).join('\n');
+const fontCss = [[400, 'normal'], [700, 'normal'], [800, 'normal'], [400, 'italic']].flatMap(([weight, style]) =>
+  [['latin-ext', latinExt], ['latin', latin]].map(([sub, range]) => {
+    const b64 = fs.readFileSync(path.join(fontDir, `montserrat-${sub}-${weight}-${style}.woff2`)).toString('base64');
+    return `@font-face{font-family:'Montserrat';font-style:${style};font-weight:${weight};src:url(data:font/woff2;base64,${b64}) format('woff2');unicode-range:${range};}`;
+  })).join('\n');
 
 const browser = await chromium.launch();
 const page = await browser.newPage({ viewport: { width: W, height: H } });
