@@ -52,10 +52,6 @@ SCENES.title = (g, lt, sc) => {
   const cu = sc.cues;
   g.fillStyle = C.paper; g.fillRect(0, 0, W, H);
   drawGlow(g, 540, 700, 700, '#fff3d6', 0.9);
-  // sea band at the bottom
-  g.fillStyle = C.sea; g.fillRect(0, 1560, W, 400);
-  waves(g, 1600, 1950, rgb(C.white, 0.5), lt, 1);
-  ink(g, wpoly([[-20, 1560], [W + 20, 1560], [W + 20, 1572], [-20, 1572]], 0.8, 1), C.seaD, 0);
 
   // medallion portrait
   const s = pop(cu.ink, lt, 0.7);
@@ -65,13 +61,6 @@ SCENES.title = (g, lt, sc) => {
     const inner = wellipse(0, 0, 286, 286, 1.6, 12, 24);
     ink(g, inner, C.teal, 5);
     g.save(); g.clip(inner);
-    // light rays
-    g.globalAlpha = 0.18;
-    for (let i = 0; i < 12; i++) {
-      const a = i / 12 * TAU + lt * 0.08;
-      g.fillStyle = C.white; g.beginPath(); g.moveTo(0, 0); g.arc(0, 0, 400, a, a + 0.14); g.fill();
-    }
-    g.globalAlpha = 1;
     person(g, Object.assign({}, WILL.old, { shadow: false, x: 0, y: 590, s: 1.95, t: lt, armL: 0.1, armR: 0.1, mouth: 'smile' }));
     g.restore();
   });
@@ -202,50 +191,49 @@ function familyRoom(g, wall, glowX = 540) {
   ink(g, wrect(-10, 1180, W + 20, 800, 0, 123), rgb(shade(wall, 0.72)), 0);
   wline(g, [[0, 1180], [W, 1180]], 5, C.ink, 124);
 }
-SCENES.alec = (g, lt, sc) => {
+// the whole family on one page; whoever the caption is about stands out
+SCENES.family = (g, lt, sc) => {
   const cu = sc.cues;
-  familyRoom(g, '#dfe6d4');
-  const p = pop(cu.in, lt, 0.55);
-  // ideas rising from his experiment
-  for (let i = 0; i < 3; i++) {
-    const u = ((lt - cu.bubbles) * 0.22 + i / 3) % 1;
-    if (lt > cu.bubbles) alpha(g, Math.sin(u * Math.PI), () => at(g, 700 + (i - 1) * 120, 400 - u * 150, 1.1, 0, () => drawSci(g, i, lt)));
-  }
-  at(g, 520, 1190, 1, 0, () => {
-    g.scale(1, p);
-    person(g, Object.assign({}, ALEC, { s: 2.0, t: lt, armL: 0.12, armR: 1.9, elbR: 0.9, mouth: 'smile', brow: 0.4, look: 0.5,
-      handR: (gg, x, y) => propFlask(gg, x + 6, y - 6, 0.9, '#7ad1b0', lt) }));
-  });
-};
-SCENES.mildred = (g, lt, sc) => {
-  const cu = sc.cues;
-  familyRoom(g, '#e6dbe9');
-  const p = pop(cu.in, lt, 0.55);
-  const wave = Math.sin(Math.max(0, lt - cu.wave) * 3) * 0.08;
-  at(g, 460, 1190, 1, 0, () => {
-    g.scale(1, p);
-    person(g, Object.assign({}, MILDRED, { s: 2.0, t: lt, armR: 2.6 + wave, elbR: 0.4, armL: 0.2, mouth: 'grin', brow: 0.5, look: 0.4,
-      handR: (gg, x, y) => placard(gg, x, y, lt, wave) }));
-  });
-};
-SCENES.jose = (g, lt, sc) => {
-  const cu = sc.cues;
-  familyRoom(g, '#f0dcc4');
-  const p = pop(cu.in, lt, 0.55);
-  const look = ss(cu.baby + 0.4, cu.baby + 1.0, lt);
-  at(g, 400, 1190, 1, 0, () => {
-    g.scale(1, p);
-    person(g, { kid: true, hair: '#3e2a1c', hairStyle: 'kid', top: C.coral, bottom: C.navy, shorts: true, hat: 'school', hatCol: C.navy, seed: 9,
-      s: 2.1, t: lt, armL: 0.15, armR: lerp(0.15, 1.2, look), mouth: 'grin', look: look });
-  });
-  // baby William in a basket beside his big brother
-  const pb = pop(cu.baby, lt, 0.6);
-  if (pb > 0) at(g, 720, 1192, pb * 1.15, 0, () => {
-    g.fillStyle = 'rgba(42,33,29,0.18)'; g.beginPath(); g.ellipse(0, 4, 90, 10, 0, 0, TAU); g.fill();
-    ink(g, wpoly([[-80, -70], [80, -70], [64, 0], [-64, 0]], 1.2, 131), '#c99a5b');
-    for (let i = 0; i < 5; i++) wline(g, [[-70 + i * 35, -66], [-58 + i * 30, -4]], 3, rgb(C.ink, 0.45), 132 + i);
-    babyBundle(g, 0, -88, 1.1, 0, 0);
-  });
+  const wall = '#e9dcc4';
+  familyRoom(g, wall);
+  const fA = win(cu.alec - 0.2, cu.alec + 0.3, cu.mildred - 0.3, cu.mildred, lt);
+  const fM = win(cu.mildred - 0.3, cu.mildred, cu.jose - 0.3, cu.jose, lt);
+  const fJ = ss(cu.jose - 0.3, cu.jose, lt);
+  const pA = pop(cu.alec, lt, 0.55), pM = pop(cu.mildred, lt, 0.55), pJ = pop(cu.jose, lt, 0.55);
+  if (pA > 0) withLayer(g, 'fA', 1, L => {
+    for (let i = 0; i < 3; i++) {
+      const u = ((lt - cu.alec) * 0.22 + i / 3) % 1;
+      alpha(L, fA * Math.sin(u * Math.PI), () => at(L, 250 + (i - 1) * 100, 500 - u * 130, 0.9, 0, () => drawSci(L, i, lt)));
+    }
+    at(L, 230, 1190, 1, 0, () => {
+      L.scale(1, pA);
+      person(L, Object.assign({}, ALEC, { s: 1.55, t: lt, armL: 0.12, armR: 1.9, elbR: 0.9, mouth: 'smile', brow: 0.4 * fA, look: 0.4,
+        handR: (gg, x, y) => propFlask(gg, x + 6, y - 6, 0.9, '#7ad1b0', lt) }));
+    });
+  }, 1 - fA, wall);
+  if (pM > 0) withLayer(g, 'fM', 1, L => {
+    at(L, 540, 1190, 1, 0, () => {
+      L.scale(1, pM);
+      person(L, Object.assign({}, MILDRED, { s: 1.55, t: lt, armR: 2.6, elbR: 0.4, armL: 0.2, mouth: fM > 0.5 ? 'grin' : 'smile', brow: 0.5 * fM,
+        handR: (gg, x, y) => placard(gg, x, y, lt, 0) }));
+    });
+  }, 1 - fM, wall);
+  if (pJ > 0) withLayer(g, 'fJ', 1, L => {
+    const look = ss(cu.baby + 0.4, cu.baby + 1.0, lt);
+    at(L, 870, 1190, 1, 0, () => {
+      L.scale(1, pJ);
+      person(L, { kid: true, hair: '#3e2a1c', hairStyle: 'kid', top: C.coral, bottom: C.navy, shorts: true, hat: 'school', hatCol: C.navy, seed: 9,
+        s: 1.6, t: lt, armL: lerp(0.15, 1.1, look), armR: 0.15, mouth: 'grin', look: -look });
+    });
+    // baby William beside his big brother
+    const pb = pop(cu.baby, lt, 0.6);
+    if (pb > 0) at(L, 700, 1192, pb * 0.95, 0, () => {
+      L.fillStyle = 'rgba(42,33,29,0.18)'; L.beginPath(); L.ellipse(0, 4, 90, 10, 0, 0, TAU); L.fill();
+      ink(L, wpoly([[-80, -70], [80, -70], [64, 0], [-64, 0]], 1.2, 131), '#c99a5b');
+      for (let i = 0; i < 5; i++) wline(L, [[-70 + i * 35, -66], [-58 + i * 30, -4]], 3, rgb(C.ink, 0.45), 132 + i);
+      babyBundle(L, 0, -88, 1.1, 0, 0);
+    });
+  }, 1 - fJ, wall);
 };
 
 function drawSci(g, i, t) {

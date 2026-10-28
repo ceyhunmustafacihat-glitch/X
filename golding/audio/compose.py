@@ -310,8 +310,8 @@ M(t0 + 0.2, pad([hz(x) for x in ["C3", "G3", "E4"]], 5.2, 0.24, attack=1.0, rele
 
 # --- birth and the family pages: playful pizzicato
 playful(S("birth") + 0.1, nxt("birth") - 0.3, 104, C_PROG, C_TUNE)
-for sid in ["alec", "mildred", "jose"]:
-    playful(S(sid) + 0.05, nxt(sid) - 0.2, 104, [("F2", ["A4", "C5", "F5"]), ("C3", ["E5", "G5", "Bb4"])] if sid == "mildred" else C_PROG, C_TUNE, 0.9)
+playful(S("family") + 0.05, nxt("family") - 0.3, 104,
+        [("F2", ["A4", "C5", "F5"]), ("D3", ["A4", "D5", "F5"]), ("Bb2", ["D5", "F5", "Bb4"]), ("C3", ["E5", "G5", "Bb4"])], C_TUNE, 0.9)
 
 # --- house: spooky A minor
 th, te_ = S("house"), nxt("house")
@@ -454,13 +454,13 @@ for k in range(8):
     FX(S("birth", "move") + 0.8 + k * 0.22, pop_snd(900 + k * 40) * 0.4, 0.08, -0.3 + k * 0.08, 0.2)
 FX(S("birth", "house"), pop_snd(700), 0.16, 0.2, 0.2)
 # family pages
-for sid in ["alec", "mildred", "jose"]:
-    FX(S(sid, "in"), pop_snd(760), 0.16, 0, 0.2)
+for key in ["alec", "mildred", "jose"]:
+    FX(S("family", key), pop_snd(760), 0.16, 0, 0.2)
 for k in range(10):
-    FX(S("alec", "bubbles") + k * 0.4 + rng.random() * 0.1, glide(500 + rng.random() * 400, 900 + rng.random() * 500, 0.06, 0.5), 0.06, 0.3, 0.2)
+    FX(S("family", "alec") + 0.6 + k * 0.4 + rng.random() * 0.1, glide(500 + rng.random() * 400, 900 + rng.random() * 500, 0.06, 0.5), 0.06, 0.3, 0.2)
 for k in range(4):
-    FX(S("mildred", "wave") + k * 0.9, noise_band(0.5, 400, 3000) * np.sin(np.linspace(0, np.pi, int(0.5 * SR))), 0.035, 0.2, 0.4)
-FX(S("jose", "baby"), pop_snd(1000), 0.16, 0.3, 0.2)
+    FX(S("family", "mildred") + 0.6 + k * 0.9, noise_band(0.5, 400, 3000) * np.sin(np.linspace(0, np.pi, int(0.5 * SR))), 0.035, 0.2, 0.4)
+FX(S("family", "baby"), pop_snd(1000), 0.16, 0.3, 0.2)
 # house
 hd = nxt("house") - S("house")
 n = int(hd * SR)
