@@ -1,5 +1,7 @@
 # sözlükdeus — “Türk dili, Türk milletinin kalbidir, zihnidir.”
 
+> Bu depoda ayrıca: [`satranc/`](satranc/) — **Satranç Dersi 01: Satranç Tahtası** (9:16, 75 sn, döngülü Reels videosu).
+
 Instagram Reels için 9:16 dikey (1080 × 1920), 32 saniyelik 2D animasyon.
 Sosyal medyada amaçsızca vakit geçiren bir genç, [@sozlukdeus](https://www.instagram.com/sozlukdeus/) sayfasının bir kelime paylaşımına rastlar;
 tek bir kelimenin uyandırdığı merak, zihnindeki ve odasındaki değişimi başlatır.
