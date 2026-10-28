@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>Satranç Tahtası — Kapak</title>
 <link rel="stylesheet" href="../anim/fonts/fonts.css">
-<style>html, body { margin: 0; background: #1e2838; } canvas { display: block; }</style>
+<style>html, body { margin: 0; background: #0c0e13; } canvas { display: block; }</style>
 </head>
 <body>
 <canvas id="c" width="1080" height="1920"></canvas>
@@ -15,18 +15,23 @@
   await Promise.all(['500 40px Montserrat', '700 40px Montserrat', '800 40px Montserrat', '900 40px Montserrat']
     .map(f => document.fonts.load(f, 'SATRANÇ TAHTASI İ')));
   const W = 1080, H = 1920;
-  const C = { bg: '#1e2838', cream: '#F5E6CC', gold: '#E8B04B', salmon: '#D9876E', ink: '#2a2420',
-    teal: '#2B6F88', ray: '#3B8AA1', light: '#F0D9B5', dark: '#B58863', side: '#7a5235' };
+  // palette taken from the video (anim/scene.js)
+  const C = { bg0: '#0c0e13', bg1: '#191d28', white: '#F7F3EA', gold: '#FFC94A', ink: '#0c0e13',
+    disc: '#151924', ray: '#1f2533', light: '#F0D9B5', dark: '#B58863', frame: '#2b1e15', side: '#5a3d26', sideDark: '#3d2918' };
   const ctx = document.getElementById('c').getContext('2d');
   let seed = 7;
   const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
 
-  // background + faint speckles
-  ctx.fillStyle = C.bg; ctx.fillRect(0, 0, W, H);
-  for (let i = 0; i < 260; i++) {
-    ctx.fillStyle = `rgba(255,255,255,${0.02 + rnd() * 0.04})`;
-    ctx.beginPath(); ctx.arc(rnd() * W, rnd() * H, 1 + rnd() * 1.6, 0, Math.PI * 2); ctx.fill();
-  }
+  // background exactly as in the video: vertical gradient, faint tilted checker, warm glow
+  const g = ctx.createLinearGradient(0, 0, 0, H);
+  g.addColorStop(0, C.bg1); g.addColorStop(0.55, C.bg0); g.addColorStop(1, '#07080b');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  ctx.save(); ctx.translate(W / 2, H / 2); ctx.rotate(-0.21); ctx.fillStyle = 'rgba(255,255,255,0.022)';
+  for (let i = -10; i < 10; i++) for (let j = -12; j < 12; j++) if (!((i + j) & 1)) ctx.fillRect(i * 150 - 300, j * 150 - 300, 150, 150);
+  ctx.restore();
+  const rg = ctx.createRadialGradient(W / 2, 1100, 60, W / 2, 1100, 900);
+  rg.addColorStop(0, 'rgba(255,201,74,0.12)'); rg.addColorStop(1, 'rgba(255,201,74,0)');
+  ctx.fillStyle = rg; ctx.fillRect(0, 0, W, H);
 
   const text = (s, x, y, size, weight, color, spacing = 0) => {
     ctx.font = `${weight} ${size}px Montserrat`; ctx.letterSpacing = spacing + 'px';
@@ -39,12 +44,12 @@
   };
 
   // title block
-  text('SATRANÇ', W / 2, 450, fit('SATRANÇ', 900, 108, 760, 2), 900, C.cream, 2);
+  text('SATRANÇ', W / 2, 450, fit('SATRANÇ', 900, 108, 760, 2), 900, C.white, 2);
   text('TAHTASI', W / 2, 598, fit('TAHTASI', 900, 146, 820, 2), 900, C.gold, 2);
 
   // medallion
   const MX = W / 2, MY = 1120, R = 340, RI = 300;
-  ctx.fillStyle = 'rgba(12,16,24,0.55)';
+  ctx.fillStyle = 'rgba(0,0,0,0.45)';
   ctx.beginPath(); ctx.ellipse(MX, 1540, 290, 27, 0, 0, Math.PI * 2); ctx.fill();
   ctx.beginPath(); ctx.arc(MX, MY, R + 6, 0, Math.PI * 2); ctx.fillStyle = C.ink; ctx.fill();
   ctx.beginPath(); ctx.arc(MX, MY, R, 0, Math.PI * 2); ctx.fillStyle = C.gold; ctx.fill();
@@ -52,7 +57,7 @@
 
   ctx.save();
   ctx.beginPath(); ctx.arc(MX, MY, RI, 0, Math.PI * 2); ctx.clip();
-  ctx.fillStyle = C.teal; ctx.fillRect(MX - RI, MY - RI, 2 * RI, 2 * RI);
+  ctx.fillStyle = C.disc; ctx.fillRect(MX - RI, MY - RI, 2 * RI, 2 * RI);
   ctx.fillStyle = C.ray;
   for (let i = 0; i < 18; i++) {
     const a0 = (i / 18) * Math.PI * 2, a1 = a0 + Math.PI / 18;
@@ -61,7 +66,11 @@
     ctx.lineTo(MX + Math.cos(a1) * 600, MY - 40 + Math.sin(a1) * 600); ctx.closePath(); ctx.fill();
   }
   // small sparkles in place of the reference's rain
-  ctx.strokeStyle = 'rgba(255,255,255,0.45)'; ctx.lineCap = 'round';
+  // warm glow behind the board, like the video's centre light
+  const dg = ctx.createRadialGradient(MX, MY - 40, 20, MX, MY - 40, RI);
+  dg.addColorStop(0, 'rgba(255,201,74,0.28)'); dg.addColorStop(1, 'rgba(255,201,74,0)');
+  ctx.fillStyle = dg; ctx.fillRect(MX - RI, MY - RI, 2 * RI, 2 * RI);
+  ctx.strokeStyle = 'rgba(255,201,74,0.55)'; ctx.lineCap = 'round';
   for (let i = 0; i < 26; i++) {
     const x = MX - RI + rnd() * 2 * RI, y = MY - RI + rnd() * 2 * RI * 0.62, s = 4 + rnd() * 7;
     ctx.lineWidth = 2.5;
@@ -77,9 +86,9 @@
     ctx.beginPath(); pts.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y))); ctx.closePath();
     ctx.fillStyle = fill; ctx.fill(); ctx.strokeStyle = C.ink; ctx.lineWidth = 6; ctx.lineJoin = 'round'; ctx.stroke();
   };
-  poly([P[3], P[2], [P[2][0], P[2][1] + TH], [P[3][0], P[3][1] + TH]], '#5f3f29');
-  poly([P[2], P[1], [P[1][0], P[1][1] + TH], [P[2][0], P[2][1] + TH]], C.side);
-  poly(P, '#3a271b');
+  poly([P[3], P[2], [P[2][0], P[2][1] + TH], [P[3][0], P[3][1] + TH]], C.side);
+  poly([P[2], P[1], [P[1][0], P[1][1] + TH], [P[2][0], P[2][1] + TH]], C.sideDark);
+  poly(P, C.frame);
   for (let f = 0; f < N; f++) for (let r = 0; r < N; r++) {
     const u = f - N / 2, v = (N - 1 - r) - N / 2;   // white's view: a1 in the near-left corner
     ctx.beginPath();
@@ -123,12 +132,16 @@
   }
   // queen on d-file, king on e-file, both on the back half so the squares stay visible
   const [qx, qy] = iso(-2.0, 0.0), [kx, ky] = iso(0.0, -2.0);
-  queen(qx, qy, 1.45, '#4a3428');
-  king(kx, ky, 1.55, '#FBF4E6');
+  queen(qx, qy, 1.45, '#fbf7ef');
+  king(kx, ky, 1.55, '#fbf7ef');
   ctx.restore();
 
   // redraw the inner ring outline over the clipped art
   ctx.beginPath(); ctx.arc(MX, MY, RI + 3, 0, Math.PI * 2); ctx.strokeStyle = C.ink; ctx.lineWidth = 6; ctx.stroke();
+  // the video's vignette
+  const v = ctx.createRadialGradient(W / 2, H / 2, H * 0.35, W / 2, H / 2, H * 0.75);
+  v.addColorStop(0, 'rgba(0,0,0,0)'); v.addColorStop(1, 'rgba(0,0,0,0.55)');
+  ctx.fillStyle = v; ctx.fillRect(0, 0, W, H);
   window.coverReady = true;
 })();
 </script>
