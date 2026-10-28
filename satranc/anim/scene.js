@@ -66,7 +66,7 @@
 
   // ------------------------------------------------------------------ script
   const T = {
-    titleOut: 2.7, build: 3.3, frameIn: 3.1,
+    build: 3.3, frameIn: 3.1,
     count: [9.5, 11.1], rows: 12.2, cols: 15.0, lights: 17.9, darks: 19.5,
     axisLetters: 24.5, axisNumbers: 25.3, filesGlow: 28.3, ranksGlow: 29.8,
     walk: 31.9, colE: 35.9, row4: 36.5, e4: 37.1, ripple: 39.7,
@@ -105,7 +105,7 @@
   // the cover and this card runs on scene time (real time minus INS), so the rest keeps its timing.
   const CUT = 3.0, INS = 3.3;
   const sceneT = t => (t < CUT ? t : Math.max(CUT, t - INS));
-  const INTRO_CARD = { a: 3.3, b: 6.3, kicker: 'BÖLÜM 01', lines: ['TAHTANIN', 'YAPISI'] };
+  const INTRO_CARD = { a: 2.95, b: 6.3, backdropFrom: 3.2, kicker: 'BÖLÜM 01', lines: ['TAHTANIN', 'YAPISI'] };
   const CARDS = [
     { a: 21.0, b: 24.1, kicker: 'BÖLÜM 02', lines: ['TAHTANIN', 'KONUMLANDIRILMASI'] },
     { a: 48.4, b: 51.1, kicker: 'BÖLÜM 03', lines: ['TAHTANIN', 'BÖLGELERİ'] },
@@ -136,53 +136,13 @@
     ctx.fillStyle = v; ctx.fillRect(0, 0, W, H);
   }
 
-  // ------------------------------------------------------------------ title (loop point)
-  // Fully shown at t = 0; leaves at 2.7 s; re-enters from 74 s and lands exactly at t = D (= 0).
+  // ------------------------------------------------------------------ cover (loop point)
+  // Drawn in the chapter-card style. Fully shown at t = 0 and leaves by COVER.b; re-enters over the
+  // last second and lands exactly at t = D (= 0), so the video loops seamlessly.
+  const COVER = { a: -1.0, b: 3.2, holdOut: true, kicker: '', lines: ['SATRANÇ', 'TAHTASI'] };
   function title(t) {
-    let p = 1, out = 0;
-    if (t >= T.titleOut && t < T.titleIn) { if (t > T.titleOut + 0.9) return; out = seg(t, T.titleOut, T.titleOut + 0.8); }
-    if (t >= T.titleIn) p = seg(t, T.titleIn, D);
-    const el = k => {
-      const pin = eOut(clamp((p - k * 0.08) / 0.6));
-      const po = eIn(clamp((out - k * 0.05) / 0.7));
-      return { a: pin * (1 - po), dy: (1 - pin) * 70 - po * 90 };
-    };
-    let e = el(1);
-    const s1 = fitSize('SATRANÇ', 900, 176, 940, 2);
-    text('SATRANÇ', W / 2, 690 + e.dy, { weight: 900, size: s1, alpha: e.a, spacing: 2 });
-    e = el(2);
-    text('TAHTASI', W / 2, 860 + e.dy, { weight: 900, size: s1, alpha: e.a, color: C.gold, spacing: 2 });
-    e = el(3);
-    ctx.save(); ctx.globalAlpha = e.a;
-    ctx.fillStyle = C.white; rrect(W / 2 - 110 * e.a, 960 + e.dy, 220 * e.a, 8, 4); ctx.fill(); ctx.restore();
-    e = el(4);
-    text('Yapısı  ·  Koordinatlar  ·  Bölgeler', W / 2, 1030 + e.dy, { weight: 600, size: 42, color: C.muted, alpha: e.a });
-    e = el(5);
-    isoBoard(W / 2, 1360 + e.dy, e.a, t);
-  }
-  function isoBoard(x, y, a, t) {
-    if (a <= 0) return;
-    const s = 62;
-    ctx.save(); ctx.globalAlpha = a;
-    const tile = (oy, fn) => {
-      ctx.save(); ctx.translate(x, y + oy); ctx.scale(1, 0.56); ctx.rotate(Math.PI / 4); fn(); ctx.restore();
-    };
-    tile(46, () => { ctx.fillStyle = 'rgba(0,0,0,0.45)'; ctx.filter = 'blur(18px)'; ctx.fillRect(-4.3 * s, -4.3 * s, 8.6 * s, 8.6 * s); ctx.filter = 'none'; });
-    tile(22, () => { ctx.fillStyle = '#1a110b'; ctx.fillRect(-4.3 * s, -4.3 * s, 8.6 * s, 8.6 * s); });
-    tile(0, () => {
-      ctx.fillStyle = C.frame; ctx.fillRect(-4.3 * s, -4.3 * s, 8.6 * s, 8.6 * s);
-      for (let f = 0; f < 8; f++) for (let r = 0; r < 8; r++) {
-        ctx.fillStyle = isLight(f, r) ? C.light : C.dark;
-        ctx.fillRect((f - 4) * s, (3 - r) * s, s, s);
-      }
-      // a soft gold sheen sweeping across once per loop
-      const k = ((t / D) * 3) % 1;
-      const gx = -8 * s + k * 16 * s;
-      const g = ctx.createLinearGradient(gx - 2 * s, 0, gx + 2 * s, 0);
-      g.addColorStop(0, 'rgba(255,240,200,0)'); g.addColorStop(0.5, 'rgba(255,240,200,0.28)'); g.addColorStop(1, 'rgba(255,240,200,0)');
-      ctx.fillStyle = g; ctx.fillRect(-4 * s, -4 * s, 8 * s, 8 * s);
-    });
-    ctx.restore();
+    if (t < T.titleIn) card(t, COVER);
+    else card(t - D, COVER);
   }
 
   // ------------------------------------------------------------------ board
@@ -682,7 +642,10 @@
     const kin = eIO(seg(t, c.a, c.a + 0.45)), kout = eIO(seg(t, c.b - 0.5, c.b));
     // backdrop
     ctx.save();
-    ctx.globalAlpha = 0.86 * kin * (1 - kout);
+    // chained cards (cover → chapter 1) hand the backdrop over instead of fading it out and in
+    if (c.holdOut) ctx.globalAlpha = 0.86 * kin;
+    else if (c.backdropFrom !== undefined) ctx.globalAlpha = t < c.backdropFrom ? 0 : 0.86 * (1 - kout);
+    else ctx.globalAlpha = 0.86 * kin * (1 - kout);
     ctx.fillStyle = '#0a0c11'; ctx.fillRect(0, 0, W, H);
     ctx.restore();
     // gold band wipe
@@ -732,7 +695,6 @@
     put(INTRO_CARD.a, 'whoosh', { gain: 0.75, dur: 0.7 }); put(INTRO_CARD.a + 0.3, 'hit', { gain: 0.75 });
     put(INTRO_CARD.b - 0.6, 'whoosh', { gain: 0.55, dur: 0.6, rev: 1 });
     add(0.05, 'hit', { gain: 0.9 }); add(0.07, 'shimmer', { gain: 0.5 });
-    add(T.titleOut - 0.05, 'whoosh', { gain: 0.7, dur: 0.8 });
     add(T.frameIn, 'thud', { gain: 0.6 });
     for (let k = 0; k <= 14; k++) add(T.build + k * 0.06 + 0.05, 'tock', { pitch: 1 + k * 0.035, gain: 0.55 });
     for (const c of CAPS) add(c.a, 'blip', { gain: 0.22 });

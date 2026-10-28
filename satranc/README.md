@@ -12,8 +12,8 @@ H.264 High, 1080×1920, 30 fps, yuv420p, AAC 48 kHz stereo.
 
 | Zaman | Bölüm | Görüntü | Ses |
 |---|---|---|---|
-| 0–3 sn | Kapak | **SATRANÇ TAHTASI** başlığı, izometrik tahta | Başlık vuruşu, ışıltı |
-| 3–6 sn | Ara başlık | **TAHTANIN YAPISI** (büyük font, gelir ve gider) | Whoosh + vuruş |
+| 0–3 sn | Kapak | **SATRANÇ TAHTASI**, bölüm geçişleriyle aynı başlık stilinde | Başlık vuruşu, ışıltı |
+| 3–6 sn | Ara başlık | **TAHTANIN YAPISI**: kapak yazısı kayarak çıkarken bu başlık kayarak girer | Whoosh + vuruş |
 | 6–12 sn | 01 · Tahtanın yapısı | Tahta kare kare çapraz dalga hâlinde kurulur. “Birbirini takip eden açık ve koyu renkli karelerden oluşan, kare biçiminde bir oyun alanı” | Ahşap “tok” sesleri |
 | 12–15 sn | | 1’den 64’e sayaç, kareler tek tek numaralanır: **64 KARE** | Yükselen tıkırtılar, ding |
 | 15–18 sn | | 8 yatay sıra (satır) alttan üste parlar | Swish + nota |
