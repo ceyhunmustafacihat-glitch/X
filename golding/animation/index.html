@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>William Golding — Bir Yazarın Hayatı</title>
+<link rel="stylesheet" href="../../animation/fonts/fonts.css">
+<style>
+  html, body { margin: 0; background: #1a1411; color: #f3e7cd; font-family: Inter, sans-serif; }
+  body.render { overflow: hidden; }
+  #stage { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 16px; }
+  canvas { display: block; background: #000; }
+  body:not(.render) canvas { height: min(84vh, 1920px); width: auto; aspect-ratio: 9 / 16; max-width: calc(100vw - 32px); }
+  body.render #stage { padding: 0; }
+  body.render #ui { display: none; }
+  #ui { display: flex; gap: 10px; align-items: center; width: min(560px, calc(100vw - 32px)); }
+  #ui button { background: #2a211d; color: #f3e7cd; border: 1px solid #7b4f2e; border-radius: 6px; padding: 6px 14px; font: inherit; cursor: pointer; }
+  #ui input { flex: 1; accent-color: #e5a93c; }
+  #time { font-variant-numeric: tabular-nums; min-width: 4.5em; text-align: right; font-size: 13px; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <canvas id="c" width="1080" height="1920"></canvas>
+  <div id="ui">
+    <button id="play">▶︎ Oynat</button>
+    <input id="scrub" type="range" min="0" max="177" step="0.0333" value="0">
+    <span id="time">0.00 s</span>
+  </div>
+  <audio id="audio" src="../output/soundtrack.wav" preload="auto"></audio>
+</div>
+<script src="timeline.js"></script>
+<script src="core.js"></script>
+<script src="person.js"></script>
+<script src="captions.js"></script>
+<script src="main.js"></script>
+<script src="scenes1.js"></script>
+<script src="scenes2.js"></script>
+<script src="scenes3.js"></script>
+<script>
+(async function () {
+  const params = new URLSearchParams(location.search);
+  const canvas = document.getElementById('c');
+  const fams = ['600 40px "Cormorant Garamond"', '700 40px "Cormorant Garamond"', 'italic 600 40px "Cormorant Garamond"', '600 40px Caveat',
+    '600 40px Montserrat', '700 40px Montserrat', '800 40px Montserrat'];
+  await Promise.all(fams.map(f => document.fonts.load(f, 'William Golding İğüşıöçÜ “”')));
+  await document.fonts.ready;
+  init(canvas);
+  window.renderAt = t => { renderFrame(t); return true; };
+  window.animReady = true;
+  if (params.has('render')) { document.body.classList.add('render'); return; }
+  if (params.has('t')) { renderFrame(parseFloat(params.get('t'))); return; }
+
+  const audio = document.getElementById('audio');
+  const scrub = document.getElementById('scrub'), timeEl = document.getElementById('time'), btn = document.getElementById('play');
+  scrub.max = TL.duration;
+  let playing = false, t0 = 0, start = 0;
+  const show = t => { renderFrame(t); scrub.value = t; timeEl.textContent = t.toFixed(2) + ' s'; };
+  function loop(now) {
+    if (!playing) return;
+    let t = audio.readyState >= 2 && !audio.paused ? audio.currentTime : t0 + (now - start) / 1000;
+    if (t >= TL.duration) { playing = false; btn.textContent = '▶︎ Oynat'; t = TL.duration - 0.001; }
+    show(t);
+    if (playing) requestAnimationFrame(loop);
+  }
+  btn.onclick = () => {
+    playing = !playing;
+    btn.textContent = playing ? '❚❚ Durdur' : '▶︎ Oynat';
+    if (playing) {
+      t0 = parseFloat(scrub.value); if (t0 >= TL.duration - 0.05) t0 = 0;
+      start = performance.now();
+      audio.currentTime = t0; audio.play().catch(() => {});
+      requestAnimationFrame(loop);
+    } else audio.pause();
+  };
+  scrub.oninput = () => { playing = false; audio.pause(); btn.textContent = '▶︎ Oynat'; show(parseFloat(scrub.value)); };
+  show(3.5);
+})();
+</script>
+</body>
+</html>
