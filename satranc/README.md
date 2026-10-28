@@ -8,6 +8,8 @@ H.264 High, 1080×1920, 30 fps, yuv420p, AAC 48 kHz stereo.
 
 ![Storyboard](docs/storyboard.jpg)
 
+Kapak fotoğrafı (9:16, 1080 × 1920): [`docs/kapak_foto.png`](docs/kapak_foto.png). Kaynağı `cover/cover.html`; yeniden üretmek için `node cover/render.mjs`.
+
 ## Akış
 
 | Zaman | Bölüm | Görüntü | Ses |
