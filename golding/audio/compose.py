@@ -386,7 +386,7 @@ for key, ch in [("rank1", ["C3", "G3", "C4"]), ("rank2", ["Eb3", "Bb3", "Eb4"]),
     FX(S("war", key) + 0.35, timpani(hz("G2"), 1.0, 0.7), 0.45, 0, 0.3)
     FX(S("war", key) + 0.1, glide(400, 1000, 0.2), 0.08, 0, 0.2)
 tc_ = S("war", "chase")
-for k in range(int(5.2 / 0.2)):
+for k in range(int(5.0 / 0.2)):
     M(tc_ + k * 0.2, pluck(hz(["C3", "C3", "Eb3", "C3", "D3", "C3", "G2", "C3"][k % 8]), 0.7, 0.3), 0.55, -0.2, 0.25)
     if k % 2 == 0:
         FX(tc_ + k * 0.2, kick(50, 0.35), 0.22, 0, 0.1)
@@ -531,6 +531,13 @@ FX(S("hard", "gasp") - 0.2, glide(90, 60, 2.0, 0.5, "rich"), 0.14, 0.4, 0.4)
 M(S("hard", "gasp"), brass([hz("C#3"), hz("G3"), hz("C4")], 0.6, 0.6, attack=0.01), 1.0, 0, 0.4)
 FX(S("hard", "attack") - 0.1, glide(300, 1500, 0.5, 0.5), 0.1, 0, 0.3)
 brawl_snd(S("hard", "attack") + 0.3, 1.0)
+# the burial: spade thuds and a pleased little tune
+tbu = S("hard", "bury")
+for k in range(8):
+    FX(tbu + 0.2 + k * 0.42, kick(90, 0.15, 30), 0.25, 0.2, 0.2)
+    FX(tbu + 0.22 + k * 0.42, noise_band(0.15, 300, 3000) * np.exp(-tt(int(0.15 * SR)) / 0.05), 0.1, 0.2, 0.2)
+for k, nm in enumerate(["C5", "E5", "G5", "C6", "G5", "C6"]):
+    M(tbu + 0.4 + k * 0.4, marimba(hz(nm), 0.5), 0.5, 0.2, 0.35)
 # honours
 FX(S("honors", "medal"), bell(hz("C6"), 0.5, 2.5), 0.28, 0, 0.5)
 for k in range(220):

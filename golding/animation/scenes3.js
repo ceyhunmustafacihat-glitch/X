@@ -37,7 +37,7 @@ function smoke(g, x, y, t, n = 6, colr = '#d9d6d0', a = 0.8, seed = 1, rise = 60
 
 SCENES.war = (g, lt, sc) => {
   const cu = sc.cues;
-  const bA = 1 - ss(4.6, 5.0, lt), bB = win(4.6, 5.0, 9.1, 9.5, lt), bC = win(9.1, 9.5, 14.7, 15.1, lt), bD = ss(14.7, 15.1, lt);
+  const bA = 1 - ss(4.6, 5.0, lt), bB = win(4.6, 5.0, 10.4, 10.8, lt), bC = win(10.4, 10.8, 15.9, 16.3, lt), bD = ss(15.9, 16.3, lt);
   const navy = { hair: '#6b4428', hairStyle: 'short', seed: 3, bottom: C.navyD };
   if (bA > 0) alpha(g, bA, () => {
     const sk = g.createLinearGradient(0, 0, 0, 1000);
@@ -51,8 +51,13 @@ SCENES.war = (g, lt, sc) => {
     smoke(g, 570 + lt * 6, 760 + bob, lt, 6, '#e8e4dc', 0.7, 1220);
     if (lt > cu.horn && lt < cu.horn + 1.6) smoke(g, 620 + lt * 6, 740 + bob, (lt - cu.horn) * 3, 4, C.white, 1 - inv(cu.horn, cu.horn + 1.6, lt), 1230, 20);
     waves(g, 1010, 1900, rgb(C.white, 0.35), lt, 5, 56);
-    person(g, Object.assign({}, navy, { x: 230, y: 1240, s: 1.5, t: lt, top: C.navy, sailorCollar: true, hat: 'sailor', mouth: 'smile', brow: 0.3,
-      armR: lt > cu.horn + 0.6 ? 2.75 : 0.15, elbR: lt > cu.horn + 0.6 ? 2.1 : 0, armL: 0.1 }));
+    // much younger shipmates beside him
+    for (const [x, hair, sd] of [[560, '#c27a3a', 81], [770, '#2b1d14', 82]])
+      person(g, { x, y: 1250, s: 1.32, t: lt, hair, hairStyle: 'kid', top: C.navy, bottom: C.navyD, sailorCollar: true, hat: 'sailor', seed: sd,
+        mouth: 'grin', brow: 0.6, look: -0.6, armL: 0.15, armR: 0.15 });
+    const glance = ss(2.2, 2.8, lt);
+    person(g, Object.assign({}, navy, { x: 250, y: 1240, s: 1.5, t: lt, top: C.navy, sailorCollar: true, hat: 'sailor', mouth: glance > 0.5 ? 'flat' : 'smile', brow: 0.3, angry: glance * 0.5,
+      look: glance, armR: lt > cu.horn + 0.6 && lt < 2.4 ? 2.75 : 0.15, elbR: lt > cu.horn + 0.6 && lt < 2.4 ? 2.1 : 0, armL: 0.1 }));
   });
   if (bB > 0) alpha(g, bB, () => {
     g.fillStyle = '#2f4865'; g.fillRect(0, 0, W, H);
@@ -159,7 +164,7 @@ function bobDylanPuppet(g, x, y, s, t, rot = 0) {
 }
 SCENES.hard = (g, lt, sc) => {
   const cu = sc.cues;
-  const bAB = 1 - ss(8.2, 8.6, lt), bC = ss(8.2, 8.6, lt);
+  const bAB = 1 - ss(8.2, 8.6, lt), bC = win(8.2, 8.6, 12.3, 12.7, lt), bG = ss(12.3, 12.7, lt);
   if (bAB > 0) alpha(g, bAB, () => {
     const tilt = Math.sin(lt * 1.7) * 0.03 * ss(4.8, 6.0, lt);
     g.save(); g.translate(540, 900); g.rotate(tilt); g.translate(-540, -900);
@@ -246,6 +251,40 @@ SCENES.hard = (g, lt, sc) => {
         const x = 800 + Math.cos(i * 2.4) * v * 360, y = 900 + Math.sin(i * 2.4) * v * 240 + v * v * 300;
         alpha(g, 1 - v, () => at(g, x, y, 1, v * 6 + i, () => ink(g, wellipse(0, 0, 18, 7, 0.4, 1520 + i), C.white, 2.5)));
       }
+    }
+  });
+  if (bG > 0) alpha(g, bG, () => {
+    // ...and then he buried it in the garden
+    const lb = lt - cu.bury;
+    g.fillStyle = '#1f2440'; g.fillRect(0, 0, W, H);
+    for (let i = 0; i < 30; i++) sparkle(g, (i * 137) % W, 300 + (i * 89) % 600, 4 + (i % 3) * 2, 0.7, '#fff3c4');
+    drawGlow(g, 820, 430, 200, '#fff2c0', 0.4);
+    ink(g, wellipse(820, 430, 60, 60, 1, 1560), '#eadfb5', 4);
+    // the friend's house behind, one lit window
+    ink(g, wrect(60, 620, 380, 480, 1.2, 1561), '#3a3550');
+    ink(g, wpoly([[40, 630], [250, 470], [460, 630]], 1.2, 1562), '#2a2638');
+    ink(g, wrect(140, 700, 80, 100, 1, 1563), rgb('#f6c55e', 0.9), 4);
+    ink(g, wrect(280, 700, 80, 100, 1, 1564), '#26223a', 4);
+    ink(g, wrect(-10, 1100, W + 20, 900, 1.4, 1565), '#2f4a35');
+    // the mound with the puppet's shoes sticking out
+    const grow = ss(0, 1.2, lb);
+    ink(g, wcurve([[520, 1150], [600, 1150 - 70 * grow], [720, 1150 - 90 * grow], [840, 1150 - 60 * grow], [900, 1150]], 1.5, 1566), '#5a3f2e');
+    for (const sd of [-1, 1]) at(g, 735 + sd * 26, 1150 - 90 * grow - 10, 1, sd * 0.3, () => {
+      limb(g, [[0, 30], [0, -10]], '#2a3550', 12, 3, 1567 + sd);
+      ink(g, wellipse(sd * 6, -18, 16, 9, 0.5, 1569 + sd), C.ink, 3);
+    });
+    for (const [x, y, r, k] of [[930, 1170, 0.5, 0], [470, 1180, -0.4, 1], [980, 1130, 1.2, 2]]) at(g, x, y, 1, r, () => {
+      if (k === 1) ink(g, wellipse(0, 0, 22, 18, 0.8, 1590), '#3a2a20', 3);
+      else limb(g, [[0, 0], [36, 0]], k ? '#2a3550' : '#3a3a44', 12, 3, 1591 + k);
+    });
+    // Golding with a spade, patting the earth down, very satisfied
+    const pat = Math.abs(Math.sin(lb * 6));
+    person(g, Object.assign({}, WILL.old, { x: 380, y: 1200, s: 1.35, t: lt, top: '#9fb6d6', bottom: '#9fb6d6', mouth: 'grin', eyes: lb > 1.2 ? 'happy' : 'open', angry: lb < 1.2 ? 0.6 : 0,
+      look: 1, armR: 1.4 + pat * 0.6, elbR: 0.6, armL: 1.2 + pat * 0.6, elbL: 0.8,
+      handR: (gg, x, y) => at(gg, x, y, 1, -0.6 - pat * 0.4, () => { limb(gg, [[0, 0], [0, 140]], C.wood, 9, 3, 1571); ink(gg, wpoly([[-22, 140], [22, 140], [16, 196], [0, 206], [-16, 196]], 0.8, 1572), '#9aa0a6', 4); }) }));
+    for (let i = 0; i < 6; i++) {
+      const v = ((lb * 1.3 + i / 6) % 1);
+      alpha(g, 1 - v, () => ink(g, wellipse(620 + i * 30 + v * 40, 1110 - v * 120 + Math.sin(i) * 20, 8, 7, 0.4, 1573 + i), '#5a3f2e', 2.5));
     }
   });
 };

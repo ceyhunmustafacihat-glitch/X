@@ -142,7 +142,7 @@ function person(g, o) {
 function drawHair(g, d, R, hY, seed) {
   const h = d.hair, st = d.hairStyle;
   if (st === 'bald' || d.hat === 'sailor' && st === 'short') {
-    if (st !== 'bald') ink(g, wcurve([[-R * 1.02, hY - R * 0.05], [-R * 0.9, hY - R * 0.5], [-R * 0.6, hY - R * 0.4], [-R * 0.7, hY + R * 0.1]], 1, seed + 50), h, 3.5);
+    if (st !== 'bald') ink(g, wcurve([[-R * 1.03, hY - R * 0.05], [-R * 0.99, hY - R * 0.55], [-R * 0.8, hY - R * 0.52], [-R * 0.86, hY - R * 0.05]], 1, seed + 50), h, 3.5);
     return;
   }
   if (st === 'curly') {

@@ -3,13 +3,13 @@
 // to the start of their scene; "*word*" marks a highlighted word. Scenes with
 // a "title" are plain chapter pages.
 window.TIMELINE = {
-  "duration": 171.8,
+  "duration": 177.4,
   "fps": 30,
   "scenes": [
     {
       "id": "title",
       "start": 0.0,
-      "end": 5.6,
+      "end": 5.2,
       "caps": [],
       "cues": {
         "ink": 0.3,
@@ -20,8 +20,8 @@ window.TIMELINE = {
     },
     {
       "id": "birth",
-      "start": 5.6,
-      "end": 16.4,
+      "start": 5.2,
+      "end": 16.0,
       "caps": [
         [
           0.8,
@@ -44,8 +44,8 @@ window.TIMELINE = {
     },
     {
       "id": "family",
-      "start": 16.4,
-      "end": 31.0,
+      "start": 16.0,
+      "end": 30.6,
       "caps": [
         [
           0.6,
@@ -72,16 +72,16 @@ window.TIMELINE = {
     },
     {
       "id": "ch_youth",
-      "start": 31.0,
-      "end": 33.4,
+      "start": 30.6,
+      "end": 32.6,
       "title": "ÇOCUKLUK VE|GENÇLİK YILLARI",
       "caps": [],
       "cues": {}
     },
     {
       "id": "house",
-      "start": 33.4,
-      "end": 45.8,
+      "start": 32.6,
+      "end": 45.0,
       "caps": [
         [
           0.5,
@@ -103,8 +103,8 @@ window.TIMELINE = {
     },
     {
       "id": "school",
-      "start": 45.8,
-      "end": 63.6,
+      "start": 45.0,
+      "end": 62.8,
       "caps": [
         [
           0.5,
@@ -132,16 +132,16 @@ window.TIMELINE = {
     },
     {
       "id": "ch_oxford",
-      "start": 63.6,
-      "end": 65.8,
+      "start": 62.8,
+      "end": 64.8,
       "title": "OXFORD YILLARI",
       "caps": [],
       "cues": {}
     },
     {
       "id": "oxford",
-      "start": 65.8,
-      "end": 77.4,
+      "start": 64.8,
+      "end": 76.4,
       "caps": [
         [
           0.5,
@@ -161,8 +161,8 @@ window.TIMELINE = {
     },
     {
       "id": "dark",
-      "start": 77.4,
-      "end": 86.4,
+      "start": 76.4,
+      "end": 85.4,
       "caps": [
         [
           0.5,
@@ -182,8 +182,8 @@ window.TIMELINE = {
     },
     {
       "id": "love",
-      "start": 86.4,
-      "end": 98.0,
+      "start": 85.4,
+      "end": 97.0,
       "caps": [
         [
           0.5,
@@ -211,97 +211,102 @@ window.TIMELINE = {
     },
     {
       "id": "ch_teacher",
-      "start": 98.0,
-      "end": 100.2,
+      "start": 97.0,
+      "end": 99.0,
       "title": "ÖĞRETMENLİK|YILLARI",
       "caps": [],
       "cues": {}
     },
     {
       "id": "teacher",
-      "start": 100.2,
-      "end": 110.8,
+      "start": 99.0,
+      "end": 112.6,
       "caps": [
         [
           0.5,
-          4.4,
+          4.2,
           "Golding, öğrencilerinin davranışlarını çok dikkatli gözlemleyen bir öğretmendi."
         ],
         [
-          4.7,
-          10.3,
-          "Bir okul gezisinde öğrencileri ikiye ayırdı: Bir grup savunurken diğeri saldırdı. O ise *izledi*."
+          4.5,
+          8.9,
+          "Bir okul gezisinde onları tarihî bir *sura* götürdü ve ikiye ayırdı: Bir grup savunacak, diğeri saldıracaktı."
+        ],
+        [
+          9.2,
+          13.2,
+          "Bu küçük savaş oyununda *grup psikolojisini* yakından gözlemledi."
         ]
       ],
       "cues": {
         "write": 1.2,
-        "split": 4.6,
-        "charge": 6.0,
-        "clash": 8.0
+        "split": 4.4,
+        "charge": 5.8,
+        "clash": 7.8
       }
     },
     {
       "id": "ch_war",
-      "start": 110.8,
-      "end": 113.0,
+      "start": 112.6,
+      "end": 114.6,
       "title": "İKİNCİ DÜNYA|SAVAŞI",
       "caps": [],
       "cues": {}
     },
     {
       "id": "war",
-      "start": 113.0,
-      "end": 133.8,
+      "start": 114.6,
+      "end": 137.4,
       "caps": [
         [
           0.5,
-          4.5,
-          "İngiliz *Kraliyet Donanması*'na er olarak katıldı."
+          4.4,
+          "*29 yaşında* İngiliz Kraliyet Donanması'na er olarak katıldı."
         ],
         [
-          4.8,
-          9.0,
-          "Subaylık için başvurdu ve *teğmenliğe* kadar yükseldi."
+          4.7,
+          10.4,
+          "Çevresindekilerin kendisinden çok genç olması onu rahatsız etti. Subaylığa başvurdu ve *teğmenliğe* kadar yükseldi."
         ],
         [
-          9.3,
-          14.6,
+          10.7,
+          15.9,
           "Almanların dev savaş gemisi *Bismarck*'ın takip edilip batırıldığı operasyonda yer aldı."
         ],
         [
-          14.9,
-          20.4,
+          16.2,
+          22.4,
           "Gördükleri, insanın doğuştan iyi ve medeni olduğuna dair *iyimser düşünceyi* terk etmesine yol açtı."
         ]
       ],
       "cues": {
         "horn": 0.9,
-        "rank1": 5.2,
-        "rank2": 6.5,
-        "rank3": 7.8,
-        "chase": 9.3,
+        "rank1": 5.6,
+        "rank2": 7.2,
+        "rank3": 8.8,
+        "chase": 10.7,
         "fire": [
-          10.4,
-          11.2,
-          12.0,
-          12.7
+          11.8,
+          12.6,
+          13.4,
+          14.1
         ],
-        "sink": 13.1,
-        "ruins": 14.9
+        "sink": 14.5,
+        "ruins": 16.2
       }
     },
     {
       "id": "ch_hard",
-      "start": 133.8,
-      "end": 136.0,
+      "start": 137.4,
+      "end": 139.4,
       "title": "SAVAŞ SONRASI|ZOR ZAMANLAR",
       "caps": [],
       "cues": {}
     },
     {
       "id": "hard",
-      "start": 136.0,
-      "end": 149.8,
+      "start": 139.4,
+      "end": 156.4,
       "caps": [
         [
           0.5,
@@ -315,8 +320,13 @@ window.TIMELINE = {
         ],
         [
           8.6,
-          13.4,
-          "Bir gece arkadaşının evinde uyandığında *Bob Dylan* kuklasını şeytan sandı ve ona saldırdı!"
+          12.2,
+          "Bir gece yazar arkadaşının evinde uyandığında *Bob Dylan* kuklasını şeytan sandı..."
+        ],
+        [
+          12.5,
+          16.6,
+          "...kuklaya saldırıp parçaladı ve onu evin arka bahçesine *gömdü*!"
         ]
       ],
       "cues": {
@@ -329,22 +339,23 @@ window.TIMELINE = {
           6.4
         ],
         "wake": 8.8,
-        "gasp": 10.4,
-        "attack": 11.8
+        "gasp": 10.2,
+        "attack": 11.2,
+        "bury": 12.6
       }
     },
     {
       "id": "ch_last",
-      "start": 149.8,
-      "end": 152.0,
+      "start": 156.4,
+      "end": 158.4,
       "title": "SON YILLAR",
       "caps": [],
       "cues": {}
     },
     {
       "id": "honors",
-      "start": 152.0,
-      "end": 162.4,
+      "start": 158.4,
+      "end": 168.8,
       "caps": [
         [
           0.5,
@@ -368,8 +379,8 @@ window.TIMELINE = {
     },
     {
       "id": "end",
-      "start": 162.4,
-      "end": 171.8,
+      "start": 168.8,
+      "end": 177.4,
       "caps": [
         [
           0.5,
