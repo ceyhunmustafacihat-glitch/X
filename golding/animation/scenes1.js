@@ -72,17 +72,9 @@ SCENES.title = (g, lt, sc) => {
       g.fillStyle = C.white; g.beginPath(); g.moveTo(0, 0); g.arc(0, 0, 400, a, a + 0.14); g.fill();
     }
     g.globalAlpha = 1;
-    person(g, Object.assign({}, WILL.old, { shadow: false, x: 0, y: 590, s: 1.95, t: lt, armL: 0.1, armR: 0.1, mouth: 'smile', look: Math.sin(lt * 0.8) * 0.3 }));
+    person(g, Object.assign({}, WILL.old, { shadow: false, x: 0, y: 590, s: 1.95, t: lt, armL: 0.1, armR: 0.1, mouth: 'smile' }));
     g.restore();
   });
-  // little things that orbit the medallion
-  const deco = [[-1, 250, 360, 'book'], [1, 830, 330, 'ship'], [2, 210, 1010, 'quill'], [3, 880, 1040, 'star']];
-  for (const [i, x, y, k] of deco) {
-    const p = pop(cu.ink + 0.6 + (i + 1) * 0.18, lt, 0.5);
-    if (p <= 0) continue;
-    at(g, x, y + Math.sin(lt * 1.6 + i) * 10, p, Math.sin(lt + i) * 0.12, () => drawIcon(g, k, lt));
-  }
-
   drawWordmark(g, 1170, ss(cu.name, cu.name + 1.0, lt), ss(cu.years, cu.years + 0.6, lt), ss(cu.tag, cu.tag + 0.6, lt));
 };
 
@@ -118,7 +110,7 @@ const GB = [[-5.7, 50.07], [-5.2, 49.96], [-4.6, 50.32], [-4.1, 50.35], [-3.64, 
   [-4.85, 50.55], [-5.05, 50.42], [-5.4, 50.2]];
 const IRL = [[-6.0, 52.2], [-6.05, 52.8], [-6.2, 53.35], [-6.1, 53.9], [-5.6, 54.3], [-5.65, 54.7], [-6.05, 55.2], [-7.2, 55.3], [-8.3, 55.15], [-8.6, 54.65], [-10.0, 54.25], [-9.9, 53.45],
   [-9.4, 53.1], [-9.9, 52.3], [-10.4, 51.9], [-9.6, 51.5], [-8.3, 51.75], [-7.0, 52.1]];
-const PLACES = { newquay: [-5.08, 50.415], perran: [-5.12, 50.21], oxford: [-1.26, 51.75], salisbury: [-1.8, 51.07] };
+const PLACES = { newquay: [-5.08, 50.415], marlborough: [-1.73, 51.42], perran: [-5.12, 50.21], oxford: [-1.26, 51.75], salisbury: [-1.8, 51.07] };
 const mp = (lon, lat, k = 96) => [(lon + 2.6) * 0.588 * k, -(lat - 54.3) * k];
 
 function drawMap(g, cx, cy, z, focus, t, opts = {}) {
@@ -167,120 +159,92 @@ function babyBundle(g, x, y, s, t, cry = 0) {
 SCENES.birth = (g, lt, sc) => {
   const cu = sc.cues;
   g.fillStyle = C.sea; g.fillRect(0, 0, W, H);
-  waves(g, 300, 1900, rgb(C.white, 0.22), lt, 3, 64, 8, 18);
-  const e = easeInOut(ss(cu.zoom, cu.pin - 0.2, lt));
-  const z = lerp(1.0, 3.3, e);
-  const nq = mp(...PLACES.newquay);
-  const f = [lerp(-90, nq[0] + 30, e), lerp(-20, nq[1] - 40, e)];
-  drawMap(g, 540, 760, z, f, lt, { labels: 1 - ss(0, 0.5, e) });
-  // boat and gulls (screen space, parallax-free)
-  at(g, 270 + Math.sin(lt * 0.6) * 20, 1120 + Math.sin(lt * 1.7) * 6, 0.9, Math.sin(lt * 1.7) * 0.05, () => {
-    ink(g, wpoly([[-60, 0], [60, 0], [40, 26], [-44, 26]], 1, 101), C.coral);
-    wline(g, [[0, 0], [0, -110]], 5, C.ink, 102);
-    ink(g, wpoly([[4, -104], [56, -12], [4, -12]], 1, 103), C.white);
-  });
-  seagull(g, 760 + lt * 14, 480 + Math.sin(lt) * 14, 1.1, lt, 1);
-  seagull(g, 840 + lt * 12, 540 + Math.sin(lt + 2) * 12, 0.8, lt, 2);
-
-  // the date stamp
-  const st = pop(cu.zoom + 0.1, lt, 0.4);
-  if (st > 0) at(g, 540, 470, lerp(1.6, 1, clamp(st)), -0.1, () => {
-    alpha(g, 0.92 * (1 - 0.3 * e), () => {
-      ink(g, wround(-250, -64, 500, 128, 18, 1.4, 111), rgb(C.cream, 0.9), 7, C.red);
-      ink(g, wround(-236, -50, 472, 100, 12, 1.2, 112), null, 3, C.red);
-      text(g, '19 EYLÜL 1911', 0, 4, '800 64px Montserrat', C.red, 'center', 4);
-    });
-  });
-  // pin + label + baby
-  const nqS = [540 + (nq[0] - f[0]) * z, 760 + (nq[1] - f[1]) * z];
-  const pb = bounce(cu.pin, lt, 0.8);
-  if (lt > cu.pin) {
-    pin(g, nqS[0], nqS[1] - (1 - pb) * 500, 1.15);
-    const la = pop(cu.pin + 0.4, lt, 0.4);
-    if (la > 0) at(g, nqS[0] + 170, nqS[1] - 110, la, 0.04, () => {
-      ink(g, wround(-130, -42, 260, 84, 20, 1, 113), C.card, 4.5);
-      text(g, 'NEWQUAY', 0, 2, '700 38px Montserrat', C.ink, 'center', 4);
-    });
-  }
-  const bp = pop(cu.cry, lt, 0.5);
-  if (bp > 0) {
-    babyBundle(g, nqS[0] + 40, nqS[1] + 130, 1.5 * bp, lt, Math.sin(lt * 10) > 0 ? 1 : 0);
-    for (let i = 0; i < 3; i++) {
-      const u = ((lt - cu.cry) * 0.6 + i / 3) % 1;
-      heart(g, nqS[0] + 40 + (i - 1) * 60 + Math.sin(u * 6 + i) * 10, nqS[1] + 60 - u * 140, 0.9, C.coral, (1 - u) * bp);
+  waves(g, 300, 1900, rgb(C.white, 0.2), lt, 3, 64, 8, 14);
+  const nq = mp(...PLACES.newquay), mb = mp(...PLACES.marlborough);
+  // camera: whole island -> Newquay -> pull back to show the move to Marlborough
+  const e1 = easeInOut(ss(cu.zoom, cu.pin - 0.3, lt)), e2 = easeInOut(ss(cu.move, cu.move + 1.6, lt));
+  const mid = [(nq[0] + mb[0]) / 2, (nq[1] + mb[1]) / 2 - 20];
+  const z = lerp(lerp(1.0, 3.2, e1), 2.2, e2);
+  const f0 = [lerp(-90, nq[0] + 20, e1), lerp(-20, nq[1] - 60, e1)];
+  const f = [lerp(f0[0], mid[0], e2), lerp(f0[1], mid[1] - 30, e2)];
+  drawMap(g, 540, 760, z, f, lt);
+  const S_ = p => [540 + (p[0] - f[0]) * z, 760 + (p[1] - f[1]) * z];
+  const nqS = S_(nq), mbS = S_(mb);
+  // the route, drawn as a dotted line
+  const route = ss(cu.move + 0.8, cu.house, lt);
+  if (route > 0) {
+    g.strokeStyle = C.red; g.lineWidth = 6; g.lineCap = 'round'; g.setLineDash([2, 18]);
+    const cx = (nqS[0] + mbS[0]) / 2, cy = Math.min(nqS[1], mbS[1]) - 120;
+    g.beginPath();
+    for (let i = 0; i <= 40 * route; i++) {
+      const u = i / 40, x = (1 - u) * (1 - u) * nqS[0] + 2 * u * (1 - u) * cx + u * u * mbS[0], y = (1 - u) * (1 - u) * nqS[1] + 2 * u * (1 - u) * cy + u * u * mbS[1];
+      i ? g.lineTo(x, y) : g.moveTo(x, y);
     }
+    g.stroke(); g.setLineDash([]);
   }
+  if (lt > cu.pin) pin(g, nqS[0], nqS[1] - (1 - bounce(cu.pin, lt, 0.8)) * 500, 1.0);
+  const bp = pop(cu.baby, lt, 0.5) * (1 - ss(cu.move, cu.move + 0.5, lt));
+  if (bp > 0) babyBundle(g, nqS[0] + 10, nqS[1] + 110, 1.4 * bp, 0, 0);
+  // a little house appears at Marlborough
+  const hp = pop(cu.house, lt, 0.5);
+  if (hp > 0) at(g, mbS[0], mbS[1], hp, 0, () => {
+    g.fillStyle = 'rgba(42,33,29,0.25)'; g.beginPath(); g.ellipse(4, 4, 46, 10, 0, 0, TAU); g.fill();
+    ink(g, wrect(-36, -56, 72, 56, 0.8, 115), C.cream, 4.5);
+    ink(g, wpoly([[-46, -52], [0, -92], [46, -52]], 0.8, 116), C.red, 4.5);
+    ink(g, wrect(-10, -30, 20, 30, 0.5, 117), C.brown, 3.5);
+  });
 };
 
-// ------------------------------------------------------------------ family
-SCENES.family = (g, lt, sc) => {
+// ------------------------------------------------------------------ family: one page per person
+function familyRoom(g, wall, glowX = 540) {
+  g.fillStyle = wall; g.fillRect(0, 0, W, H);
+  drawGlow(g, glowX, 760, 520, '#fff6dc', 0.35);
+  ink(g, wrect(-10, 1180, W + 20, 800, 0, 123), rgb(shade(wall, 0.72)), 0);
+  wline(g, [[0, 1180], [W, 1180]], 5, C.ink, 124);
+}
+SCENES.alec = (g, lt, sc) => {
   const cu = sc.cues;
-  // wallpaper, wainscot, floor
-  g.fillStyle = '#e9dcbc'; g.fillRect(0, 0, W, H);
-  for (let x = 0; x < W; x += 90) { g.fillStyle = rgb(C.sage, 0.35); g.fillRect(x, 0, 34, 1000); }
-  for (let x = 45, k = 0; x < W; x += 90, k++) for (let y = 120; y < 1000; y += 160) ink(g, wellipse(x + 17 - 45, y + (k % 2) * 80, 8, 12, 0.6, 120 + k), rgb(C.coral, 0.5), 0);
-  ink(g, wrect(-10, 960, W + 20, 230, 1.5, 121), '#b88b5d');
-  for (let x = 40; x < W; x += 170) ink(g, wrect(x, 990, 130, 160, 1, 122 + x), '#c79c6c', 3.5);
-  ink(g, wrect(-10, 1180, W + 20, 800, 1.5, 123), '#8a5a35');
-  for (let y = 1230; y < 1920; y += 70) wline(g, [[0, y], [W, y]], 3, rgb(C.ink, 0.35), 124 + y);
-  // a framed seascape on the wall
-  ink(g, wrect(700, 380, 260, 190, 1.2, 125), C.mustard, 6);
-  ink(g, wrect(720, 400, 220, 150, 1, 126), C.sky, 3);
-  g.fillStyle = C.sea; g.fillRect(722, 490, 216, 58);
-  seagull(g, 800, 450, 0.6, lt, 3);
-
-  const fA = win(0.3, 0.8, 5.5, 6.0, lt), fM = win(5.6, 6.1, 10.5, 11.0, lt), fJ = ss(10.6, 11.1, lt);
-  const dimA = 1 - Math.max(fA, ss(12, 12.5, lt)), dimM = 1 - Math.max(fM, ss(12, 12.5, lt)), dimJ = 1 - Math.max(fJ, ss(12, 12.5, lt));
-  // spotlight on whoever the caption is about
-  const spotX = lt < 5.8 ? 240 : lt < 10.8 ? 560 : 860;
-  drawGlow(g, spotX, 900, 420, '#fff6dc', 0.7 * (lt < 12.4 ? 1 : 0.4));
-
-  // Alec — science teacher
-  const pa = pop(cu.alec, lt, 0.55);
-  if (pa > 0) withLayer(g, 'fA', 1, L => {
-    at(L, 240, 1185, 1, 0, () => {
-      L.scale(1, pa);
-      person(L, Object.assign({}, ALEC, { s: 1.5, t: lt, armL: 0.15, armR: 1.9, elbR: 0.9, mouth: fA > 0.5 ? 'grin' : 'smile', brow: fA,
-        handR: (gg, x, y) => propFlask(gg, x + 6, y - 6, 0.9, '#7ad1b0', lt) }));
-    });
-    if (fA > 0.01) {
-      // atoms and gears drift up from his experiment
-      for (let i = 0; i < 3; i++) {
-        const u = (lt * 0.25 + i / 3) % 1;
-        alpha(L, fA * Math.sin(u * Math.PI), () => at(L, 160 + i * 90, 640 - u * 180, 0.9, u * 2, () => drawSci(L, i, lt)));
-      }
-    }
-  }, dimA);
-  // Mildred — suffragist
-  const pm = pop(cu.mildred, lt, 0.55);
-  if (pm > 0) withLayer(g, 'fM', 1, L => {
-    at(L, 560, 1185, 1, 0, () => {
-      L.scale(1, pm);
-      const wave = Math.sin(lt * 5) * 0.12 * fM;
-      person(L, Object.assign({}, MILDRED, { s: 1.5, t: lt, armR: 2.6 + wave, elbR: 0.4, armL: 0.25, mouth: fM > 0.5 ? 'grin' : 'smile', brow: fM * 0.6,
-        handR: (gg, x, y) => placard(gg, x, y, lt, wave) }));
-    });
-  }, dimM);
-  // Jose — big brother
-  const pj = pop(cu.jose, lt, 0.55);
-  if (pj > 0) withLayer(g, 'fJ', 1, L => {
-    at(L, 865, 1185, 1, 0, () => {
-      L.scale(1, pj);
-      const point = ss(cu.baby + 0.3, cu.baby + 0.8, lt);
-      person(L, Object.assign({}, { kid: true, hair: '#3e2a1c', hairStyle: 'kid', top: C.coral, bottom: C.navy, shorts: true, hat: 'school', hatCol: C.navy, seed: 9 },
-        { s: 1.5, t: lt, armL: lerp(0.2, 1.5, point), elbL: 0, armR: 0.2, mouth: point > 0.5 ? 'grin' : 'smile', look: -point }));
-    });
-  }, dimJ);
-  // baby William arrives in a basket
+  familyRoom(g, '#dfe6d4');
+  const p = pop(cu.in, lt, 0.55);
+  // ideas rising from his experiment
+  for (let i = 0; i < 3; i++) {
+    const u = ((lt - cu.bubbles) * 0.22 + i / 3) % 1;
+    if (lt > cu.bubbles) alpha(g, Math.sin(u * Math.PI), () => at(g, 700 + (i - 1) * 120, 400 - u * 150, 1.1, 0, () => drawSci(g, i, lt)));
+  }
+  at(g, 520, 1190, 1, 0, () => {
+    g.scale(1, p);
+    person(g, Object.assign({}, ALEC, { s: 2.0, t: lt, armL: 0.12, armR: 1.9, elbR: 0.9, mouth: 'smile', brow: 0.4, look: 0.5,
+      handR: (gg, x, y) => propFlask(gg, x + 6, y - 6, 0.9, '#7ad1b0', lt) }));
+  });
+};
+SCENES.mildred = (g, lt, sc) => {
+  const cu = sc.cues;
+  familyRoom(g, '#e6dbe9');
+  const p = pop(cu.in, lt, 0.55);
+  const wave = Math.sin(Math.max(0, lt - cu.wave) * 3) * 0.08;
+  at(g, 460, 1190, 1, 0, () => {
+    g.scale(1, p);
+    person(g, Object.assign({}, MILDRED, { s: 2.0, t: lt, armR: 2.6 + wave, elbR: 0.4, armL: 0.2, mouth: 'grin', brow: 0.5, look: 0.4,
+      handR: (gg, x, y) => placard(gg, x, y, lt, wave) }));
+  });
+};
+SCENES.jose = (g, lt, sc) => {
+  const cu = sc.cues;
+  familyRoom(g, '#f0dcc4');
+  const p = pop(cu.in, lt, 0.55);
+  const look = ss(cu.baby + 0.4, cu.baby + 1.0, lt);
+  at(g, 400, 1190, 1, 0, () => {
+    g.scale(1, p);
+    person(g, { kid: true, hair: '#3e2a1c', hairStyle: 'kid', top: C.coral, bottom: C.navy, shorts: true, hat: 'school', hatCol: C.navy, seed: 9,
+      s: 2.1, t: lt, armL: 0.15, armR: lerp(0.15, 1.2, look), mouth: 'grin', look: look });
+  });
+  // baby William in a basket beside his big brother
   const pb = pop(cu.baby, lt, 0.6);
-  if (pb > 0) at(g, 720, 1188, pb, 0, () => {
+  if (pb > 0) at(g, 720, 1192, pb * 1.15, 0, () => {
+    g.fillStyle = 'rgba(42,33,29,0.18)'; g.beginPath(); g.ellipse(0, 4, 90, 10, 0, 0, TAU); g.fill();
     ink(g, wpoly([[-80, -70], [80, -70], [64, 0], [-64, 0]], 1.2, 131), '#c99a5b');
-    for (let i = 0; i < 5; i++) wline(g, [[-70 + i * 35, -66], [-58 + i * 30, -4]], 3, rgb(C.ink, 0.5), 132 + i);
-    babyBundle(g, 0, -88, 1.1, lt, 0);
-    at(g, 0, -190 + Math.sin(lt * 2) * 6, 1, -0.05, () => {
-      ink(g, wround(-82, -32, 164, 64, 16, 1, 133), C.card, 4);
-      text(g, 'WILLIAM', 0, 2, '700 32px Montserrat', C.red, 'center', 3);
-    });
+    for (let i = 0; i < 5; i++) wline(g, [[-70 + i * 35, -66], [-58 + i * 30, -4]], 3, rgb(C.ink, 0.45), 132 + i);
+    babyBundle(g, 0, -88, 1.1, 0, 0);
   });
 };
 
@@ -300,11 +264,14 @@ function drawSci(g, i, t) {
 function placard(g, x, y, t, wave) {
   at(g, x, y, 1, wave * 0.6, () => {
     limb(g, [[0, 30], [0, -110]], C.wood, 8, 4, 151);
-    ink(g, wrect(-108, -230, 216, 120, 1.2, 152), C.white, 5);
-    g.fillStyle = C.purple; g.fillRect(-104, -226, 208, 14);
-    g.fillStyle = C.green; g.fillRect(-104, -128, 208, 14);
-    text(g, 'VOTES FOR', 0, -188, '800 32px Montserrat', C.ink, 'center', 1);
-    text(g, 'WOMEN', 0, -153, '800 38px Montserrat', C.red, 'center', 3);
+    ink(g, wrect(-100, -240, 200, 130, 1.2, 152), C.white, 5);
+    g.fillStyle = C.purple; g.fillRect(-96, -236, 192, 16);
+    g.fillStyle = C.green; g.fillRect(-96, -130, 192, 16);
+    // a ballot box with a vote going in
+    ink(g, wrect(-34, -200, 68, 52, 0.6, 153), C.cream, 4);
+    wline(g, [[-16, -200], [16, -200]], 6, C.ink, 154);
+    ink(g, wrect(-12, -236, 24, 30, 0.4, 155), C.white, 3);
+    wline(g, [[-6, -222], [-1, -215], [8, -230]], 3.5, C.red, 156);
   });
 }
 
@@ -343,7 +310,7 @@ SCENES.house = (g, lt, sc) => {
   const sp = wpoly([[150, 760], [150, 560], [200, 360], [250, 560], [250, 760]], 1.2, 164);
   ink(g, sp, '#525a6e');
   wline(g, [[200, 360], [200, 300]], 5, C.ink, 165); wline(g, [[180, 322], [220, 322]], 5, C.ink, 166);
-  const wa = 0.75 + 0.15 * Math.sin(lt * 4);
+  const wa = 0.85;
   ink(g, wcurve([[170, 980], [170, 880], [200, 840], [230, 880], [230, 980]], 1, 167), rgb('#f6c55e', wa), 4);
   // graveyard, with headstones leaning on the garden wall
   ink(g, wrect(-10, 1140, W + 20, 30, 1, 187), '#2f3f33', 0);
@@ -379,31 +346,16 @@ SCENES.house = (g, lt, sc) => {
   for (let k = 0; k < 5; k++) wline(g, [[700 + k * 34, 700 - k * 31], [1000 - k * 34, 700 - k * 31]], 2.5, rgb(C.ink, 0.25), 189 + k);
   ink(g, wrect(940, 560, 42, 100, 1, 182), '#8f5a45');
   for (const [wx, wy] of [[725, 760], [905, 760], [725, 940], [905, 940]]) {
-    ink(g, wrect(wx, wy, 76, 100, 1, 183 + wx + wy), rgb('#f6c55e', 0.85 + 0.1 * Math.sin(lt * 3 + wx)), 5);
+    ink(g, wrect(wx, wy, 76, 100, 1, 183 + wx + wy), rgb('#f6c55e', 0.9), 5);
     wline(g, [[wx + 38, wy], [wx + 38, wy + 100]], 4, C.ink, 184 + wx); wline(g, [[wx, wy + 50], [wx + 76, wy + 50]], 4, C.ink, 185 + wy);
   }
   ink(g, wrect(818, 1040, 64, 110, 1, 186), '#6a4630');
-  ink(g, wrect(812, 990, 76, 34, 0.6, 188), '#2b4a8a', 3.5);
-  text(g, '29', 850, 1008, '700 22px Montserrat', C.white, 'center', 2);
-  // little William: at the window first, then up the chestnut tree, away from the lawn
-  const cl = cu.climb;
-  if (lt < cl - 0.3) {
-    const peek = 0.5 + 0.5 * Math.sin(lt * 1.3);
+  // little William watching the graves from the upstairs window
+  if (lt < cu.cellar - 0.3) {
+    const peek = ss(0.8, 1.6, lt);
     g.save(); g.beginPath(); g.rect(725, 760, 76, 100); g.clip();
-    person(g, Object.assign({}, WILL.kid, { x: 763, y: 1010 - peek * 14, s: 0.55, t: lt, eyes: 'wide', mouth: 'o', look: -0.8, shadow: false }));
+    person(g, Object.assign({}, WILL.kid, { x: 763, y: 1060 - peek * 54, s: 0.55, t: lt, eyes: lt > 2.6 ? 'wide' : 'open', mouth: lt > 2.6 ? 'o' : 'flat', look: -1, shadow: false }));
     g.restore();
-  } else if (lt < cu.cellar - 0.3) {
-    const u = easeInOut(ss(cl - 0.3, cl + 0.8, lt));
-    const bx = lerp(600, 655, u), by = lerp(1150, 905, u);
-    const sitting = u > 0.98;
-    person(g, Object.assign({}, WILL.kid, { x: bx, y: by, s: 0.72, t: lt, shadow: false, eyes: sitting ? 'wide' : 'open', mouth: sitting ? 'wavy' : 'flat',
-      lookY: sitting ? 1 : 0, look: sitting ? -0.6 : 0, brow: sitting ? 0.9 : 0.4,
-      armL: sitting ? 0.6 : 2.7 + Math.sin(lt * 12) * 0.2, armR: sitting ? 0.6 : 2.7 - Math.sin(lt * 12) * 0.2, elbL: sitting ? 0.9 : 0, elbR: sitting ? 0.9 : 0,
-      walk: sitting ? 0 : lt * 10, stride: sitting ? 0 : 0.5 }));
-    if (sitting) for (let i = 0; i < 3; i++) {
-      const v = ((lt - cl) * 0.8 + i / 3) % 1;
-      alpha(g, (1 - v) * 0.8, () => wline(g, [[600 + i * 30, 1060 - v * 30], [590 + i * 30, 1090 - v * 30]], 3, C.cream, 199 + i));
-    }
   }
   // drifting fog
   for (let i = 0; i < 4; i++) alpha(g, 0.35, () => cloud(g, ((i * 330 + lt * 22) % 1400) - 200, 1130 + (i % 2) * 20, 1.4, '#c9d3e6', 200 + i));

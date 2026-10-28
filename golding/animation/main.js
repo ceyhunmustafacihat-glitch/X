@@ -17,17 +17,16 @@ function renderScene(sc, t) {
   const g = L.g;
   const lt = t - sc.start, dur = sc.end - sc.start;
   // gentle push-in over the whole scene
-  const z = 1 + 0.035 * (lt / dur);
+  const z = sc.title ? 1 : 1 + 0.03 * (lt / dur);
   g.translate(540, 900); g.scale(z, z); g.translate(-540, -900);
-  (SCENES[sc.id] || ((gg) => { gg.fillStyle = C.paper; gg.fillRect(0, 0, W, H); }))(g, lt, sc, t);
+  (sc.title ? chapterPage : SCENES[sc.id])(g, lt, sc, t);
   g.setTransform(1, 0, 0, 1, 0, 0);
-  const chipA = sc.cues.card !== undefined ? 1 - ss(sc.cues.card - 0.4, sc.cues.card, lt) : 1;
-  alpha(g, chipA, () => drawChapter(g, sc.chapter, lt));
   return L.c;
 }
 
 function renderFrame(t) {
-  BOIL = Math.floor(t * 8);
+  // lines are drawn once and held still: no per-frame jitter
+  BOIL = 0;
   const g = MAIN.g;
   g.setTransform(1, 0, 0, 1, 0, 0);
   g.globalAlpha = 1; g.globalCompositeOperation = 'source-over';

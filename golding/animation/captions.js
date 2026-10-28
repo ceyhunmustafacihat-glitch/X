@@ -140,3 +140,20 @@ function drawWordmark(g, y, nameA, yearsA, tagA) {
   });
   alpha(g, tagA, () => text(g, 'NOBEL ÖDÜLLÜ İNGİLİZ YAZAR', 540, y + 170 + (1 - tagA) * 12, '600 28px Montserrat', C.navy, 'center', 7));
 }
+
+// a plain, single-colour chapter page with one large title
+function chapterPage(g, lt, sc) {
+  const dur = sc.end - sc.start;
+  g.fillStyle = C.navy; g.fillRect(0, 0, W, H);
+  const lines = sc.title.split('|');
+  const a = ss(0.15, 0.6, lt);
+  const sz = Math.min(...lines.map(ln => fitFont(g, ln, 800, 112, 6, 920)));
+  const y0 = 900 - (lines.length - 1) * sz * 0.62;
+  lines.forEach((ln, i) => {
+    const la = ss(0.15 + i * 0.12, 0.65 + i * 0.12, lt);
+    alpha(g, la, () => text(g, ln, 540, y0 + i * sz * 1.24 + (1 - la) * 18, `800 ${sz}px Montserrat`, C.cream, 'center', 6));
+  });
+  const w = 160 * easeOut(ss(0.5, 1.1, lt));
+  g.fillStyle = C.gold;
+  g.fillRect(540 - w / 2, y0 + (lines.length - 1) * sz * 1.24 + sz * 0.85, w, 6);
+}
