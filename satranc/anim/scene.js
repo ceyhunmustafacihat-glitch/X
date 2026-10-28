@@ -71,7 +71,7 @@
     axisLetters: 24.5, axisNumbers: 25.3, filesGlow: 28.3, ranksGlow: 29.8,
     walk: 31.9, colE: 35.9, row4: 36.5, e4: 37.1, ripple: 39.7,
     spot: 45.1, center: 51.5, ext: 56.5, king: 61.9, queen: 66.1, divider: 68.6,
-    boardOut: 72.9, titleIn: 74.0,
+    boardOut: 72.9, titleIn: D - 1.0,
   };
   const STEP = { rows: 0.26, cols: 0.26, walk: 0.36, center: 0.22, ext: 0.16, labels: 0.14 };
   const CENTER = ['d4', 'e4', 'd5', 'e5'];
@@ -93,7 +93,7 @@
     { a: 61.8, b: 66.0, text: '*e, f, g* ve *h* sütunları *şah kanadı* olarak adlandırılır.', hl: C.blue },
     { a: 66.0, b: 68.5, text: '*a, b, c* ve *d* sütunları ise *vezir kanadıdır.*', hl: C.rose },
     { a: 68.5, b: 70.5, text: 'Tahta ikiye ayrılır: ~vezir kanadı~ ve *şah kanadı*', hl: C.blue, hl2: C.rose },
-    { a: 70.6, b: 72.9, text: 'Tahta bu kadar!', size: 92, sub: 'Sıradaki derste görüşmek üzere.' },
+    { a: 70.6, b: 72.9, text: 'Tahta bu kadar!', size: 92, sub: 'Artık satranç tahtasını tanıyorsun.' },
   ];
   const CHIPS = [
     { a: 3.5, b: 21.1, n: '01', text: 'TAHTANIN YAPISI' },
@@ -101,6 +101,11 @@
     { a: 42.1, b: 48.5, n: '!', text: 'ÖNEMLİ KURAL', color: C.rose },
     { a: 51.0, b: 70.5, n: '03', text: 'TAHTANIN BÖLGELERİ' },
   ];
+  // The chapter-1 card plays between the cover and the board: from CUT on, every layer except
+  // the cover and this card runs on scene time (real time minus INS), so the rest keeps its timing.
+  const CUT = 3.0, INS = 3.3;
+  const sceneT = t => (t < CUT ? t : Math.max(CUT, t - INS));
+  const INTRO_CARD = { a: 3.3, b: 6.3, kicker: 'BÖLÜM 01', lines: ['TAHTANIN', 'YAPISI'] };
   const CARDS = [
     { a: 21.0, b: 24.1, kicker: 'BÖLÜM 02', lines: ['TAHTANIN', 'KONUMLANDIRILMASI'] },
     { a: 48.4, b: 51.1, kicker: 'BÖLÜM 03', lines: ['TAHTANIN', 'BÖLGELERİ'] },
@@ -142,9 +147,7 @@
       const po = eIn(clamp((out - k * 0.05) / 0.7));
       return { a: pin * (1 - po), dy: (1 - pin) * 70 - po * 90 };
     };
-    let e = el(0);
-    pill('SATRANÇ DERSİ  ·  01', W / 2, 520 + e.dy, { alpha: e.a, size: 28, spacing: 5 });
-    e = el(1);
+    let e = el(1);
     const s1 = fitSize('SATRANÇ', 900, 176, 940, 2);
     text('SATRANÇ', W / 2, 690 + e.dy, { weight: 900, size: s1, alpha: e.a, spacing: 2 });
     e = el(2);
@@ -709,11 +712,13 @@
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.globalAlpha = 1; ctx.letterSpacing = '0px'; ctx.filter = 'none';
     background(t);
-    board(t);
-    for (const c of CAPS) caption(t, c);
-    stats(t);
-    chips(t);
-    for (const c of CARDS) card(t, c);
+    const o = sceneT(t);
+    board(o);
+    for (const c of CAPS) caption(o, c);
+    stats(o);
+    chips(o);
+    for (const c of CARDS) card(o, c);
+    card(t, INTRO_CARD);
     title(t);
     vignette();
   }
@@ -721,7 +726,11 @@
   // ------------------------------------------------------------------ sound cues (same clock)
   function buildCues() {
     const q = [];
-    const add = (t, type, o = {}) => q.push(Object.assign({ t: +t.toFixed(4), type }, o));
+    // cue times are written in scene time and shifted onto the real clock past the cut
+    const put = (t, type, o) => q.push(Object.assign({ t: +t.toFixed(4), type }, o));
+    const add = (t, type, o = {}) => put(t >= CUT ? t + INS : t, type, o);
+    put(INTRO_CARD.a, 'whoosh', { gain: 0.75, dur: 0.7 }); put(INTRO_CARD.a + 0.3, 'hit', { gain: 0.75 });
+    put(INTRO_CARD.b - 0.6, 'whoosh', { gain: 0.55, dur: 0.6, rev: 1 });
     add(0.05, 'hit', { gain: 0.9 }); add(0.07, 'shimmer', { gain: 0.5 });
     add(T.titleOut - 0.05, 'whoosh', { gain: 0.7, dur: 0.8 });
     add(T.frameIn, 'thud', { gain: 0.6 });
@@ -761,7 +770,7 @@
     add(T.divider, 'swish', { gain: 0.5, dur: 0.6 });
     add(70.6, 'success', { gain: 0.55 });
     for (let k = 0; k <= 14; k++) add(T.boardOut + k * 0.04 + 0.1, 'tock', { pitch: 1.5 - k * 0.035, gain: 0.4 });
-    add(T.titleIn - 0.1, 'whoosh', { gain: 0.75, dur: 1.0, rev: 1 });
+    put(T.titleIn - 0.1, 'whoosh', { gain: 0.75, dur: 1.0, rev: 1 });
     return q.sort((a, b) => a.t - b.t);
   }
 
