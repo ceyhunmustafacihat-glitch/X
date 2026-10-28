@@ -107,12 +107,36 @@ function drawQuote(g, q, lt, t) {
   const lines = str.split('|');
   lines.forEach((ln, i) => {
     const la = ss(t0 + 0.2 + i * 0.45, t0 + 0.75 + i * 0.45, lt);
-    alpha(g, la, () => text(g, ln, 540, 1080 + i * 100 + (1 - la) * 16, 'italic 600 92px "Cormorant Garamond"', C.cream));
+    alpha(g, la, () => text(g, ln, 540, 1060 + i * 96 + (1 - la) * 16, 'italic 600 70px Montserrat', C.cream));
   });
   const aa = ss(t0 + 1.8, t0 + 2.4, lt);
   alpha(g, aa, () => {
-    wline(g, [[440, 1405], [640, 1405]], 3, C.gold, 530);
-    text(g, 'William Golding', 540, 1465, '600 58px Caveat', C.gold);
+    wline(g, [[470, 1390], [610, 1390]], 3, C.gold, 530);
+    text(g, 'WILLIAM GOLDING', 540, 1440, '700 30px Montserrat', C.gold, 'center', 8);
   });
   g.restore();
+}
+
+// corporate wordmark used by the opening and closing cards
+function fitFont(g, str, weight, size, spacing, maxW) {
+  g.font = `${weight} ${size}px Montserrat`; g.letterSpacing = spacing + 'px';
+  const w = g.measureText(str).width; g.letterSpacing = '0px';
+  return w > maxW ? size * maxW / w : size;
+}
+function drawWordmark(g, y, nameA, yearsA, tagA) {
+  const name = 'WILLIAM GOLDING';
+  const sz = fitFont(g, name, 800, 84, 7, 900);
+  if (nameA > 0) {
+    // revealed left to right behind a sliding mask
+    g.save(); g.beginPath(); g.rect(0, y - 70, 90 + easeOut(nameA) * 900, 140); g.clip();
+    text(g, name, 540, y, `800 ${sz}px Montserrat`, C.ink, 'center', 7);
+    g.restore();
+  }
+  alpha(g, yearsA, () => {
+    const yy = y + 92;
+    g.strokeStyle = C.red; g.lineWidth = 3;
+    g.beginPath(); g.moveTo(540 - 330 * yearsA, yy); g.lineTo(540 - 170, yy); g.moveTo(540 + 170, yy); g.lineTo(540 + 330 * yearsA, yy); g.stroke();
+    text(g, '1911 – 1993', 540, yy + 2, '700 40px Montserrat', C.red, 'center', 8);
+  });
+  alpha(g, tagA, () => text(g, 'NOBEL ÖDÜLLÜ İNGİLİZ YAZAR', 540, y + 170 + (1 - tagA) * 12, '600 28px Montserrat', C.navy, 'center', 7));
 }

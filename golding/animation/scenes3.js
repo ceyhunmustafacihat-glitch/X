@@ -37,7 +37,8 @@ function smoke(g, x, y, t, n = 6, colr = '#d9d6d0', a = 0.8, seed = 1, rise = 60
 
 SCENES.war = (g, lt, sc) => {
   const cu = sc.cues;
-  const bA = 1 - ss(5.3, 5.7, lt), bB = win(5.3, 5.7, 9.9, 10.3, lt), bC = win(9.9, 10.3, 15.7, 16.1, lt), bD = win(15.7, 16.1, 20.6, 21.1, lt), bE = ss(20.6, 21.1, lt);
+  const bA = 1 - ss(4.8, 5.2, lt), bB = win(4.8, 5.2, 9.3, 9.7, lt), bC = win(9.3, 9.7, 14.5, 14.9, lt), bX = win(14.5, 14.9, 19.5, 19.9, lt),
+    bD = win(19.5, 19.9, 24.6, 25.0, lt), bE = ss(24.6, 25.0, lt);
   const navy = { hair: '#6b4428', hairStyle: 'short', seed: 3, bottom: C.navyD };
   if (bA > 0) alpha(g, bA, () => {
     const sk = g.createLinearGradient(0, 0, 0, 1000);
@@ -60,7 +61,7 @@ SCENES.war = (g, lt, sc) => {
     const steps = [[220, 1150, 'Er'], [520, 1010, 'Subay adayı'], [820, 870, 'Teğmen']];
     steps.forEach(([x, y, lab], i) => {
       ink(g, wrect(x - 150, y, 300, 1300, 1.4, 1240 + i), [C.stone, '#c9b98f', C.gold][i], 5);
-      text(g, lab, x, y + 50, '600 50px Caveat', C.ink);
+      text(g, lab.toLocaleUpperCase('tr'), x, y + 50, '700 30px Montserrat', C.ink, 'center', 3);
     });
     const r1 = cu.rank1, r2 = cu.rank2, r3 = cu.rank3;
     const lvl = lt < r2 ? 0 : lt < r3 ? 1 : 2;
@@ -110,7 +111,7 @@ SCENES.war = (g, lt, sc) => {
     const ta = 1 - ss(cu.sink - cu.chase, cu.sink - cu.chase + 0.6, lc);
     alpha(g, ta, () => at(g, 800, 700, pop(0.3, lc, 0.4), -0.05, () => {
       ink(g, wround(-120, -38, 240, 76, 18, 1, 1300), C.card, 4);
-      text(g, 'Bismarck', 0, 0, '600 54px Caveat', C.red);
+      text(g, 'BISMARCK', 0, 2, '800 36px Montserrat', C.red, 'center', 4);
     }));
     // salvos: muzzle flash, glowing shell arc, splash or hit
     cu.fire.forEach((ft, k) => {
@@ -131,6 +132,67 @@ SCENES.war = (g, lt, sc) => {
       }
     });
     waves(g, 1000, 1900, rgb('#9fb3d0', 0.18), lt, 7, 60);
+  });
+  if (bX > 0) alpha(g, bX, () => {
+    // D-Day, 6 June 1944: Golding's rocket landing craft off the Normandy coast
+    const ld = lt - cu.dday;
+    const sk = g.createLinearGradient(0, 0, 0, 1000);
+    sk.addColorStop(0, '#7d8aa3'); sk.addColorStop(0.7, '#e6b39a'); sk.addColorStop(1, '#f2d2b4');
+    g.fillStyle = sk; g.fillRect(0, 0, W, H);
+    drawGlow(g, 220, 860, 260, '#fff0c8', 0.6);
+    // the coast: bluffs and beach
+    ink(g, wcurve([[-20, 900], [140, 870], [330, 820], [520, 800], [700, 780], [900, 760], [1100, 770], [1100, 930], [-20, 930]], 1.6, 1401), '#7f8f62');
+    ink(g, wrect(-10, 905, W + 20, 40, 1, 1402), '#d9c39a', 4);
+    for (const x of [380, 640, 880]) smoke(g, x, 800, lt, 5, '#8c8784', 0.7, 1403 + x, 60, 1.1);
+    // other ships on the horizon
+    for (const [x, s] of [[120, 0.22], [300, 0.18], [980, 0.2]]) warship(g, x, 945, s, '#6a7484', 1410 + x);
+    g.fillStyle = '#4f6f86'; g.fillRect(0, 940, W, 1000);
+    waves(g, 980, 1900, rgb(C.white, 0.25), lt, 9, 54);
+    // the LCT(R): a flat landing craft whose deck is a grid of rocket tubes
+    const bob = Math.sin(lt * 1.4) * 7;
+    at(g, 560, 1120 + bob, 1, Math.sin(lt * 1.4) * 0.015, () => {
+      const hull = wpoly([[-420, -30], [400, -30], [440, -60], [430, 10], [380, 50], [-400, 50]], 1.2, 1420);
+      ink(g, hull, '#6f7884'); inkShade(g, hull, -10, -8, 0.2);
+      ink(g, wrect(-360, -86, 600, 56, 1, 1421), '#5b636e');
+      for (let r = 0; r < 3; r++) for (let c = 0; c < 15; c++) {
+        const x = -345 + c * 38, y = -78 + r * 16;
+        ink(g, wround(x, y - 6, 26, 12, 4, 0.3, 1422 + r * 20 + c), '#3d434b', 2.5);
+      }
+      ink(g, wrect(270, -170, 110, 140, 1, 1480), '#7f8894');
+      ink(g, wrect(290, -150, 70, 26, 0.6, 1481), '#bfe0ea', 3);
+      wline(g, [[330, -170], [330, -260]], 5, C.ink, 1482);
+      ensign(g, 334, -262, lt, 0.6);
+      text(g, 'LCT(R)', -60, 22, '800 24px Montserrat', C.cream, 'center', 4);
+      // Lieutenant Golding on the bridge
+      person(g, Object.assign({}, navy, { x: 230, y: -170, s: 0.62, t: lt, top: C.navyD, collar: C.white, tie: C.ink, hat: 'officer', buttons: true, stripes: 2,
+        armR: lt > cu.rockets[0] - 0.6 ? 2.6 : 0.2, elbR: 0.3, armL: 0.2, mouth: 'flat', brow: 0.6, look: -1, shadow: false }));
+    });
+    // rocket salvos: streaks from the deck to the beach, flashes ashore
+    cu.rockets.forEach((rt, k) => {
+      const v = lt - rt;
+      if (v < 0 || v > 2.2) return;
+      for (let i = 0; i < 14; i++) {
+        const d = v - i * 0.03;
+        if (d < 0 || d > 0.9) continue;
+        const u = d / 0.9;
+        const sx = 230 + i * 34, sy = 1050 + bob, tx = 120 + ((i * 67 + k * 140) % 860), ty = 890;
+        const x = lerp(sx, tx, u), y = lerp(sy, ty, u) - Math.sin(u * Math.PI) * 360;
+        const x2 = lerp(sx, tx, Math.max(0, u - 0.08)), y2 = lerp(sy, ty, Math.max(0, u - 0.08)) - Math.sin(Math.max(0, u - 0.08) * Math.PI) * 360;
+        wline(g, [[x2, y2], [x, y]], 5, rgb('#fff1c2', 0.9), 1490 + i);
+        drawGlow(g, x, y, 26, '#ffb24a', 1);
+      }
+      for (let i = 0; i < 6; i++) {
+        const w = v - 0.95 - i * 0.05;
+        if (w < 0 || w > 0.8) continue;
+        drawGlow(g, 140 + ((i * 151 + k * 97) % 820), 880, 110 * (1 - w), '#ff8a3a', 1 - w);
+      }
+      if (v < 0.3) drawGlow(g, 560, 1050 + bob, 380, '#ffd27a', 0.6 * (1 - v / 0.3));
+    });
+    const la = pop(0.4, ld, 0.4);
+    if (la > 0) at(g, 540, 430, la, 0, () => {
+      ink(g, wround(-250, -40, 500, 80, 40, 1, 1500), C.card, 4.5);
+      text(g, 'D-DAY · 6 HAZİRAN 1944', 0, 2, '800 30px Montserrat', C.navy, 'center', 4);
+    });
   });
   if (bD > 0) alpha(g, bD, () => {
     const sk = g.createLinearGradient(0, 0, 0, 1050);
@@ -175,7 +237,7 @@ SCENES.war = (g, lt, sc) => {
 // ------------------------------------------------------------------ hard times
 function bobDylanPuppet(g, x, y, s, t, rot = 0) {
   at(g, x, y, s, rot, () => {
-    person(g, { x: 0, y: 0, s: 0.8, t, hair: '#3a2a20', hairStyle: 'curly', top: '#3a3a44', bottom: '#2a3550', seed: 61, mouth: 'flat', eyes: 'open', armL: 0.5, armR: 0.5, elbL: 1.3, elbR: 1.3,
+    person(g, { shadow: false, x: 0, y: 0, s: 0.8, t, hair: '#3a2a20', hairStyle: 'curly', top: '#3a3a44', bottom: '#2a3550', seed: 61, mouth: 'flat', eyes: 'open', armL: 0.5, armR: 0.5, elbL: 1.3, elbR: 1.3,
       handR: (gg, hx, hy) => { ink(gg, wellipse(hx - 20, hy + 10, 44, 34, 1, 1401), '#c07a3a', 4); limb(gg, [[hx - 10, hy], [hx + 60, hy - 60]], C.brown, 8, 3, 1402); } });
     // harmonica on its neck rack
     wline(g, [[-30, -270], [-30, -230], [30, -230], [30, -270]], 3, '#bfc4c8', 1403);
@@ -188,7 +250,7 @@ function bobDylanPuppet(g, x, y, s, t, rot = 0) {
 }
 SCENES.hard = (g, lt, sc) => {
   const cu = sc.cues;
-  const bAB = 1 - ss(8.4, 8.9, lt), bC = ss(8.4, 8.9, lt);
+  const bAB = 1 - ss(7.8, 8.2, lt), bC = win(7.8, 8.2, 12.4, 12.8, lt), bG = ss(12.4, 12.8, lt);
   if (bAB > 0) alpha(g, bAB, () => {
     const tilt = Math.sin(lt * 1.7) * 0.03 * ss(4.8, 6.0, lt);
     g.save(); g.translate(540, 900); g.rotate(tilt); g.translate(-540, -900);
@@ -265,7 +327,7 @@ SCENES.hard = (g, lt, sc) => {
       // the leap with a pillow
       const jx = lerp(330, 720, ss(0, 0.4, atk)), jy = 1230 - Math.sin(clamp(atk / 0.5) * Math.PI) * 140;
       ink(g, wpoly([[60, 1070], [600, 1070], [640, 1220], [40, 1220]], 1.4, 1500), '#d8cce0');
-      person(g, Object.assign({}, WILL.old, { x: jx, y: jy, s: 1.35, t: lt, top: '#9fb6d6', bottom: '#9fb6d6', eyes: 'wide', mouth: 'grin', angry: 1, look: 1, lean: 0.15,
+      person(g, Object.assign({}, WILL.old, { shadow: false, x: jx, y: jy, s: 1.35, t: lt, top: '#9fb6d6', bottom: '#9fb6d6', eyes: 'wide', mouth: 'grin', angry: 1, look: 1, lean: 0.15,
         armL: 2.6 + Math.sin(atk * 14) * 0.5, armR: 2.6 + Math.sin(atk * 14) * 0.5, elbL: 0.2, elbR: 0.2, walk: atk * 10, stride: 0.8,
         handR: (gg, x, y) => ink(gg, wround(x - 40, y - 80, 110, 70, 26, 1.5, 1510), C.white, 4) }));
       if (atk > 0.3 && atk < 1.6) brawl(g, 830, 950, 150, lt, pop(cu.attack + 0.3, lt, 0.25) * (1 - ss(cu.attack + 1.2, cu.attack + 1.6, lt)), 5);
@@ -275,6 +337,36 @@ SCENES.hard = (g, lt, sc) => {
         const x = 800 + Math.cos(i * 2.4) * v * 360, y = 900 + Math.sin(i * 2.4) * v * 240 + v * v * 300;
         alpha(g, 1 - v, () => at(g, x, y, 1, v * 6 + i, () => ink(g, wellipse(0, 0, 18, 7, 0.4, 1520 + i), C.white, 2.5)));
       }
+    }
+  });
+  if (bG > 0) alpha(g, bG, () => {
+    // ...and then he buried it in the garden
+    const lb = lt - cu.bury;
+    g.fillStyle = '#1f2440'; g.fillRect(0, 0, W, H);
+    for (let i = 0; i < 30; i++) sparkle(g, (i * 137) % W, 300 + (i * 89) % 600, 4 + (i % 3) * 2, 0.7, '#fff3c4');
+    drawGlow(g, 820, 430, 200, '#fff2c0', 0.4);
+    ink(g, wellipse(820, 430, 60, 60, 1, 1560), '#eadfb5', 4);
+    // the friend's house behind, one lit window
+    ink(g, wrect(60, 620, 380, 480, 1.2, 1561), '#3a3550');
+    ink(g, wpoly([[40, 630], [250, 470], [460, 630]], 1.2, 1562), '#2a2638');
+    ink(g, wrect(140, 700, 80, 100, 1, 1563), rgb('#f6c55e', 0.9), 4);
+    ink(g, wrect(280, 700, 80, 100, 1, 1564), '#26223a', 4);
+    ink(g, wrect(-10, 1100, W + 20, 900, 1.4, 1565), '#2f4a35');
+    // the mound with the puppet's shoes sticking out
+    const grow = ss(0, 1.2, lb);
+    ink(g, wcurve([[520, 1150], [600, 1150 - 70 * grow], [720, 1150 - 90 * grow], [840, 1150 - 60 * grow], [900, 1150]], 1.5, 1566), '#5a3f2e');
+    for (const sd of [-1, 1]) at(g, 735 + sd * 26, 1150 - 90 * grow - 10, 1, sd * 0.3, () => {
+      limb(g, [[0, 30], [0, -10]], '#2a3550', 12, 3, 1567 + sd);
+      ink(g, wellipse(sd * 6, -18, 16, 9, 0.5, 1569 + sd), C.ink, 3);
+    });
+    // Golding with a spade, patting the earth down, very satisfied
+    const pat = Math.abs(Math.sin(lb * 6));
+    person(g, Object.assign({}, WILL.old, { x: 380, y: 1200, s: 1.35, t: lt, top: '#9fb6d6', bottom: '#9fb6d6', mouth: 'grin', eyes: lb > 1.2 ? 'happy' : 'open', angry: lb < 1.2 ? 0.6 : 0,
+      look: 1, armR: 1.4 + pat * 0.6, elbR: 0.6, armL: 1.2 + pat * 0.6, elbL: 0.8,
+      handR: (gg, x, y) => at(gg, x, y, 1, -0.6 - pat * 0.4, () => { limb(gg, [[0, 0], [0, 140]], C.wood, 9, 3, 1571); ink(gg, wpoly([[-22, 140], [22, 140], [16, 196], [0, 206], [-16, 196]], 0.8, 1572), '#9aa0a6', 4); }) }));
+    for (let i = 0; i < 6; i++) {
+      const v = ((lb * 1.3 + i / 6) % 1);
+      alpha(g, 1 - v, () => ink(g, wellipse(620 + i * 30 + v * 40, 1110 - v * 120 + Math.sin(i) * 20, 8, 7, 0.4, 1573 + i), '#5a3f2e', 2.5));
     }
   });
 };
@@ -291,7 +383,7 @@ function medal(g, x, y, s, t) {
       const a = Math.PI / 2 + sd * (0.4 + i * 0.36);
       at(g, Math.cos(a) * 76, 40 + Math.sin(a) * 76, 1, a + sd * 0.6, () => ink(g, wellipse(0, 0, 14, 6, 0.3, 1610 + i), '#c99a2e', 2.5));
     }
-    text(g, '1983', 0, 40, '700 52px "Cormorant Garamond"', '#7a5414');
+    text(g, '1983', 0, 42, '800 42px Montserrat', '#7a5414', 'center', 2);
     const sh = (t * 0.6) % 1.6;
     g.save(); g.clip(wellipse(0, 40, 120, 120, 0, 1603, 20));
     g.fillStyle = 'rgba(255,255,255,0.45)'; g.beginPath(); g.moveTo(-200 + sh * 300, -120); g.lineTo(-160 + sh * 300, -120); g.lineTo(-260 + sh * 300, 200); g.lineTo(-300 + sh * 300, 200); g.fill();
@@ -317,9 +409,19 @@ SCENES.honors = (g, lt, sc) => {
     g.restore();
     ink(g, wrect(-10, 1150, W + 20, 800, 1.4, 1631), '#6b3a2a');
     person(g, Object.assign({}, WILL.old, { x: 540, y: 1220, s: 1.45, t: lt, coat: '#2b2b35', top: C.white, tie: C.ink, mouth: 'grin', eyes: lt > 2 ? 'happy' : 'open', brow: 0.6,
-      armL: 2.8, elbL: 0.3, armR: 2.8, elbR: 0.3 }));
+      armL: 2.3, elbL: 0.4, armR: 2.3, elbR: 0.4 }));
+    const bp = pop(cu.booker, lt, 0.6);
+    if (bp > 0) at(g, 290, 600 - (1 - bp) * 80, bp, -0.06 + Math.sin(lt * 1.3) * 0.03, () => {
+      drawGlow(g, 0, 0, 220, '#fff0b0', 0.6);
+      g.fillStyle = 'rgba(42,33,29,0.3)'; g.fill(wround(-92, -128, 196, 270, 10, 1, 1680));
+      ink(g, wround(-100, -136, 196, 270, 10, 1, 1681), '#1f2c3d', 5);
+      ink(g, wrect(-100, -40, 196, 60, 0.6, 1682), C.gold, 4);
+      text(g, 'BOOKER', -2, -10, '800 30px Montserrat', C.ink, 'center', 4);
+      text(g, '1980', -2, 80, '800 34px Montserrat', C.gold, 'center', 4);
+      wline(g, [[-80, -136], [-80, 134]], 4, rgb(C.ink, 0.6), 1683);
+    });
     const mp_ = pop(cu.medal, lt, 0.6);
-    if (mp_ > 0) medal(g, 540, 560 - (1 - mp_) * 80, mp_ * 1.0, lt);
+    if (mp_ > 0) medal(g, 790, 600 - (1 - mp_) * 80, mp_ * 0.85, lt);
     // the audience clapping
     for (let i = 0; i < 9; i++) {
       const x = 60 + i * 120, y = 1220 + (i % 2) * 30, c = lt > cu.clap ? Math.abs(Math.sin(lt * 10 + i)) : 0;
@@ -403,13 +505,9 @@ SCENES.end = (g, lt, sc) => {
       const inner = wellipse(0, 0, 286, 286, 1.6, 12, 24);
       ink(g, inner, C.teal, 5);
       g.save(); g.clip(inner);
-      person(g, Object.assign({}, WILL.old, { x: 0, y: 590, s: 1.95, t: lt, mouth: 'smile', eyes: 'happy' }));
+      person(g, Object.assign({}, WILL.old, { shadow: false, x: 0, y: 590, s: 1.95, t: lt, mouth: 'smile', eyes: 'happy' }));
       g.restore();
     });
-    const na = ss(cu.card + 0.3, cu.card + 1.0, lt);
-    alpha(g, na, () => {
-      text(g, 'William Golding', 540, 1160, '700 124px "Cormorant Garamond"', C.ink);
-      text(g, '1911 – 1993', 540, 1280, '700 54px Montserrat', C.red, 'center', 10);
-    });
+    drawWordmark(g, 1170, ss(cu.card + 0.3, cu.card + 1.2, lt), ss(cu.card + 0.8, cu.card + 1.4, lt), ss(cu.card + 1.1, cu.card + 1.7, lt));
   });
 };

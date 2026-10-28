@@ -1,6 +1,6 @@
 # William Golding — Bir Yazarın Hayatı
 
-Instagram Reels için 9:16 dikey (1080 × 1920), **2 dakika 57 saniyelik** illüstrasyon tarzında biyografi animasyonu.
+Instagram Reels için 9:16 dikey (1080 × 1920), **2 dakika 57 saniyelik** illüstrasyon tarzında biyografi animasyonu. Tüm yazılar Montserrat ile yazıldı.
 Seslendirme yok; anlatımı kısa, okunaklı altyazı kartları taşıyor. Filigran, kullanıcı adı ya da logo yok.
 
 **Video:** [`output/william_golding_reels.mp4`](output/william_golding_reels.mp4)
@@ -10,34 +10,47 @@ H.264 High, 1080×1920, 30 fps, yuv420p, AAC 48 kHz stereo.
 
 ## Sahne akışı
 
-| Zaman | Bölüm | Görüntü | Altyazı |
-|---|---|---|---|
-| 0:00–0:07 | Açılış | Madalyon içinde beyaz sakallı Golding portresi, el yazısıyla açılan isim | William Golding · 1911 – 1993 · Nobel ödüllü İngiliz yazar |
-| 0:07–0:17 | Doğum | Britanya haritası, Cornwall'a yakınlaşma, “19 EYLÜL 1911” damgası, Newquay'e düşen iğne, kundaktaki bebek | Doğum tarihi ve Newquay |
-| 0:17–0:33 | Ailesi | Elinde köpüren deney şişesiyle baba Alec, “Votes for Women” pankartlı ve süfrajet kuşaklı anne Mildred, ağabey Jose, sepetteki bebek William | Fen öğretmeni baba, oy hakkı savunucusu anne, 5 yaş büyük ağabey |
-| 0:33–0:46 | Çocukluk | Gece, kilise ve mezarlık yanındaki ev; kamera yer altına iner: mumla bodruma inen William, karanlıkta parlayan gözler, çığlık ve kaçış | Mezarlık ve bodrum korkusu |
-| 0:46–1:05 | Okul yılları | Okul bahçesinde yalnız William, toz bulutlu kavga ve yara bantları; ödül kitabıyla gururlu yürüyüş; sınıfta fen öğretmeninin kendi babası çıkması ve göz kırpması | Sosyal olmayan, kavgacı, onaylanmaya hassas çocuk; öğretmeni babası |
-| 1:05–1:14 | Karanlık bir itiraf | Loş masa, 1926 tarihli günlük, sayfaya yayılan mürekkep lekesi. Olay canlandırılmıyor | Kendi anılarına göre 15 yaşındaki tecavüz girişimi |
-| 1:14–1:27 | Oxford | Gün batımında Oxford silueti, cübbeli William elinde deney şişesiyle zoraki gülümsüyor, düşünce balonunda baba; “puf” ve şişe kitaba dönüşür, harfler uçuşur | Doğa bilimleri, ardından İngiliz dili ve edebiyatı |
-| 1:27–1:41 | Aşk | Parkta Molly ile nişan yüzüğü; kimyager Ann ve nişanlısı gelir, kıvılcım ve kalpler; iki yüzük de kırılır, düğün, konfeti | Molly Evans, Ann Brookfield, 1939'da evlilik |
-| 1:41–1:54 | Öğretmenlik | Uzakta Salisbury Katedrali, tarihî toprak sur; öğrenciler ikiye ayrılır, bir grup savunur, diğeri saldırır; Golding not alır | Öğrencileri gözlemlemesi |
-| 1:54–2:19 | İkinci Dünya Savaşı | Savaş gemisinde selam veren er; “Er → Subay adayı → Teğmen” merdiveni ve değişen üniforma; gece Bismarck takibi, salvolar, batış; yıkık şehirde yağmur altında düşünceli Golding; bal peteği zemininde arı ve alıntı | Kraliyet Donanması, teğmenlik, Bismarck, insan doğası üzerine düşünceleri ve “İnsan, arının bal yapması gibi kötülük üretir.” |
-| 2:19–2:34 | Zor zamanlar | Boş kâğıtlı daktilo, buruşuk sayfalar, dönen saat; masada çoğalan şişeler ve sallanan oda; gece misafir odası, Bob Dylan kuklasının duvardaki gölgesi şeytana dönüşür, Golding yastıkla saldırır | Yazma tıkanıklığı, alkol, kukla olayı |
-| 2:34–2:47 | Son yıllar | Sahnede 1983 Nobel madalyası, alkışlayan seyirci ve konfeti; taht salonunda kılıçla şövalyelik töreni | Nobel 1983, şövalyelik 1988 |
-| 2:47–2:57 | Veda | Cornwall kıyısında gün batımı, Perranarworthal'ı gösteren küçük harita; kapanışta portre, isim ve yıllar | 19 Haziran 1993, Perranarworthal, kalp yetmezliği |
+| Zaman | Bölüm | Görüntü ve anlatım |
+|---|---|---|
+| 0:00 | Açılış | Madalyon portre. Kurumsal yazı: WILLIAM GOLDING · 1911 – 1993 · NOBEL ÖDÜLLÜ İNGİLİZ YAZAR |
+| 0:06 | Doğum | Britanya haritası (bölge adlarıyla), Cornwall'a yakınlaşma, "19 EYLÜL 1911" damgası, Newquay |
+| 0:16 | Ailesi | Fen öğretmeni baba Alec, oy hakkı savunucusu anne Mildred, 5 yaş büyük ağabey Jose, bebek William |
+| 0:30 | Çocukluk | Marlborough'daki 29 numaralı ev ve arkasındaki kilise mezarlığı; bahçe duvarına yaslanan mezar taşları; çimlere basmamak için kestane ağacına tırmanan William; ömür boyu kâbuslarına giren bodrum |
+| 0:45 | Okul yılları | Kavga ve zorbalık, gururla taşınan hediye kitap, Marlborough Grammar School'da fen öğretmeni olan babası |
+| 1:01 | Oxford | Brasenose Koleji, 1930'da doğa bilimleri, iki yıl sonra İngiliz edebiyatı; 1934'te ilk kitabı *Poems* |
+| 1:14 | Karanlık bir itiraf | Eşi için yazdığı anılarına göre 18 yaşında, Oxford'daki ilk yılında Dora'ya tecavüz girişimi; 2009 biyografisiyle ortaya çıkışı. Olay canlandırılmıyor |
+| 1:26 | Aşk | Molly Evans ile nişan, kimyager Ann Brookfield, iki nişanın bozulması ve 1939'daki evlilik |
+| 1:38 | Öğretmenlik | Salisbury, Bishop Wordsworth's School; Figsbury Ring gezisinde suru savunan ve saldıran iki grup |
+| 1:49 | İkinci Dünya Savaşı | 1940'ta er olarak Kraliyet Donanması'na katılış; teğmenliğe yükseliş; Bismarck'ın batırılışı; D-Day'de (6 Haziran 1944) roket atan çıkarma gemisinin komutanı; "İnsan, arının bal yapması gibi kötülük üretir." |
+| 2:18 | Zor zamanlar | 1970'lerdeki yazma tıkanıklığı ve alkol; yazar arkadaşının evinde Bob Dylan kuklasını şeytan sanıp saldırması ve onu bahçeye gömmesi |
+| 2:34 | Son yıllar | 1980 Booker, 1983 Nobel; 1988'de II. Elizabeth tarafından şövalye ilan edilişi |
+| 2:47 | Veda | 19 Haziran 1993, Perranarworthal, kalp yetmezliği; kapanış portresi |
 
-## Notlardaki adlar ve yazımlar
+## Bilgilerin doğrulanması
 
-- **Perranarworthal**: notlarda “Perra Narvortal” olarak geçen köyün doğru yazımı (Cornwall, Truro yakını).
-- **Ann Brookfield**: notlardaki “Anne Brockfield”. Biyografilerde bu şekilde geçiyor.
-- **Jose**: ağabeyin adı notlardaki gibi kullanıldı.
-- Notlarda adı geçmeyen birkaç yer de eklendi: okul (Marlborough, babasının ders verdiği okul) yalnızca “gittiği okul” olarak geçiyor. Öğretmenlik için Salisbury, Oxford için 1930 ve “iki yıl sonra” bilgisi kullanıldı.
-- “İnsan, arının bal yapması gibi kötülük üretir” Golding'in kendi sözü (“man produces evil as a bee produces honey”, *The Hot Gates*'teki “Fable” denemesi).
-- İstenildiği gibi *Sineklerin Tanrısı*'na hiç değinilmedi.
+Notlardaki bilgiler biyografi kaynaklarıyla karşılaştırıldı (John Carey'nin 2009 tarihli *William Golding: The Man Who Wrote Lord of the Flies* biyografisi ile bu kitap üzerine yazılan haber ve eleştiriler, Brasenose Koleji ve Bishop Wordsworth's School sayfaları, Golding vakfının sitesi).
+
+**Düzeltilenler**
+- **Dora:** Golding 18 yaşındaydı ve olay Oxford'daki ilk yılında, eve döndüğü bir dönemde yaşandı. Olay, eşi Ann için yazdığı yayımlanmamış anılarda geçiyor ve 2009'daki biyografiyle ortaya çıktı. Dora'nın yaşı kaynaklarda 15 ile 16 arasında değiştiği için videoda yazılmadı.
+- **Mezarlıklı ev:** Bu ev Newquay'de değil, Wiltshire'daki Marlborough'da, 29 The Green adresindeydi. Arkası St Mary's Kilisesi'nin mezarlığına bakıyordu. Golding doğduğunda Newquay'deydi, aile Marlborough'da yaşıyordu.
+- **Yazımlar:** Doğru yazımlar Perranarworthal ve Ann Brookfield. Ağabeyin asıl adı Joseph, ailede "Jose" diye çağrılıyordu.
+- **Kukla:** Olay yazar Andrew Sinclair'in evinde geçti. Golding sonunda kuklayı bahçeye gömdü.
+
+**Eklenenler**
+- Mezar taşlarının bahçe duvarına yaslanması ve çimlere basmamak için kestane ağacına tırmanması. Bodrum ömür boyu kâbuslarına girdi.
+- Okulda kavgaların yanında akranlarına zorbalık ettiği de kayıtlı.
+- Brasenose Koleji ve 1934'te çıkan ilk kitabı *Poems*.
+- Bishop Wordsworth's School ve Figsbury Ring gezisi.
+- D-Day'de roket atan bir çıkarma gemisine, yani LCT(R)'ye komuta etmesi.
+- 1980 Booker Ödülü (*Rites of Passage*).
+
+**Doğrulanamayanlar**
+- Okul başarısı için hediye edilen kitap ve onaylanmaya olan hassasiyet notlarınızdan alındı; bulduğum kaynaklarda geçmiyor.
+- Figsbury Ring gezisi tek bir anı yazısına dayanıyor.
 
 ## Yapı
 
-Her kare koddan çiziliyor; hazır görsel ya da ses dosyası kullanılmadı. Çizgiler saniyede 8 kez hafifçe titriyor (“line boil”); el çizimi animasyon hissi buradan geliyor. Üstüne sabit bir kâğıt dokusu ekleniyor.
+Her kare koddan çiziliyor; hazır görsel ya da ses dosyası kullanılmadı. Karakterlerin ayaklarının altında gölge var, tabelalardaki yazılar sığacak şekilde ölçekleniyor. Çizgiler saniyede 8 kez hafifçe titriyor (“line boil”); el çizimi animasyon hissi buradan geliyor. Üstüne sabit bir kâğıt dokusu ekleniyor.
 
 ```
 animation/
@@ -45,10 +58,10 @@ animation/
   timeline.js   sahneler, altyazılar ve ses ipuçları (görüntü ve sesin ortak zaman çizelgesi)
   core.js       matematik, renk paleti, katmanlar, kâğıt dokusu, titreyen mürekkep çizgileri
   person.js     tek bir parametrik karakter: bebekten sakallı Nobel ödüllüsüne tüm kadro
-  captions.js   bölüm etiketi, altyazı kartları (kelime kelime belirir), alıntı kartı
-  scenes1.js    açılış, doğum (harita), aile, mezarlık ve bodrum
-  scenes2.js    okul, itiraf, Oxford, aşk, öğretmenlik
-  scenes3.js    savaş, zor zamanlar, ödüller, veda
+  captions.js   bölüm etiketi, altyazı kartları (kelime kelime belirir), alıntı kartı, kurumsal isim bloğu
+  scenes1.js    açılış, doğum (harita), aile, Marlborough'daki ev ve bodrum
+  scenes2.js    okul, Oxford, itiraf, aşk, öğretmenlik
+  scenes3.js    savaş (D-Day dahil), zor zamanlar, ödüller, veda
   main.js       sahne geçişleri, kâğıt dokusu, vinyet
 audio/compose.py   sahne sahne müzik ve efekt sentezi
 render/render.mjs  Chromium ile kare kare render ve ffmpeg ile MP4

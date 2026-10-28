@@ -13,7 +13,7 @@ function person(g, o) {
     mouth: 'smile', eyes: 'open', look: 0, lookY: 0, brow: 0, angry: 0, sad: 0, blush: 0,
     skirt: null, walk: 0, stride: 0, lean: 0, seed: 1, t: 0, tie: null, collar: null,
     sailorCollar: false, stripes: 0, buttons: false, handL: null, handR: null, bob: 0, squash: 1,
-    sash: false, coat: null, flip: false, headTilt: 0, bodyW: 1, pin: null, shorts: false, socks: C.white
+    sash: false, coat: null, flip: false, headTilt: 0, bodyW: 1, pin: null, shorts: false, socks: C.white, shadow: true
   }, o);
   g.save();
   g.translate(d.x, d.y);
@@ -28,6 +28,8 @@ function person(g, o) {
   const out = {};
   if (d.kneel) g.translate(0, P.leg * 0.62);
 
+  // ---- contact shadow
+  if (d.shadow) { g.fillStyle = 'rgba(30,20,15,0.2)'; g.beginPath(); g.ellipse(0, 4, P.hw * 0.95, 9, 0, 0, TAU); g.fill(); }
   // ---- legs
   const hx = P.hw * 0.26;
   const ph = d.walk, st = d.stride;

@@ -41,9 +41,8 @@
 (async function () {
   const params = new URLSearchParams(location.search);
   const canvas = document.getElementById('c');
-  const fams = ['600 40px "Cormorant Garamond"', '700 40px "Cormorant Garamond"', 'italic 600 40px "Cormorant Garamond"', '600 40px Caveat',
-    '600 40px Montserrat', '700 40px Montserrat', '800 40px Montserrat'];
-  await Promise.all(fams.map(f => document.fonts.load(f, 'William Golding İğüşıöçÜ “”')));
+  const fams = ['600 40px Montserrat', '700 40px Montserrat', '800 40px Montserrat', 'italic 600 40px Montserrat'];
+  await Promise.all(fams.map(f => document.fonts.load(f, 'William Golding İğüşıöçÜ “”₂–')));
   await document.fonts.ready;
   init(canvas);
   window.renderAt = t => { renderFrame(t); return true; };

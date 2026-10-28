@@ -72,7 +72,7 @@ SCENES.title = (g, lt, sc) => {
       g.fillStyle = C.white; g.beginPath(); g.moveTo(0, 0); g.arc(0, 0, 400, a, a + 0.14); g.fill();
     }
     g.globalAlpha = 1;
-    person(g, Object.assign({}, WILL.old, { x: 0, y: 590, s: 1.95, t: lt, armL: 0.1, armR: 0.1, mouth: 'smile', look: Math.sin(lt * 0.8) * 0.3 }));
+    person(g, Object.assign({}, WILL.old, { shadow: false, x: 0, y: 590, s: 1.95, t: lt, armL: 0.1, armR: 0.1, mouth: 'smile', look: Math.sin(lt * 0.8) * 0.3 }));
     g.restore();
   });
   // little things that orbit the medallion
@@ -83,19 +83,7 @@ SCENES.title = (g, lt, sc) => {
     at(g, x, y + Math.sin(lt * 1.6 + i) * 10, p, Math.sin(lt + i) * 0.12, () => drawIcon(g, k, lt));
   }
 
-  // name, written left to right
-  const nr = ss(cu.name, cu.name + 1.0, lt);
-  if (nr > 0) {
-    g.save();
-    g.beginPath(); g.rect(0, 1080, 90 + nr * 900, 160); g.clip();
-    text(g, 'William Golding', 540, 1160, '700 132px "Cormorant Garamond"', C.ink);
-    g.restore();
-    wline(g, [[250, 1235], [250 + 580 * ss(cu.name + 0.6, cu.name + 1.3, lt), 1235]], 5, C.coral, 21);
-  }
-  const ya = ss(cu.years, cu.years + 0.5, lt);
-  alpha(g, ya, () => text(g, '1911 – 1993', 540, 1300 + (1 - ya) * 20, '700 54px Montserrat', C.red, 'center', 10));
-  const ta = ss(cu.tag, cu.tag + 0.6, lt);
-  alpha(g, ta, () => text(g, 'Nobel ödüllü İngiliz yazar', 540, 1390 + (1 - ta) * 16, '600 58px Caveat', C.navy));
+  drawWordmark(g, 1170, ss(cu.name, cu.name + 1.0, lt), ss(cu.years, cu.years + 0.6, lt), ss(cu.tag, cu.tag + 0.6, lt));
 };
 
 function drawIcon(g, k, t) {
@@ -145,8 +133,14 @@ function drawMap(g, cx, cy, z, focus, t, opts = {}) {
   // a few hills / trees to make it feel like a storybook map
   const marks = [[-2.2, 52.4], [-3.6, 52.0], [-1.6, 53.6], [-4.2, 56.8], [-3.2, 57.2], [-1.0, 52.1], [-2.6, 54.6], [-4.6, 50.55]];
   marks.forEach(([lo, la], i) => {
-    const [x, y] = mp(lo, la);
-    ink(g, wpoly([[x - 16, y + 8], [x, y - 14], [x + 16, y + 8]], 0.8 / z, 70 + i), C.grassD, 3 / z);
+    const [x, y] = mp(lo, la), k = 1 / Math.pow(z, 0.75);
+    ink(g, wpoly([[x - 14 * k, y + 7 * k], [x, y - 12 * k], [x + 14 * k, y + 7 * k]], 0.8 / z, 70 + i), C.grassD, 3 / z);
+  });
+  if (opts.labels > 0) alpha(g, opts.labels, () => {
+    for (const [nm, lo, la] of [['İNGİLTERE', -1.3, 52.6], ['GALLER', -3.6, 52.25], ['İSKOÇYA', -4.0, 57.0], ['İRLANDA', -8.0, 53.2]]) {
+      const [x, y] = mp(lo, la);
+      text(g, nm, x, y, `700 ${22 / z}px Montserrat`, rgb(C.ink, 0.7), 'center', 4 / z);
+    }
   });
   if (opts.after) opts.after(g, z);
   g.restore();
@@ -178,7 +172,7 @@ SCENES.birth = (g, lt, sc) => {
   const z = lerp(1.0, 3.3, e);
   const nq = mp(...PLACES.newquay);
   const f = [lerp(-90, nq[0] + 30, e), lerp(-20, nq[1] - 40, e)];
-  drawMap(g, 540, 760, z, f, lt);
+  drawMap(g, 540, 760, z, f, lt, { labels: 1 - ss(0, 0.5, e) });
   // boat and gulls (screen space, parallax-free)
   at(g, 270 + Math.sin(lt * 0.6) * 20, 1120 + Math.sin(lt * 1.7) * 6, 0.9, Math.sin(lt * 1.7) * 0.05, () => {
     ink(g, wpoly([[-60, 0], [60, 0], [40, 26], [-44, 26]], 1, 101), C.coral);
@@ -204,8 +198,8 @@ SCENES.birth = (g, lt, sc) => {
     pin(g, nqS[0], nqS[1] - (1 - pb) * 500, 1.15);
     const la = pop(cu.pin + 0.4, lt, 0.4);
     if (la > 0) at(g, nqS[0] + 170, nqS[1] - 110, la, 0.04, () => {
-      ink(g, wround(-110, -42, 220, 84, 20, 1, 113), C.card, 4.5);
-      text(g, 'Newquay', 0, 0, '600 58px Caveat', C.ink);
+      ink(g, wround(-130, -42, 260, 84, 20, 1, 113), C.card, 4.5);
+      text(g, 'NEWQUAY', 0, 2, '700 38px Montserrat', C.ink, 'center', 4);
     });
   }
   const bp = pop(cu.cry, lt, 0.5);
@@ -285,7 +279,7 @@ SCENES.family = (g, lt, sc) => {
     babyBundle(g, 0, -88, 1.1, lt, 0);
     at(g, 0, -190 + Math.sin(lt * 2) * 6, 1, -0.05, () => {
       ink(g, wround(-82, -32, 164, 64, 16, 1, 133), C.card, 4);
-      text(g, 'William', 0, 0, '600 48px Caveat', C.red);
+      text(g, 'WILLIAM', 0, 2, '700 32px Montserrat', C.red, 'center', 3);
     });
   });
 };
@@ -351,12 +345,23 @@ SCENES.house = (g, lt, sc) => {
   wline(g, [[200, 360], [200, 300]], 5, C.ink, 165); wline(g, [[180, 322], [220, 322]], 5, C.ink, 166);
   const wa = 0.75 + 0.15 * Math.sin(lt * 4);
   ink(g, wcurve([[170, 980], [170, 880], [200, 840], [230, 880], [230, 980]], 1, 167), rgb('#f6c55e', wa), 4);
-  // bare tree with an owl
-  limb(g, [[470, 1150], [480, 900], [450, 760], [400, 680]], '#3d3330', 26, 5, 168);
-  limb(g, [[478, 900], [560, 800], [620, 760]], '#3d3330', 16, 5, 169);
-  limb(g, [[452, 780], [520, 700]], '#3d3330', 12, 5, 170);
+  // graveyard, with headstones leaning on the garden wall
+  ink(g, wrect(-10, 1140, W + 20, 30, 1, 187), '#2f3f33', 0);
+  const stones = [[70, 1160, 0.85, -0.08, 0], [180, 1172, 1.0, 0.06, 1], [290, 1158, 0.8, -0.14, 0], [372, 1164, 0.8, 0.34, 0], [418, 1160, 0.7, 0.42, 1]];
+  stones.forEach(([x, y, s, r, k], i) => gravestone(g, x, y, s, r, k, 190 + i * 5));
+  const wall = wpoly([[436, 1150], [436, 1000], [482, 1000], [482, 1150]], 1.2, 196);
+  ink(g, wall, '#9a8f86'); inkShade(g, wall, -8, -6, 0.2);
+  for (let y = 1030; y < 1150; y += 30) wline(g, [[436, y], [482, y]], 2.5, rgb(C.ink, 0.4), 197 + y);
+  ink(g, wrect(428, 990, 62, 16, 0.8, 198), '#aaa096', 4);
+  // the garden lawn he would not step on
+  ink(g, wrect(482, 1128, 210, 24, 1, 199), '#3f5a3c', 4);
+  // chestnut tree in the garden, owl on top
+  limb(g, [[570, 1140], [575, 920], [545, 790], [500, 700]], '#3d3330', 26, 5, 168);
+  limb(g, [[573, 930], [640, 870], [690, 850]], '#3d3330', 16, 5, 169);
+  limb(g, [[550, 800], [610, 730]], '#3d3330', 12, 5, 170);
+  for (const [lx, ly, i] of [[505, 690, 0], [615, 722, 1], [690, 845, 2], [470, 735, 3]]) ink(g, wellipse(lx, ly, 34, 24, 1.5, 165 + i, 10, i), '#4b5f3b', 4);
   const ob = pop(cu.owl, lt, 0.5);
-  if (ob > 0) at(g, 575, 770, ob, 0, () => {
+  if (ob > 0) at(g, 520, 700, ob, 0, () => {
     ink(g, wellipse(0, -34, 30, 38, 1, 171), '#8a6a4a');
     ink(g, wpoly([[-24, -64], [-16, -84], [-6, -64]], 0.6, 172), '#8a6a4a', 4); ink(g, wpoly([[24, -64], [16, -84], [6, -64]], 0.6, 173), '#8a6a4a', 4);
     const bl = ((lt * 0.8) % 2.6) < 0.15;
@@ -366,27 +371,42 @@ SCENES.house = (g, lt, sc) => {
     }
     ink(g, wpoly([[-5, -34], [5, -34], [0, -24]], 0.3, 179), C.mustard, 2.5);
   });
-  // house
-  const hs = wpoly([[600, 1150], [600, 700], [1000, 700], [1000, 1150]], 1.4, 180);
+  // the house on The Green
+  const hs = wpoly([[690, 1150], [690, 700], [1010, 700], [1010, 1150]], 1.4, 180);
   ink(g, hs, '#d9c7a3'); inkShade(g, hs, -14, -8, 0.18);
-  ink(g, wpoly([[570, 712], [800, 520], [1030, 712]], 1.4, 181), '#7b4a3a');
-  ink(g, wrect(910, 530, 46, 110, 1, 182), '#8f5a45');
-  for (const [wx, wy] of [[650, 760], [870, 760], [650, 940], [870, 940]]) {
-    ink(g, wrect(wx, wy, 90, 110, 1, 183 + wx + wy), rgb('#f6c55e', 0.85 + 0.1 * Math.sin(lt * 3 + wx)), 5);
-    wline(g, [[wx + 45, wy], [wx + 45, wy + 110]], 4, C.ink, 184 + wx); wline(g, [[wx, wy + 55], [wx + 90, wy + 55]], 4, C.ink, 185 + wy);
+  ink(g, wpoly([[662, 712], [850, 540], [1038, 712]], 1.4, 181), '#7b4a3a');
+  // roof tiles
+  for (let k = 0; k < 5; k++) wline(g, [[700 + k * 34, 700 - k * 31], [1000 - k * 34, 700 - k * 31]], 2.5, rgb(C.ink, 0.25), 189 + k);
+  ink(g, wrect(940, 560, 42, 100, 1, 182), '#8f5a45');
+  for (const [wx, wy] of [[725, 760], [905, 760], [725, 940], [905, 940]]) {
+    ink(g, wrect(wx, wy, 76, 100, 1, 183 + wx + wy), rgb('#f6c55e', 0.85 + 0.1 * Math.sin(lt * 3 + wx)), 5);
+    wline(g, [[wx + 38, wy], [wx + 38, wy + 100]], 4, C.ink, 184 + wx); wline(g, [[wx, wy + 50], [wx + 76, wy + 50]], 4, C.ink, 185 + wy);
   }
-  // little William peeking out of the upstairs window
-  const peek = 0.5 + 0.5 * Math.sin(lt * 1.3);
-  g.save(); g.beginPath(); g.rect(650, 760, 90, 110); g.clip();
-  person(g, Object.assign({}, WILL.kid, { x: 695, y: 1030 - peek * 14, s: 0.62, t: lt, eyes: 'wide', mouth: 'o', look: -0.8 }));
-  g.restore();
-  ink(g, wrect(770, 1030, 70, 120, 1, 186), '#6a4630');
-  // graveyard + grass + fog
-  ink(g, wrect(-10, 1140, W + 20, 30, 1, 187), '#2f3f33', 0);
-  const stones = [[90, 1160, 0.9, -0.08, 0], [210, 1172, 1.05, 0.06, 1], [330, 1158, 0.8, -0.14, 0], [440, 1176, 0.95, 0.1, 0], [530, 1162, 0.75, -0.05, 1]];
-  stones.forEach(([x, y, s, r, k], i) => gravestone(g, x, y, s, r, k, 190 + i * 5));
-  const fogA = 0.35;
-  for (let i = 0; i < 4; i++) alpha(g, fogA, () => cloud(g, ((i * 330 + lt * 22) % 1400) - 200, 1130 + (i % 2) * 20, 1.4, '#c9d3e6', 200 + i));
+  ink(g, wrect(818, 1040, 64, 110, 1, 186), '#6a4630');
+  ink(g, wrect(812, 990, 76, 34, 0.6, 188), '#2b4a8a', 3.5);
+  text(g, '29', 850, 1008, '700 22px Montserrat', C.white, 'center', 2);
+  // little William: at the window first, then up the chestnut tree, away from the lawn
+  const cl = cu.climb;
+  if (lt < cl - 0.3) {
+    const peek = 0.5 + 0.5 * Math.sin(lt * 1.3);
+    g.save(); g.beginPath(); g.rect(725, 760, 76, 100); g.clip();
+    person(g, Object.assign({}, WILL.kid, { x: 763, y: 1010 - peek * 14, s: 0.55, t: lt, eyes: 'wide', mouth: 'o', look: -0.8, shadow: false }));
+    g.restore();
+  } else if (lt < cu.cellar - 0.3) {
+    const u = easeInOut(ss(cl - 0.3, cl + 0.8, lt));
+    const bx = lerp(600, 655, u), by = lerp(1150, 905, u);
+    const sitting = u > 0.98;
+    person(g, Object.assign({}, WILL.kid, { x: bx, y: by, s: 0.72, t: lt, shadow: false, eyes: sitting ? 'wide' : 'open', mouth: sitting ? 'wavy' : 'flat',
+      lookY: sitting ? 1 : 0, look: sitting ? -0.6 : 0, brow: sitting ? 0.9 : 0.4,
+      armL: sitting ? 0.6 : 2.7 + Math.sin(lt * 12) * 0.2, armR: sitting ? 0.6 : 2.7 - Math.sin(lt * 12) * 0.2, elbL: sitting ? 0.9 : 0, elbR: sitting ? 0.9 : 0,
+      walk: sitting ? 0 : lt * 10, stride: sitting ? 0 : 0.5 }));
+    if (sitting) for (let i = 0; i < 3; i++) {
+      const v = ((lt - cl) * 0.8 + i / 3) % 1;
+      alpha(g, (1 - v) * 0.8, () => wline(g, [[600 + i * 30, 1060 - v * 30], [590 + i * 30, 1090 - v * 30]], 3, C.cream, 199 + i));
+    }
+  }
+  // drifting fog
+  for (let i = 0; i < 4; i++) alpha(g, 0.35, () => cloud(g, ((i * 330 + lt * 22) % 1400) - 200, 1130 + (i % 2) * 20, 1.4, '#c9d3e6', 200 + i));
   // underground cross-section
   ink(g, wrect(-10, 1170, W + 20, 1500, 1.5, 210), '#5a3f2e');
   const r2 = mulberry32(9);

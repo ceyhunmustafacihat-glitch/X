@@ -44,11 +44,13 @@ SCENES.school = (g, lt, sc) => {
     wline(g, [[540, 420], [540, 392]], 4, C.ink, 807); wline(g, [[540, 420], [560, 430]], 4, C.ink, 808);
     for (const x of [180, 340, 640, 800]) { ink(g, wrect(x, 560, 100, 130, 1, 809 + x), '#bfe3ea', 5); wline(g, [[x + 50, 560], [x + 50, 690]], 4, C.ink, 810 + x); }
     ink(g, wcurve([[480, 1030], [480, 860], [540, 810], [600, 860], [600, 1030]], 1, 811), '#6d4a3d');
+    ink(g, wrect(250, 716, 580, 66, 1, 814), C.cream, 4.5);
+    text(g, 'MARLBOROUGH GRAMMAR SCHOOL', 540, 750, `800 ${fitFont(g, 'MARLBOROUGH GRAMMAR SCHOOL', 800, 26, 3, 530)}px Montserrat`, C.navy, 'center', 3);
     ink(g, wrect(-10, 1030, W + 20, 900, 1.5, 812), '#d6c6a0');
     for (let i = 0; i < 6; i++) wline(g, [[i * 200, 1100 + (i % 2) * 40], [i * 200 + 60, 1104 + (i % 2) * 40]], 3, rgb(C.ink, 0.2), 813 + i);
 
-    const bA = 1 - ss(5.8, 6.3, lt);   // fight beat
-    const bB = ss(5.8, 6.3, lt);       // prize beat
+    const bA = 1 - ss(5.0, 5.4, lt);   // fight beat
+    const bB = ss(5.0, 5.4, lt);       // prize beat
     // kids playing at the back (beat A) / clapping (beat B)
     const kidsBack = [[640, 1045, C.mustard, '#3e2a1c', 21], [790, 1050, C.purple, '#a0522d', 22], [930, 1040, C.green, '#2b1d14', 23]];
     kidsBack.forEach(([x, y, top, hair, sd], i) => {
@@ -107,9 +109,9 @@ SCENES.school = (g, lt, sc) => {
     at(g, 290, 600, 1.4, 0, () => { g.beginPath(); g.moveTo(-14, -60); g.lineTo(-14, -20); g.lineTo(-44, 40); g.lineTo(44, 40); g.lineTo(14, -20); g.lineTo(14, -60); g.stroke(); });
     for (let k = 0; k < 3; k++) { g.save(); g.translate(560, 560); g.rotate(k * Math.PI / 3); g.beginPath(); g.ellipse(0, 0, 80, 26, 0, 0, TAU); g.stroke(); g.restore(); }
     g.beginPath(); g.arc(560, 560, 9, 0, TAU); g.stroke();
-    text(g, 'H2O', 780, 520, '600 64px Caveat', rgb('#f1efe2', 0.95));
-    text(g, 'E = ?', 780, 640, '600 56px Caveat', rgb('#f1efe2', 0.95));
-    text(g, 'Fen', 460, 720, '600 58px Caveat', rgb('#f6d66b', 0.95));
+    chem(g, 'H', '2', 'O', 780, 520);
+    chem(g, 'CO', '2', '', 780, 640);
+    text(g, 'FEN BİLGİSİ', 540, 735, '700 36px Montserrat', rgb('#f6d66b', 0.95), 'center', 5);
     g.restore();
     // Alec at the board
     const wink = lt > cu.wink && lt < cu.wink + 1.1;
@@ -153,7 +155,7 @@ SCENES.dark = (g, lt, sc) => {
     g.fillStyle = 'rgba(0,0,0,0.3)'; g.fill(wround(-370, -210, 760, 420, 20, 1, 906));
     ink(g, wpoly([[-380, -220], [0, -195], [380, -220], [380, 190], [0, 210], [-380, 190]], 1.4, 907), '#ece2c8', 5);
     wline(g, [[0, -195], [0, 210]], 4, rgb(C.ink, 0.7), 908);
-    text(g, '1926', -190, -150, '600 54px Caveat', rgb(C.navy, 0.85));
+    text(g, '1930', -190, -150, '700 42px Montserrat', rgb(C.navy, 0.85), 'center', 4);
     const wr = ss(0.6, 3.6, lt);
     g.strokeStyle = rgb(C.navy, 0.75); g.lineWidth = 3;
     for (let i = 0; i < 9; i++) {
@@ -173,6 +175,15 @@ SCENES.dark = (g, lt, sc) => {
       ink(g, curve(new Path2D(), pts, true), '#16141f', 0);
       for (let i = 0; i < 5; i++) ink(g, wellipse(190 + Math.cos(i * 1.9) * (190 * bl), 20 + Math.sin(i * 1.9) * (150 * bl), 10 * bl, 10 * bl, 0.5, 910 + i), '#16141f', 0);
     }
+  });
+  // the 2009 biography that brought it to light
+  const bk = ss(cu.book, cu.book + 0.7, lt);
+  if (bk > 0) at(g, lerp(1300, 560, easeOut(bk)), 1170, 1, -0.04, () => {
+    g.fillStyle = 'rgba(0,0,0,0.3)'; g.fill(wround(-236, -50, 480, 110, 10, 1, 925));
+    ink(g, wround(-240, -56, 480, 104, 10, 1, 926), '#7a2e25', 5);
+    ink(g, wrect(-240, -56, 480, 14, 0.6, 927), '#e9dcbc', 3);
+    text(g, 'W. GOLDING · BİYOGRAFİ', -40, 2, '800 22px Montserrat', C.cream, 'center', 3);
+    text(g, '2009', 190, 2, '800 26px Montserrat', C.gold, 'center', 3);
   });
   // quill in its ink pot
   ink(g, wellipse(880, 1210, 54, 22, 1, 920), '#1a1a22', 4);
@@ -200,6 +211,8 @@ SCENES.oxford = (g, lt, sc) => {
   drawGlow(g, 760, 760, 300, '#fff1c2', 0.8);
   ink(g, wellipse(760, 760, 90, 90, 1.2, 950), '#fbe3a0', 0);
   skyline(g, 1020, '#9a6f84', 951);
+  ink(g, wrect(600, 860, 420, 70, 1, 952), C.navyD, 4.5);
+  text(g, 'BRASENOSE COLLEGE', 810, 896, `800 ${fitFont(g, 'BRASENOSE COLLEGE', 800, 26, 4, 370)}px Montserrat`, C.gold, 'center', 4);
   ink(g, wrect(-10, 1010, W + 20, 900, 1.4, 960), C.grass);
   ink(g, wpoly([[440, 1010], [640, 1010], [900, 1920], [180, 1920]], 1.2, 961), '#e6d3a8', 4);
   for (let i = 0; i < 7; i++) ink(g, wellipse(80 + i * 160, 1060 + (i % 2) * 30, 40, 18, 1, 962 + i), C.grassD, 0);
@@ -213,7 +226,7 @@ SCENES.oxford = (g, lt, sc) => {
     for (const [x, y, r] of [[-230, 230, 14], [-190, 170, 22]]) ink(g, wellipse(x, y, r, r, 0.6, 970 + r), C.white, 4);
     ink(g, wcurve([[-150, 40], [-160, -60], [-90, -140], [10, -150], [110, -120], [160, -30], [140, 70], [40, 120], [-80, 110]], 2, 972), C.white, 5);
     g.save(); g.beginPath(); g.rect(-150, -150, 310, 230); g.clip();
-    person(g, Object.assign({}, ALEC, { x: 0, y: 300, s: 0.95, t: lt, mouth: 'grin', eyes: 'happy', armL: 0.2, armR: 2.6, elbR: 0.6 }));
+    person(g, Object.assign({}, ALEC, { shadow: false, x: 0, y: 300, s: 0.95, t: lt, mouth: 'grin', eyes: 'happy', armL: 0.2, armR: 2.6, elbR: 0.6 }));
     g.restore();
     // thumbs up
     ink(g, wround(70, -100, 40, 44, 12, 0.6, 973), C.skin, 4); ink(g, wround(80, -134, 18, 40, 9, 0.5, 974), C.skin, 4);
@@ -227,12 +240,23 @@ SCENES.oxford = (g, lt, sc) => {
     const u = inv(pf - 0.1, pf + 0.8, lt);
     alpha(g, 1 - u, () => { for (let i = 0; i < 7; i++) { const a = i / 7 * TAU; ink(g, wellipse(560 + Math.cos(a) * 90 * u, 820 + Math.sin(a) * 70 * u, 40 * (1 - u * 0.5), 40 * (1 - u * 0.5), 2, 980 + i), C.white, 4); } });
   }
-  if (lt > pf + 0.3) {
+  const pp = pop(cu.poems, lt, 0.6);
+  if (pp > 0) at(g, 790, 600 + Math.sin(lt * 1.5) * 8, pp, 0.06, () => {
+    g.fillStyle = 'rgba(42,33,29,0.25)'; g.fill(wround(-104, -144, 220, 300, 10, 1, 990));
+    ink(g, wround(-112, -152, 220, 300, 10, 1, 991), '#2e4a6e', 5);
+    wline(g, [[-92, -152], [-92, 148]], 5, rgb(C.ink, 0.5), 992);
+    ink(g, wrect(-70, -110, 150, 4, 0.3, 993), C.gold, 0);
+    text(g, 'POEMS', 6, -60, '800 40px Montserrat', C.gold, 'center', 6);
+    text(g, 'W. G. GOLDING', 6, 0, '600 20px Montserrat', C.cream, 'center', 3);
+    ink(g, wrect(-70, 60, 150, 4, 0.3, 994), C.gold, 0);
+    text(g, '1934', 6, 100, '800 34px Montserrat', C.cream, 'center', 6);
+  });
+  if (lt > pf + 0.3 && lt < cu.poems + 0.4) {
     const letters = ['A', 'b', 'C', 'ç', 'S', 'h', 'w', 'Ğ', 'q', 'R'];
     letters.forEach((ch, i) => {
       const u = ((lt - pf - 0.3) * 0.35 + i / letters.length) % 1;
       const x = 580 + Math.sin(i * 2.1 + u * 4) * 70 + u * (i % 2 ? 260 : 120), y = 800 - u * 500;
-      alpha(g, Math.sin(u * Math.PI), () => text(g, ch, x, y, `700 ${56 + (i % 3) * 14}px "Cormorant Garamond"`, [C.navy, C.red, C.teal][i % 3]));
+      alpha(g, Math.sin(u * Math.PI), () => text(g, ch, x, y, `700 ${48 + (i % 3) * 12}px Montserrat`, [C.navy, C.red, C.teal][i % 3]));
     });
   }
 };
@@ -324,7 +348,9 @@ SCENES.teacher = (g, lt, sc) => {
   // the earthwork ring (hill fort)
   ink(g, wcurve([[-20, 1000], [300, 960], [520, 830], [700, 780], [900, 800], [1100, 860], [1100, 1950], [-20, 1950]], 2, 1106), C.grass);
   ink(g, wcurve([[480, 860], [600, 770], [760, 740], [920, 760], [1100, 820], [1100, 860], [920, 820], [760, 800], [620, 830]], 1.6, 1107), C.grassD, 4);
-  const split = ss(5.8, 6.4, lt);
+  limb(g, [[990, 1060], [990, 900]], C.wood, 12, 4, 1108);
+  at(g, 940, 910, 1, -0.04, () => { ink(g, wpoly([[-140, -30], [90, -30], [120, 0], [90, 30], [-140, 30]], 1, 1109), C.cream, 4.5); text(g, 'FIGSBURY RING', -20, 2, `800 ${fitFont(g, 'FIGSBURY RING', 800, 22, 2, 210)}px Montserrat`, C.ink, 'center', 2); });
+  const split = ss(4.8, 5.4, lt);
   const kidsA = [[640, 830, 51], [760, 800, 52], [880, 812, 53], [990, 840, 54]];   // defenders on the rampart
   const kidsB = [[150, 1120, 55], [280, 1150, 56], [410, 1110, 57], [90, 1190, 58]]; // attackers
   const charge = ss(cu.charge, cu.clash, lt);
@@ -350,3 +376,16 @@ SCENES.teacher = (g, lt, sc) => {
     mouth: lt > cu.clash ? 'smirk' : 'flat', armR: 1.3, elbR: 1.4, armL: 1.1, elbL: 1.2,
     handR: (gg, x, y) => propNotebook(gg, x - 20, y - 10, 1.15, lt, clamp(writing % 1.2)) }));
 };
+
+// chalk formula with a real subscript (the font has no subscript digits)
+function chem(g, a, sub, b, x, y) {
+  const col_ = rgb('#f1efe2', 0.95);
+  g.font = '600 52px Montserrat';
+  const wa = g.measureText(a).width; g.font = '600 32px Montserrat';
+  const ws = g.measureText(sub).width; g.font = '600 52px Montserrat';
+  const wb = g.measureText(b).width;
+  let px = x - (wa + ws + wb) / 2;
+  text(g, a, px, y, '600 52px Montserrat', col_, 'left'); px += wa;
+  text(g, sub, px, y + 16, '600 32px Montserrat', col_, 'left'); px += ws;
+  if (b) text(g, b, px, y, '600 52px Montserrat', col_, 'left');
+}

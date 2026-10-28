@@ -285,7 +285,7 @@ playful(S("school") + 0.1, S("school") + 12.2, 112,
         [["D6", None, "B5", None, "G5", "A5", "B5", None], ["E6", None, "B5", None, "G5", "B5", "E6", None],
          ["E6", "D6", "C6", None, "G5", None, "C6", None], ["D6", "C6", "B5", "A5", "F#5", None, "D6", None]], 0.9)
 tcl = S("school", "class")
-for i, tb, b in bars(tcl, S("dark") - 0.3, 112, 4):
+for i, tb, b in bars(tcl, S("oxford") - 0.3, 112, 4):
     root, tri = [("G2", ["B4", "D5", "G5"]), ("C3", ["C5", "E5", "G5"]), ("A2", ["C5", "E5", "A5"]), ("D3", ["D5", "F#5", "A5"])][i % 4]
     M(tb, pluck(hz(root), 0.6), 0.5, -0.3, 0.25)
     for j in range(4):
@@ -294,15 +294,15 @@ for i, tb, b in bars(tcl, S("dark") - 0.3, 112, 4):
 
 # --- dark: D minor drone and sparse piano
 td = S("dark")
-M(td, pad([hz("D2"), hz("A2"), hz("F3")], 8.6, 0.3, attack=1.6, release=1.2, cutoff=700), 1.0, 0, 0.6)
-for k, (dt, nm) in enumerate([(0.6, "D4"), (1.8, "F4"), (3.0, "A3"), (4.2, "C#4"), (5.6, "D4"), (6.8, "Bb3")]):
+M(td, pad([hz("D2"), hz("A2"), hz("F3")], 11.4, 0.3, attack=1.6, release=1.2, cutoff=700), 1.0, 0, 0.6)
+for k, (dt, nm) in enumerate([(0.6, "D4"), (1.8, "F4"), (3.0, "A3"), (4.2, "C#4"), (5.6, "D4"), (6.8, "Bb3"), (8.4, "A3"), (9.6, "D4")]):
     mel(td + dt, nm, 1.6, 0.36, 0.9, 0.6)
 
 # --- oxford: a waltz, D major; brighter after the switch
 to = S("oxford")
 prog = [("D2", ["F#4", "A4", "D5"]), ("B1", ["F#4", "B4", "D5"]), ("G2", ["G4", "B4", "D5"]), ("A2", ["E4", "A4", "C#5"])]
 tune = [["F#5", "A5", "D6"], ["D6", "C#6", "B5"], ["B5", "D6", "G5"], ["A5", "E5", "C#6"]]
-for i, tb, b in bars(to + 0.2, S("love") - 0.3, 86, 3):
+for i, tb, b in bars(to + 0.2, S("dark") - 0.3, 86, 3):
     root, tri = prog[i % 4]
     bright = tb > S("oxford", "poof")
     M(tb, piano(hz(root), b * 2.8, 0.5), 0.55, -0.3, 0.45)
@@ -356,12 +356,25 @@ for k in range(16):
     FX(S("war", "rank1") - 0.3 + k * 0.26, snare(0.25 + 0.03 * k), 0.45, 0.15, 0.2)
 # c: the chase: tense ostinato and drums
 tc_ = S("war", "chase")
-for k in range(int(5.8 / 0.2)):
+for k in range(int(4.8 / 0.2)):
     nm = ["C3", "C3", "Eb3", "C3", "D3", "C3", "G2", "C3"][k % 8]
     M(tc_ + k * 0.2, pluck(hz(nm), 0.7, 0.3), 0.6, -0.2, 0.25)
     if k % 2 == 0:
         FX(tc_ + k * 0.2, kick(50, 0.35), 0.25, 0, 0.1)
-M(tc_, pad([hz("C2"), hz("G2"), hz("Db3")], 5.6, 0.35, attack=0.5, release=0.8, cutoff=900), 1.0, 0, 0.5)
+M(tc_, pad([hz("C2"), hz("G2"), hz("Db3")], 4.6, 0.35, attack=0.5, release=0.8, cutoff=900), 1.0, 0, 0.5)
+# d-day: marching snare and low brass, rockets
+tdd = S("war", "dday")
+M(tdd, brass([hz("F2"), hz("C3"), hz("F3")], 4.6, 0.35, attack=0.6), 1.0, 0, 0.45)
+for k in range(int(4.8 / 0.25)):
+    FX(tdd + k * 0.25, snare(0.25 + 0.1 * (k % 4 == 0)), 0.4, 0.1, 0.2)
+    if k % 4 == 0:
+        FX(tdd + k * 0.25, timpani(hz("F2"), 0.8, 0.6), 0.45, -0.1, 0.3)
+
+for rt in SC["war"]["cues"]["rockets"]:
+    for i in range(14):
+        FX(S("war") + rt + i * 0.03, whoosh(0.5, 1500, 9000), 0.05, -0.4 + i * 0.06, 0.2)
+    for i in range(6):
+        FX(S("war") + rt + 0.95 + i * 0.05, boom(0.9, 0.6), 0.18, -0.5 + i * 0.2, 0.3)
 # d: the aftermath
 tr = S("war", "ruins")
 M(tr - 0.1, pad([hz("C3"), hz("Eb3"), hz("G3")], 4.8, 0.28, attack=0.8, release=1.0, cutoff=900), 1.0, 0, 0.6)
@@ -376,7 +389,7 @@ for dt, nm in [(0.3, "C5"), (1.0, "Ab4"), (1.7, "F4"), (2.6, "G4")]:
 # --- hard times: a woozy, detuned piano
 tha = S("hard")
 prog = [("Bb1", ["D4", "F4", "Ab4"]), ("Eb2", ["G4", "Bb4", "Db5"]), ("F2", ["A4", "C5", "Eb5"]), ("Bb1", ["D4", "F4", "Ab4"])]
-for i, tb, b in bars(tha + 0.2, tha + 8.6, 76, 4):
+for i, tb, b in bars(tha + 0.2, tha + 8.0, 76, 4):
     root, tri = prog[i % 4]
     wob = 0.004 + 0.01 * min(1, (tb - tha) / 8)
     M(tb, piano(hz(root), b * 3.6, 0.45, wob), 0.5, -0.3, 0.5)
@@ -387,10 +400,9 @@ for k in range(5):
     M(S("hard", "wake") + 0.3 + k * 0.6, celesta(hz(["F6", "B5", "E6", "A#5", "F6"][k]), 0.3), 0.6, 0.4, 0.7)
 # the attack: comic chaos
 ta = S("hard", "attack")
-for k in range(12):
+for k in range(7):
     FX(ta + 0.2 + k * 0.12, timpani(hz("E2") * (1 + 0.06 * (k % 3)), 0.4, 0.6), 0.4, 0, 0.2)
-M(ta + 1.7, brass([hz("C3"), hz("E3"), hz("G3"), hz("C4")], 0.4, 0.4), 0.9, 0, 0.3)
-M(ta + 2.15, brass([hz("C3"), hz("E3"), hz("G3"), hz("C4")], 0.2, 0.4), 0.9, 0, 0.3)
+M(ta + 0.95, brass([hz("C3"), hz("E3"), hz("G3"), hz("C4")], 0.2, 0.4), 0.9, 0, 0.3)
 
 # --- honours: fanfare
 tho = S("honors")
@@ -504,8 +516,8 @@ for k in range(5):
     FX(S("school", "chalk") + k * 0.4, sq, 0.025, -0.2, 0.2)
 FX(S("school", "wink"), celesta(hz("E7"), 0.6, 0.8), 0.5, 0.3, 0.3)
 # dark
-n = int(9.0 * SR)
-FX(S("dark"), noise_band(9.0, 1500, 9000) * np.clip(tt(n), 0, 1), 0.05, 0, 0.3)       # rain
+n = int(12.0 * SR)
+FX(S("dark"), noise_band(12.0, 1500, 9000) * np.clip(tt(n), 0, 1), 0.05, 0, 0.3)       # rain
 FX(S("dark", "page"), paper(0.4), 0.2, 0.1, 0.2)
 wd = 3.0
 scr = noise_band(wd, 2500, 7000) * np.clip(np.sin(2 * np.pi * 5.5 * tt(int(wd * SR))), 0, 1) ** 0.6
@@ -546,6 +558,7 @@ FX(S("war", "horn"), brass([hz("A1"), hz("A2")], 1.4, 0.6, attack=0.08), 0.6, 0.
 for k in range(3):
     FX(S("war", "rank1") + [0, 1.3, 2.6][k] + 0.1, glide(400, 1000, 0.2), 0.1, 0, 0.2)   # hops
 waves_bed(S("war", "chase"), 6.0, 0.08)
+waves_bed(S("war", "dday"), 5.0, 0.07)
 for ft in SC["war"]["cues"]["fire"]:
     tf = S("war") + ft
     FX(tf, boom(1.6, 0.9), 0.4, -0.4, 0.3)
@@ -572,12 +585,20 @@ for bt in SC["hard"]["cues"]["bottles"]:
 FX(S("hard", "gasp") - 0.2, glide(90, 60, 2.0, 0.5, "rich"), 0.16, 0.4, 0.4)
 M(S("hard", "gasp"), brass([hz("C#3"), hz("G3"), hz("C4")], 0.6, 0.6, attack=0.01), 1.0, 0, 0.4)
 FX(S("hard", "attack") - 0.1, glide(300, 1500, 0.5, 0.5), 0.12, 0, 0.3)                 # slide whistle
-brawl_snd(S("hard", "attack") + 0.3, 1.3)
+brawl_snd(S("hard", "attack") + 0.3, 0.8)
 for k in range(6):
     FX(S("hard", "attack") + 0.5 + k * 0.15, noise_band(0.15, 2000, 8000) * np.exp(-tt(int(0.15 * SR)) / 0.05), 0.08, rng.uniform(-0.6, 0.6), 0.3)
-FX(S("hard", "attack") + 1.9, glide(1000, 250, 0.7), 0.12, 0.5, 0.3)                     # the puppet flies off
+FX(S("hard", "attack") + 0.9, glide(1000, 250, 0.7), 0.12, 0.5, 0.3)                     # the puppet flies off
+# the burial: spade thuds and a pleased little tune
+tbu = S("hard", "bury")
+for k in range(8):
+    FX(tbu + 0.2 + k * 0.42, kick(90, 0.15, 30), 0.25, 0.2, 0.2)
+    FX(tbu + 0.22 + k * 0.42, noise_band(0.15, 300, 3000) * np.exp(-tt(int(0.15 * SR)) / 0.05), 0.1, 0.2, 0.2)
+for k, nm in enumerate(["C5", "E5", "G5", "C6", "G5", "C6"]):
+    M(tbu + 0.4 + k * 0.4, marimba(hz(nm), 0.5), 0.5, 0.2, 0.35)
 # honours
-FX(S("honors", "medal"), bell(hz("C6"), 0.5, 2.5), 0.3, 0, 0.5)
+FX(S("honors", "booker"), bell(hz("G5"), 0.5, 2.5), 0.3, -0.3, 0.5)
+FX(S("honors", "medal"), bell(hz("C6"), 0.5, 2.5), 0.3, 0.3, 0.5)
 for k in range(260):
     tk = S("honors", "clap") + rng.random() * 3.4
     FX(tk, noise_band(0.04, 800, 6000) * np.exp(-tt(int(0.04 * SR)) / 0.01), 0.05, rng.uniform(-0.8, 0.8), 0.3)
