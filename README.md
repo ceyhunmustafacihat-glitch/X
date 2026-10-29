@@ -78,3 +78,20 @@ node render/render.mjs --encode-only 1   # yalnızca sesi ya da kodlamayı deği
 - Logo, şiar ve kullanıcı adı ekranın orta bölümünde. Reels arayüzünün kapladığı alt %20'lik kısma önemli içerik yerleştirilmedi.
 - İlk 0,7 saniye siyahtan açılıyor. Kapak olarak 10. saniyedeki paylaşım karesini seçebilirsiniz.
 - Müzik tamamen bu proje için sentezlendi; telif sorunu yoktur.
+
+## Günün kelimesi gönderisi (3:4 şablon)
+
+`post/` klasörü, logonun bordo ve krem-altın renklerini izleyen 1080 × 1440 (3:4) Instagram gönderi şablonudur.
+Yukarıda kelimenin çağrıştırdığı altın çizgili görsel, ortada büyük kelime, altında küçük köken satırı, anlam ve kelimenin vurgulandığı italik örnek cümle yer alır.
+
+Örnek: [`post/output/ab.png`](post/output/ab.png)
+
+Yeni kelime için `post/words/ab.js` dosyasını kopyalayıp alanları doldurun, ardından:
+
+```bash
+node post/render.mjs ab            # post/output/ab.png
+```
+
+- `anlam` tek bir metin ya da numaralanacak bir dizi olabilir.
+- Cümlede vurgulanacak yerleri `*yıldız*` içine alın. Yıldız yoksa kelimeyle başlayan sözcükler kendiliğinden vurgulanır.
+- `gorsel`, kelimeye özel satır içi SVG'dir. Uzun kelimeler satıra sığacak şekilde otomatik küçülür.
