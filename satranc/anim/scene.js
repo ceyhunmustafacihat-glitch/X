@@ -72,7 +72,7 @@
     axisLetters: 24.5, axisNumbers: 25.3, filesGlow: 28.3, ranksGlow: 29.8,
     walk: 31.9, colE: 35.9, row4: 36.5, e4: 37.1, ripple: 39.7,
     spot: 45.1, center: 51.5, ext: 56.5, king: 61.9, queen: 66.1, divider: 68.6,
-    boardOut: 72.9, titleIn: D - 1.2,
+    boardOut: 72.9, titleIn: D - 1.6,
   };
   const STEP = { rows: 0.26, cols: 0.26, walk: 0.36, center: 0.22, ext: 0.16, labels: 0.14 };
   const CENTER = ['d4', 'e4', 'd5', 'e5'];
@@ -100,8 +100,8 @@
   // the cover and this card runs on scene time (real time minus INS), so the rest keeps its timing.
   // HOLDS pause scene time at moments where a caption or heading is fully on screen and settled,
   // giving the viewer time to read: [scene time, seconds].
-  const CUT = 3.0, INS = 4.3;
-  const HOLDS = [[8.85, 4.0], [22.6, 1.5], [27.55, 1.5], [31.15, 1.5], [35.15, 1.5], [38.9, 2.0], [41.5, 3.0],
+  const CUT = 3.0, INS = 4.8;
+  const HOLDS = [[8.85, 4.0], [20.85, 2.3], [22.6, 1.5], [27.55, 1.5], [31.15, 1.5], [35.15, 1.5], [38.9, 2.0], [41.5, 3.0],
     [44.55, 3.5], [47.9, 2.0], [49.8, 1.5], [55.5, 1.0], [65.5, 2.5], [68.0, 3.5], [70.0, 3.5], [72.4, 1.0]];
   const sceneT = t => {
     if (t < CUT) return t;
@@ -114,7 +114,7 @@
     return Math.max(CUT, x);
   };
   const realT = x => x + INS + HOLDS.reduce((sum, [at, dur]) => (at < x ? sum + dur : sum), 0);
-  const INTRO_CARD = { a: 2.75, b: 7.3, flipAt: 2.75, kicker: 'BÖLÜM 01', lines: ['TAHTANIN', 'YAPISI'] };
+  const INTRO_CARD = { a: 3.3, b: 7.8, flipAt: 3.3, kicker: 'BÖLÜM 01', lines: ['TAHTANIN', 'YAPISI'] };
   const CARDS = [
     { a: 21.0, b: 24.1, kicker: 'BÖLÜM 02', lines: ['TAHTANIN', 'KONUMLANDIRILMASI'] },
     { a: 48.4, b: 51.1, kicker: 'BÖLÜM 03', lines: ['TAHTANIN', 'BÖLGELERİ'] },
@@ -148,7 +148,7 @@
   // ------------------------------------------------------------------ cover (loop point)
   // Drawn in the chapter-card style. Fully shown at t = 0 and leaves by COVER.b; re-enters over the
   // last second and lands exactly at t = D (= 0), so the video loops seamlessly.
-  const COVER = { a: -1.2, b: 3.2, holdOut: true, tilesUntil: INTRO_CARD.flipAt, soft: true, kicker: '', lines: ['SATRANÇ', 'TAHTASI'] };
+  const COVER = { a: -1.6, b: 3.6, holdOut: true, tilesUntil: INTRO_CARD.flipAt, soft: true, kicker: '', lines: ['SATRANÇ', 'TAHTASI'] };
   function title(t) {
     if (t < T.titleIn) card(t, COVER);
     else card(t - D, COVER);
@@ -224,9 +224,9 @@
   function lightDark(t) {
     if (t < T.lights - 0.1 || t > 21.2) return null;
     const light = new Float32Array(64), dark = new Float32Array(64);
-    const out = 1 - seg(t, 20.7, 21.1);
+    const out = 1 - seg(t, 20.86, 21.1);
     lightOrder.forEach(([f, r], i) => { light[f + r * 8] = eOut(seg(t, T.lights + i * 0.04, T.lights + i * 0.04 + 0.25)) * (1 - seg(t, T.darks - 0.1, T.darks + 0.2)); });
-    darkOrder.forEach(([f, r], i) => { dark[f + r * 8] = eOut(seg(t, T.darks + i * 0.04, T.darks + i * 0.04 + 0.25)) * out; });
+    darkOrder.forEach(([f, r], i) => { dark[f + r * 8] = eOut(seg(t, T.darks + i * 0.035, T.darks + i * 0.035 + 0.25)) * out; });
     const dimDark = eIO(seg(t, T.lights, T.lights + 0.4)) * (1 - eIO(seg(t, T.darks - 0.1, T.darks + 0.3)));
     const dimLight = eIO(seg(t, T.darks - 0.1, T.darks + 0.3)) * out;
     return { light, dark, dimLight, dimDark };
@@ -591,8 +591,8 @@
     }
   }
 
-  function stat(t, a, b, num, label, { x = W / 2, color = C.gold, numSize = 200, pop = 0, swatch } = {}) {
-    const k = win(t, a, b, 0.3, 0.3);
+  function stat(t, a, b, num, label, { fo = 0.3, x = W / 2, color = C.gold, numSize = 200, pop = 0, swatch } = {}) {
+    const k = win(t, a, b, 0.3, fo);
     if (k <= 0) return;
     const p = eBack(seg(t, a, a + 0.45));
     ctx.save(); ctx.globalAlpha = k;
@@ -620,17 +620,17 @@
     stat(t, 9.3, 12.0, n64, 'KARE', { pop: n64 === 64 ? 1 - seg(t, T.count[1], T.count[1] + 0.4) : 0 });
     stat(t, 12.0, 14.85, rowsAt(t), 'YATAY SIRA  (SATIR)');
     stat(t, 14.85, 17.7, colsAt(t), 'DİKEY SÜTUN', { color: C.caramelText });
-    const nl = clamp(Math.floor((t - T.lights) / 0.04) + 1, 0, 32), nd = clamp(Math.floor((t - T.darks) / 0.04) + 1, 0, 32);
-    stat(t, 17.7, 21.0, nl, 'AÇIK', { x: 300, color: C.light, numSize: 180, swatch: C.light });
-    stat(t, 17.7, 21.0, nd, 'KOYU', { x: 780, color: '#C99A66', numSize: 180, swatch: C.dark });
-    const kv = win(t, 17.9, 21.0, 0.4, 0.3);
+    const nl = clamp(Math.floor((t - T.lights) / 0.04) + 1, 0, 32), nd = clamp(Math.floor((t - T.darks) / 0.035) + 1, 0, 32);
+    stat(t, 17.7, 21.0, nl, 'AÇIK', { fo: 0.14, x: 300, color: C.light, numSize: 180, swatch: C.light });
+    stat(t, 17.7, 21.0, nd, 'KOYU', { fo: 0.14, x: 780, color: '#C99A66', numSize: 180, swatch: C.dark });
+    const kv = win(t, 17.9, 21.0, 0.4, 0.14);
     text('+', W / 2, 380, { size: 110, weight: 300, color: C.muted, alpha: kv });
   }
 
   // Main-heading transition: two pieces collide in the middle of the screen and board squares spread
   // out from the impact, each turning into place like a piece set down. Every other transition (a
   // heading leaving, the cover coming back at the end of the loop) is a soft fade.
-  const TILE = 120, TCOLS = 9, TROWS = 16, TILE_IN = 0.2, WAVE = 0.45, FLIP = 0.28, SOFT = 0.55;
+  const TILE = 120, TCOLS = 9, TROWS = 16, TILE_IN = 0.45, WAVE = 0.75, FLIP = 0.4, SOFT = 0.8;
   const IMPACT_X = W / 2, IMPACT_Y = 960, TMAXR = Math.hypot(W / 2 + TILE, 960 + TILE);
   function tiles(t, c) {
     if (c.tilesUntil !== undefined && t >= c.tilesUntil) return;
@@ -670,11 +670,11 @@
   // the two pieces that collide to open a main heading; impact at time tc
   const PIECE_S = 2.5;
   function collision(t, tc, flip) {
-    if (t < tc - 0.6 || t > tc + 0.8) return;
+    if (t < tc - 1.0 || t > tc + 1.2) return;
     const left = flip ? drawQueen : drawKing, right = flip ? drawKing : drawQueen;
-    const approach = eIn(seg(t, tc - 0.55, tc));
-    const recoil = eOut(seg(t, tc, tc + 0.35));
-    const fade = 1 - eIO(seg(t, tc + 0.2, tc + 0.55));
+    const approach = eIn(seg(t, tc - 0.9, tc));
+    const recoil = eOut(seg(t, tc, tc + 0.5));
+    const fade = 1 - eIO(seg(t, tc + 0.4, tc + 0.85));
     const gap = 84 * PIECE_S;   // centres when the two bases touch
     const lx = -160 + (IMPACT_X - gap / 2 + 160) * approach - recoil * 70;
     const rx = W + 160 - (W + 160 - IMPACT_X - gap / 2) * approach + recoil * 70;
@@ -691,7 +691,7 @@
     piece(rx, right, !flip, 0.35);
     pieceFill = C.white; pieceStroke = C.ink;
     if (t < tc) return;
-    const p = seg(t, tc, tc + 0.6);
+    const p = seg(t, tc, tc + 0.9);
     // flash
     const fl = Math.pow(1 - seg(t, tc, tc + 0.3), 2);
     if (fl > 0) {
@@ -730,7 +730,7 @@
     if (t < c.a || t > c.b) return;
     tiles(t, c);
     // text leaves before the squares clear; a chained card keeps its squares, so its text can stay longer
-    const lead = c.holdOut ? 1.0 : 0.85;   // the cover clears before the pieces arrive
+    const lead = c.holdOut ? 1.25 : 1.0;   // the cover clears before the pieces arrive
     const yC = 960;
     const reveal = (k, delay, y, h, draw) => {
       const pin = eOut(seg(t, c.a + TILE_IN + delay, c.a + TILE_IN + delay + 0.5));
@@ -778,7 +778,7 @@
     const put = (t, type, o) => q.push(Object.assign({ t: +t.toFixed(4), type }, o));
     const add = (t, type, o = {}) => put(t >= CUT ? realT(t) : t, type, o);
     for (const tc of collisions()) {
-      put(tc - 0.5, 'swish', { gain: 0.45, dur: 0.5 });
+      put(tc - 0.8, 'swish', { gain: 0.45, dur: 0.8 });
       put(tc, 'tock', { pitch: 0.55, gain: 0.6, soft: 1 }); put(tc + 0.012, 'hit', { gain: 0.6 }); put(tc + 0.02, 'shimmer', { gain: 0.25 });
       tileCues(tc, put);
     }
@@ -795,7 +795,7 @@
     for (let f = 0; f < 8; f++) { add(T.cols + f * STEP.cols, 'swish', { gain: 0.35, dur: 0.3 }); add(T.cols + f * STEP.cols + 0.02, 'pluck', { note: pent[f], gain: 0.4 }); }
     for (let i = 0; i < 32; i += 2) add(T.lights + i * 0.04, 'pop', { pitch: 1.25 + i * 0.012, gain: 0.32 });
     add(T.lights + 1.35, 'ding', { note: 'D6', gain: 0.45 });
-    for (let i = 0; i < 32; i += 2) add(T.darks + i * 0.04, 'pop', { pitch: 0.8 + i * 0.01, gain: 0.32 });
+    for (let i = 0; i < 32; i += 2) add(T.darks + i * 0.035, 'pop', { pitch: 0.8 + i * 0.01, gain: 0.32 });
     add(T.darks + 1.35, 'ding', { note: 'A5', gain: 0.45 });
     for (const c of CARDS) add(c.b - SOFT, 'whoosh', { gain: 0.35, dur: 0.6, rev: 1 });
     for (let i = 0; i < 8; i++) add(T.axisLetters + i * 0.09 + 0.1, 'click', { pitch: 1 + i * 0.05, gain: 0.45 });
