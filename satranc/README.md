@@ -17,7 +17,7 @@ Kapak fotoğrafı (9:16, 1080 × 1920): [`docs/kapak_foto.png`](docs/kapak_foto.
 | Zaman | Bölüm | Görüntü | Ses |
 |---|---|---|---|
 | 0–3 sn | Kapak | **SATRANÇ TAHTASI**, bölüm geçişleriyle aynı başlık stilinde | Başlık vuruşu, ışıltı |
-| 3–7 sn | Ara başlık | **TAHTANIN YAPISI**: kapak yazısı kayarak çıkarken bu başlık kayarak girer | Whoosh + vuruş |
+| 3–7 sn | Ara başlık | **TAHTANIN YAPISI**: şah ve vezir kapakta çarpışır, kapak kareleri ters yüz olur | Swish, tahta “tak”, vuruş |
 | 7–13 sn | Tahtanın yapısı | Tahta kare kare çapraz dalga hâlinde kurulur. “Birbirini takip eden açık ve koyu renkli karelerden oluşan, kare biçiminde bir oyun alanı” | Ahşap “tok” sesleri |
 | 13–20 sn | | 1’den 64’e sayaç, kareler tek tek numaralanır: **64 KARE** | Yükselen tıkırtılar, ding |
 | 20–23 sn | | 8 yatay sıra (satır) alttan üste parlar | Swish + nota |
