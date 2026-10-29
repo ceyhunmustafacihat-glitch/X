@@ -5,9 +5,10 @@
   const W = 1080, H = 1920, D = TL.duration;
   const BS = 108, BX = (W - 8 * BS) / 2, BY = 572;     // board: 864 px, x 108–972, y 572–1436
   const C = {
-    bg0: '#4E3220', bg1: '#5A3A25', bg2: '#3F2819', card: '#4E3220', shade: '#1f130b', light: '#F0D9B5', dark: '#B58863', frame: '#2b1e15',
-    gold: '#FFC94A', teal: '#2FD6BD', blue: '#4C8DFF', rose: '#FF5C7A', white: '#F7F3EA', muted: '#D2B998',
-    green: '#5BE37D', ink: '#21170c',
+    // only the logo's two colours and their tones: brown #4E3220 and the pawn's gold #E2C890 → #C9A86E
+    bg0: '#4E3220', bg1: '#5A3A25', bg2: '#3F2819', card: '#4E3220', shade: '#1f130b', light: '#EEDDB8', dark: '#A97F52', frame: '#2b1e15',
+    gold: '#E5BE6E', caramel: '#B9814A', caramelText: '#E8A95E', cream: '#F3E4C2', choc: '#2A1A0E',
+    white: '#F6ECD8', muted: '#CDB28A', ink: '#24160c',
   };
   const FILES = 'abcdefgh';
   const FONT = 'Montserrat';
@@ -89,10 +90,10 @@
     { a: 42.3, b: 45.0, text: 'Oyuna başlamadan önce bilmen gereken *en önemli* ayrıntılardan biri:' },
     { a: 45.0, b: 48.4, text: 'Sağ alt köşedeki kare mutlaka *açık renkli* olmalıdır.' },
     { a: 51.2, b: 56.0, text: '*d4, e4, d5* ve *e5* kareleri *merkez* karelerdir.' },
-    { a: 56.0, b: 61.6, text: 'Onları çevreleyen 12 kare ise *genişletilmiş merkez* kareleridir.', hl: C.teal },
-    { a: 61.8, b: 66.0, text: '*e, f, g* ve *h* sütunları *şah kanadı* olarak adlandırılır.', hl: C.blue },
-    { a: 66.0, b: 68.5, text: '*a, b, c* ve *d* sütunları ise *vezir kanadıdır.*', hl: C.rose },
-    { a: 68.5, b: 70.5, text: 'Tahta ikiye ayrılır: ~vezir kanadı~ ve *şah kanadı*', hl: C.blue, hl2: C.rose },
+    { a: 56.0, b: 61.6, text: 'Onları çevreleyen 12 kare ise *genişletilmiş merkez* kareleridir.', hl: C.caramelText },
+    { a: 61.8, b: 66.0, text: '*e, f, g* ve *h* sütunları *şah kanadı* olarak adlandırılır.' },
+    { a: 66.0, b: 68.5, text: '*a, b, c* ve *d* sütunları ise *vezir kanadıdır.*', hl: C.caramelText },
+    { a: 68.5, b: 70.5, text: 'Tahta ikiye ayrılır: ~vezir kanadı~ ve *şah kanadı*', hl2: C.caramelText },
     { a: 70.6, b: 72.9, text: 'Tahta bu kadar!', size: 92, sub: 'Artık satranç tahtasını tanıyorsun.' },
   ];
   // The chapter-1 card plays between the cover and the board: from CUT on, every layer except
@@ -121,7 +122,7 @@
     }
     ctx.restore();
     const rg = ctx.createRadialGradient(W / 2, 980, 60, W / 2, 980, 900);
-    rg.addColorStop(0, 'rgba(255,201,74,0.10)'); rg.addColorStop(1, 'rgba(255,201,74,0)');
+    rg.addColorStop(0, 'rgba(229,190,110,0.10)'); rg.addColorStop(1, 'rgba(229,190,110,0)');
     ctx.fillStyle = rg; ctx.fillRect(0, 0, W, H);
   }
   function vignette() {
@@ -167,7 +168,7 @@
       ctx.shadowColor = 'rgba(0,0,0,0.6)'; ctx.shadowBlur = 60; ctx.shadowOffsetY = 24;
       rrect(BX - 18, BY - 18, 8 * BS + 36, 8 * BS + 36, 20); ctx.fillStyle = C.frame; ctx.fill();
       ctx.shadowColor = 'transparent';
-      ctx.strokeStyle = 'rgba(255,201,74,0.35)'; ctx.lineWidth = 2;
+      ctx.strokeStyle = 'rgba(229,190,110,0.35)'; ctx.lineWidth = 2;
       rrect(BX - 9, BY - 9, 8 * BS + 18, 8 * BS + 18, 12); ctx.stroke();
       ctx.restore();
     }
@@ -267,7 +268,7 @@
         const k = win(t, a, a + 0.75, 0.1, 0.55);
         if (k <= 0) continue;
         ctx.save(); ctx.globalAlpha = k;
-        ctx.fillStyle = rgba(C.gold, 0.55); ctx.fillRect(BX, sqY(r), 8 * BS, BS);
+        ctx.fillStyle = rgba(C.gold, 0.85); ctx.fillRect(BX, sqY(r), 8 * BS, BS);
         ctx.strokeStyle = C.gold; ctx.lineWidth = 5; ctx.shadowColor = C.gold; ctx.shadowBlur = 20;
         ctx.strokeRect(BX + 2.5, sqY(r) + 2.5, 8 * BS - 5, BS - 5);
         ctx.restore();
@@ -277,8 +278,8 @@
         const k = win(t, a, a + 0.75, 0.1, 0.55);
         if (k <= 0) continue;
         ctx.save(); ctx.globalAlpha = k;
-        ctx.fillStyle = rgba(C.teal, 0.5); ctx.fillRect(sqX(f), BY, BS, 8 * BS);
-        ctx.strokeStyle = C.teal; ctx.lineWidth = 5; ctx.shadowColor = C.teal; ctx.shadowBlur = 20;
+        ctx.fillStyle = rgba(C.caramel, 0.85); ctx.fillRect(sqX(f), BY, BS, 8 * BS);
+        ctx.strokeStyle = C.caramelText; ctx.lineWidth = 5; ctx.shadowColor = C.caramelText; ctx.shadowBlur = 20;
         ctx.strokeRect(sqX(f) + 2.5, BY + 2.5, BS - 5, 8 * BS - 5);
         ctx.restore();
       }
@@ -317,15 +318,15 @@
       ctx.save();
       ctx.translate(BX - 52 + (1 - pn) * -40, cy(i));
       ctx.scale(1 + 0.35 * en, 1 + 0.35 * en);
-      text(String(i + 1), 0, 0, { size: 42, weight: 800, alpha: clamp(pn) * fade, color: en > 0.05 ? mix(C.white, C.teal, en) : C.white });
+      text(String(i + 1), 0, 0, { size: 42, weight: 800, alpha: clamp(pn) * fade, color: en > 0.05 ? mix(C.white, C.caramelText, en) : C.white });
       ctx.restore();
     }
     // files / ranks sweep glow on the board
     for (let i = 0; i < 8; i++) {
       const kf = win(t, T.filesGlow + i * 0.12, T.filesGlow + 1.4 + i * 0.05, 0.2, 0.4);
-      if (kf > 0) { ctx.save(); ctx.globalAlpha = kf * 0.35; ctx.fillStyle = C.gold; ctx.fillRect(sqX(i), BY, BS, 8 * BS); ctx.restore(); }
+      if (kf > 0) { ctx.save(); ctx.globalAlpha = kf * 0.6; ctx.fillStyle = C.gold; ctx.fillRect(sqX(i), BY, BS, 8 * BS); ctx.restore(); }
       const kr = win(t, T.ranksGlow + i * 0.12, T.ranksGlow + 1.4 + i * 0.05, 0.2, 0.4);
-      if (kr > 0) { ctx.save(); ctx.globalAlpha = kr * 0.35; ctx.fillStyle = C.teal; ctx.fillRect(BX, sqY(i), 8 * BS, BS); ctx.restore(); }
+      if (kr > 0) { ctx.save(); ctx.globalAlpha = kr * 0.6; ctx.fillStyle = C.caramel; ctx.fillRect(BX, sqY(i), 8 * BS, BS); ctx.restore(); }
     }
     // a1 → a8 walk
     if (t > T.walk - 0.1 && t < T.walk + 3.9) {
@@ -347,8 +348,8 @@
     if (t > T.colE && t < 39.7) {
       const kc = win(t, T.colE, 39.5, 0.35, 0.4), kr = win(t, T.row4, 39.5, 0.35, 0.4);
       ctx.save();
-      ctx.globalAlpha = kc; ctx.fillStyle = rgba(C.gold, 0.42); ctx.fillRect(sqX(4), BY, BS, 8 * BS * eOut(seg(t, T.colE, T.colE + 0.45)));
-      ctx.globalAlpha = kr; ctx.fillStyle = rgba(C.teal, 0.42); ctx.fillRect(BX, sqY(3), 8 * BS * eOut(seg(t, T.row4, T.row4 + 0.45)), BS);
+      ctx.globalAlpha = kc; ctx.fillStyle = rgba(C.gold, 0.8); ctx.fillRect(sqX(4), BY, BS, 8 * BS * eOut(seg(t, T.colE, T.colE + 0.45)));
+      ctx.globalAlpha = kr; ctx.fillStyle = rgba(C.caramel, 0.8); ctx.fillRect(BX, sqY(3), 8 * BS * eOut(seg(t, T.row4, T.row4 + 0.45)), BS);
       ctx.restore();
       const p = seg(t, T.e4, T.e4 + 0.4), out = 1 - seg(t, 39.1, 39.5);
       if (p > 0) {
@@ -400,8 +401,8 @@
       const label = 'SAĞ ALT = AÇIK KARE';
       const w = ctx.measureText(label).width + 110;
       rrect(x2 - w, y - 36, w, 72, 36); ctx.fillStyle = C.light; ctx.fill();
-      ctx.fillStyle = C.green; ctx.beginPath(); ctx.arc(x2 - w + 40, y, 22, 0, Math.PI * 2); ctx.fill();
-      ctx.strokeStyle = '#fff'; ctx.lineWidth = 6; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+      ctx.fillStyle = C.gold; ctx.beginPath(); ctx.arc(x2 - w + 40, y, 22, 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = C.ink; ctx.lineWidth = 6; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
       ctx.beginPath(); ctx.moveTo(x2 - w + 29, y + 1); ctx.lineTo(x2 - w + 37, y + 9); ctx.lineTo(x2 - w + 52, y - 8); ctx.stroke();
       ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillStyle = C.ink;
       ctx.fillText(label, x2 - w + 76, y + 2);
@@ -413,13 +414,16 @@
   function centers(t) {
     if (t < T.center || t > 61.9) return;
     const out = 1 - seg(t, 61.3, 61.8);
+    // with a single palette, emphasis comes from dimming the rest of the board
+    const kd = win(t, T.center, 61.8, 0.4, 0.5);
+    ctx.save(); ctx.globalAlpha = kd * 0.5; ctx.fillStyle = C.shade; ctx.fillRect(BX, BY, 8 * BS, 8 * BS); ctx.restore();
     EXT.forEach((n, i) => {
       const [f, r] = sq(n);
       const a = T.ext + i * STEP.ext, p = seg(t, a, a + 0.32);
       if (p <= 0) return;
       ctx.save(); ctx.translate(cx(f), cy(r)); ctx.scale(eBack(p), eBack(p)); ctx.translate(-cx(f), -cy(r));
-      sqFill(f, r, C.teal, 0.88 * out, 5, 12, 18);
-      sqLabel(f, r, n, { a: out, size: 36, color: '#062a25', weight: 800 });
+      sqFill(f, r, C.caramel, out, 5, 12, 18);
+      sqLabel(f, r, n, { a: out, size: 36, color: C.white, weight: 800 });
       ctx.restore();
     });
     CENTER.forEach((n, i) => {
@@ -427,7 +431,7 @@
       const a = T.center + i * STEP.center, p = seg(t, a, a + 0.35);
       if (p <= 0) return;
       ctx.save(); ctx.translate(cx(f), cy(r)); ctx.scale(eBack(p), eBack(p)); ctx.translate(-cx(f), -cy(r));
-      sqFill(f, r, C.gold, 0.95 * out, 5, 12, 26);
+      sqFill(f, r, C.gold, out, 5, 12, 26);
       sqLabel(f, r, n, { a: out, size: 40, color: C.ink, weight: 900 });
       ctx.restore();
     });
@@ -439,7 +443,7 @@
     }
     const ke = seg(t, T.ext + 12 * STEP.ext, T.ext + 12 * STEP.ext + 0.4) * out;
     if (ke > 0) {
-      ctx.save(); ctx.globalAlpha = ke; ctx.strokeStyle = C.teal; ctx.lineWidth = 5; ctx.shadowColor = C.teal; ctx.shadowBlur = 24;
+      ctx.save(); ctx.globalAlpha = ke; ctx.strokeStyle = C.caramelText; ctx.lineWidth = 5; ctx.shadowColor = C.caramelText; ctx.shadowBlur = 24;
       rrect(sqX(2) - 6, sqY(5) - 6, 4 * BS + 12, 4 * BS + 12, 18); ctx.stroke(); ctx.restore();
     }
   }
@@ -448,8 +452,8 @@
   function regions(t) {
     if (t < T.king || t > T.boardOut + 0.2) return;
     const out = 1 - seg(t, T.boardOut - 0.5, T.boardOut);
-    side(t, T.king, 4, C.blue, 'ŞAH KANADI', drawKing, out, +1);
-    side(t, T.queen, 0, C.rose, 'VEZİR KANADI', drawQueen, out, -1);
+    side(t, T.king, 4, C.cream, C.ink, 'ŞAH KANADI', drawKing, out, +1);
+    side(t, T.queen, 0, C.choc, C.cream, 'VEZİR KANADI', drawQueen, out, -1);
     const kd = seg(t, T.divider, T.divider + 0.6) * out;
     if (kd > 0) {
       const x = sqX(4), h = 8 * BS * eIO(kd);
@@ -457,7 +461,7 @@
       ctx.beginPath(); ctx.moveTo(x, BY + 4 * BS - h / 2 - 14); ctx.lineTo(x, BY + 4 * BS + h / 2 + 14); ctx.stroke(); ctx.restore();
     }
   }
-  function side(t, a, f0, color, label, icon, out, dir) {
+  function side(t, a, f0, color, fg, label, icon, out, dir) {
     const k = eIO(seg(t, a, a + 0.8));
     if (k <= 0) return;
     const x0 = sqX(f0), w = 4 * BS;
@@ -465,15 +469,15 @@
     ctx.beginPath();
     if (dir > 0) ctx.rect(x0 + w * (1 - k), BY, w * k, 8 * BS); else ctx.rect(x0, BY, w * k, 8 * BS);
     ctx.clip();
-    ctx.fillStyle = rgba(color, 0.48); ctx.fillRect(x0, BY, w, 8 * BS);
-    ctx.strokeStyle = color; ctx.lineWidth = 6; ctx.strokeRect(x0 + 3, BY + 3, w - 6, 8 * BS - 6);
+    ctx.fillStyle = rgba(color, 0.55); ctx.fillRect(x0, BY, w, 8 * BS);
+    ctx.strokeStyle = C.gold; ctx.lineWidth = 6; ctx.strokeRect(x0 + 3, BY + 3, w - 6, 8 * BS - 6);
     ctx.restore();
     const pi = eBack(seg(t, a + 0.6, a + 1.1)) * out;
     if (pi > 0) {
       ctx.save(); ctx.translate(x0 + w / 2, BY + 4 * BS + 10); ctx.scale(pi * 2.9, pi * 2.9);
       ctx.shadowColor = 'rgba(0,0,0,0.5)'; ctx.shadowBlur = 30; ctx.shadowOffsetY = 12;
       icon(); ctx.restore();
-      pill(label, x0 + w / 2, BY + BS * 0.55, { color, fg: '#fff', size: 28, h: 56, spacing: 3, alpha: clamp(pi), scale: 0.8 + 0.2 * clamp(pi) });
+      pill(label, x0 + w / 2, BY + BS * 0.55, { color, fg, size: 28, h: 56, spacing: 3, alpha: clamp(pi), scale: 0.8 + 0.2 * clamp(pi) });
     }
     for (let i = 0; i < 4; i++) {
       const p = seg(t, a + 1.0 + i * STEP.labels, a + 1.0 + i * STEP.labels + 0.3);
@@ -481,12 +485,12 @@
       const f = f0 + i;
       ctx.save(); ctx.translate(cx(f), cy(0)); ctx.scale(eBack(p), eBack(p)); ctx.translate(-cx(f), -cy(0));
       sqFill(f, 0, color, out, 8, 12, 20);
-      sqLabel(f, 0, name(f, 0), { a: out, size: 36, color: '#fff', weight: 900 });
+      sqLabel(f, 0, name(f, 0), { a: out, size: 36, color: fg, weight: 900 });
       ctx.restore();
     }
   }
   // simple piece silhouettes drawn in a 100×100 box centred on the origin
-  function pieceStyle() { ctx.fillStyle = '#fbf7ef'; ctx.strokeStyle = '#1b1b1f'; ctx.lineWidth = 4; ctx.lineJoin = 'round'; }
+  function pieceStyle() { ctx.fillStyle = C.white; ctx.strokeStyle = C.ink; ctx.lineWidth = 4; ctx.lineJoin = 'round'; }
   function base() {
     ctx.beginPath(); ctx.roundRect(-34, 30, 68, 14, 5); ctx.fill(); ctx.stroke();
     ctx.beginPath(); ctx.roundRect(-26, 22, 52, 10, 4); ctx.fill(); ctx.stroke();
@@ -600,10 +604,10 @@
     const n64 = countAt(t);
     stat(t, 9.3, 12.0, n64, 'KARE', { pop: n64 === 64 ? 1 - seg(t, T.count[1], T.count[1] + 0.4) : 0 });
     stat(t, 12.0, 14.85, rowsAt(t), 'YATAY SIRA  (SATIR)');
-    stat(t, 14.85, 17.7, colsAt(t), 'DİKEY SÜTUN', { color: C.teal });
+    stat(t, 14.85, 17.7, colsAt(t), 'DİKEY SÜTUN', { color: C.caramelText });
     const nl = clamp(Math.floor((t - T.lights) / 0.04) + 1, 0, 32), nd = clamp(Math.floor((t - T.darks) / 0.04) + 1, 0, 32);
     stat(t, 17.7, 21.0, nl, 'AÇIK', { x: 300, color: C.light, numSize: 180, swatch: C.light });
-    stat(t, 17.7, 21.0, nd, 'KOYU', { x: 780, color: '#D9A577', numSize: 180, swatch: C.dark });
+    stat(t, 17.7, 21.0, nd, 'KOYU', { x: 780, color: '#C99A66', numSize: 180, swatch: C.dark });
     const kv = win(t, 17.9, 21.0, 0.4, 0.3);
     text('+', W / 2, 380, { size: 110, weight: 300, color: C.muted, alpha: kv });
   }

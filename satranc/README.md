@@ -3,7 +3,7 @@
 Instagram Reels / TikTok / Shorts için 9:16 dikey (1080 × 1920), 78 saniyelik, **döngülü (loop)** eğitim videosu.
 Tüm yazılar **Montserrat** ile, tüm ses efektleri koddan sentezlendi (telif sorunu yok).
 
-Ana renk logonun kahverengisi (**#4E3220**); arka plan, geçiş kartları ve gölgeler bu rengin tonlarında. Vurgular ikonik renklerle yapılır: altın (merkez, sayaçlar, başlıklar), turkuaz (genişletilmiş merkez, sütunlar), mavi (şah kanadı), kırmızı (vezir kanadı), yeşil (onay).
+Videonun tamamı logonun iki rengi ve onların tonlarından oluşur: kahverengi (**#4E3220**) ve piyonun altını (**#E2C890 → #C9A86E**). Arka plan, geçiş kartları ve gölgeler kahve tonlarında; vurgular altın, karamel, krem ve koyu çikolata tonlarıyla, gerekirse tahtanın geri kalanı karartılarak yapılır (şah kanadı krem, vezir kanadı koyu çikolata).
 
 **Video:** [`output/satranc_tahtasi.mp4`](output/satranc_tahtasi.mp4)
 H.264 High, 1080×1920, 30 fps, yuv420p, AAC 48 kHz stereo.
