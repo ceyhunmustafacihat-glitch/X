@@ -98,9 +98,23 @@
   ];
   // The chapter-1 card plays between the cover and the board: from CUT on, every layer except
   // the cover and this card runs on scene time (real time minus INS), so the rest keeps its timing.
-  const CUT = 3.0, INS = 3.3;
-  const sceneT = t => (t < CUT ? t : Math.max(CUT, t - INS));
-  const INTRO_CARD = { a: 2.75, b: 6.3, flipAt: 2.75, kicker: 'BÖLÜM 01', lines: ['TAHTANIN', 'YAPISI'] };
+  // HOLDS pause scene time at moments where a caption or heading is fully on screen and settled,
+  // giving the viewer time to read: [scene time, seconds].
+  const CUT = 3.0, INS = 4.3;
+  const HOLDS = [[8.85, 4.0], [22.6, 1.5], [27.55, 1.5], [31.15, 1.5], [35.15, 1.5], [38.9, 2.0], [41.5, 3.0],
+    [44.55, 3.5], [47.9, 2.0], [49.8, 1.5], [55.5, 1.0], [65.5, 2.5], [68.0, 3.5], [70.0, 3.5], [72.4, 1.0]];
+  const sceneT = t => {
+    if (t < CUT) return t;
+    let x = t - INS;
+    for (const [at, dur] of HOLDS) {
+      if (x <= at) break;
+      if (x < at + dur) return at;
+      x -= dur;
+    }
+    return Math.max(CUT, x);
+  };
+  const realT = x => x + INS + HOLDS.reduce((sum, [at, dur]) => (at < x ? sum + dur : sum), 0);
+  const INTRO_CARD = { a: 2.75, b: 7.3, flipAt: 2.75, kicker: 'BÖLÜM 01', lines: ['TAHTANIN', 'YAPISI'] };
   const CARDS = [
     { a: 21.0, b: 24.1, kicker: 'BÖLÜM 02', lines: ['TAHTANIN', 'KONUMLANDIRILMASI'] },
     { a: 48.4, b: 51.1, kicker: 'BÖLÜM 03', lines: ['TAHTANIN', 'BÖLGELERİ'] },
@@ -134,7 +148,7 @@
   // ------------------------------------------------------------------ cover (loop point)
   // Drawn in the chapter-card style. Fully shown at t = 0 and leaves by COVER.b; re-enters over the
   // last second and lands exactly at t = D (= 0), so the video loops seamlessly.
-  const COVER = { a: -1.2, b: 3.2, holdOut: true, tilesUntil: INTRO_CARD.flipAt, soft: true, noBand: true, kicker: '', lines: ['SATRANÇ', 'TAHTASI'] };
+  const COVER = { a: -1.2, b: 3.2, holdOut: true, tilesUntil: INTRO_CARD.flipAt, soft: true, kicker: '', lines: ['SATRANÇ', 'TAHTASI'] };
   function title(t) {
     if (t < T.titleIn) card(t, COVER);
     else card(t - D, COVER);
@@ -710,19 +724,13 @@
     return [dx, dy];
   }
   // real-time instants of every collision: chapter 1 (off the cover) and the chapter cards
-  const collisions = () => [INTRO_CARD.flipAt, ...CARDS.map(c => c.a + INS)];
+  const collisions = () => [INTRO_CARD.flipAt, ...CARDS.map(c => realT(c.a))];
 
   function card(t, c) {
     if (t < c.a || t > c.b) return;
     tiles(t, c);
     // text leaves before the squares clear; a chained card keeps its squares, so its text can stay longer
     const lead = c.holdOut ? 1.0 : 0.85;   // the cover clears before the pieces arrive
-    // gold band wipe
-    const bandIn = eIO(seg(t, c.a + 0.05, c.a + 0.55)), bandOut = eIO(seg(t, c.b - lead + 0.05, c.b - lead + 0.35));
-    const bx0 = W * bandOut, bx1 = W * bandIn;
-    if (bx1 > bx0 && !c.noBand) {
-      ctx.save(); ctx.fillStyle = C.gold; ctx.fillRect(bx0, 1180, bx1 - bx0, 10); ctx.restore();
-    }
     const yC = 960;
     const reveal = (k, delay, y, h, draw) => {
       const pin = eOut(seg(t, c.a + TILE_IN + delay, c.a + TILE_IN + delay + 0.5));
@@ -768,10 +776,10 @@
     const q = [];
     // cue times are written in scene time and shifted onto the real clock past the cut
     const put = (t, type, o) => q.push(Object.assign({ t: +t.toFixed(4), type }, o));
-    const add = (t, type, o = {}) => put(t >= CUT ? t + INS : t, type, o);
+    const add = (t, type, o = {}) => put(t >= CUT ? realT(t) : t, type, o);
     for (const tc of collisions()) {
       put(tc - 0.5, 'swish', { gain: 0.45, dur: 0.5 });
-      put(tc, 'tock', { pitch: 0.55, gain: 1.0 }); put(tc, 'hit', { gain: 0.8 }); put(tc + 0.02, 'shimmer', { gain: 0.25 });
+      put(tc, 'tock', { pitch: 0.55, gain: 0.6, soft: 1 }); put(tc + 0.012, 'hit', { gain: 0.6 }); put(tc + 0.02, 'shimmer', { gain: 0.25 });
       tileCues(tc, put);
     }
     put(INTRO_CARD.b - SOFT, 'whoosh', { gain: 0.35, dur: 0.6, rev: 1 });

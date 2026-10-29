@@ -64,14 +64,15 @@ def fade(x, a=0.002, r=0.01):
 
 
 # ---------------------------------------------------------------- voices
-def tock(pitch=1.0):
+def tock(pitch=1.0, soft=0):
     t = tt(0.18)
     f0 = 820 * pitch
     body = (np.sin(2 * np.pi * f0 * t) * np.exp(-t / 0.035)
             + 0.5 * np.sin(2 * np.pi * f0 * 2.31 * t) * np.exp(-t / 0.018)
             + 0.25 * np.sin(2 * np.pi * f0 * 3.9 * t) * np.exp(-t / 0.01))
-    click = bandnoise(0.18, 1500, 6000) * np.exp(-t / 0.0025) * 2.5
-    return fade(body + click, 0.0005, 0.03)
+    click = bandnoise(0.18, 1500, 6000) * np.exp(-t / 0.0025) * (0.8 if soft else 2.5)
+    # soft: gentler attack for the loud collision clack, so the AAC encoder does not overshoot
+    return fade(body + click, 0.003 if soft else 0.0005, 0.03)
 
 
 def click(pitch=1.0):
@@ -258,6 +259,30 @@ def reverb(x, secs=1.6, mix=0.22):
     return out * mix
 
 
+def limiter_gain(x, ceil, block=48, look=5, release=0.08):
+    """Per-sample gain from 1 ms block peaks: instant attack a few blocks ahead, smooth release.
+    The loop is circular, so the release state wraps around the end of the video."""
+    n = x.shape[1]
+    nb = -(-n // block)
+    peak = np.zeros(nb * block)
+    peak[:n] = np.max(np.abs(x), axis=0)
+    peak = peak.reshape(nb, block).max(axis=1)
+    ahead = peak.copy()
+    for k in range(1, look + 1):
+        ahead = np.maximum(ahead, np.roll(peak, -k))
+    want = np.minimum(1.0, ceil / np.maximum(ahead, 1e-9))
+    a = np.exp(-block / (release * SR))
+    g = np.empty(nb)
+    for _ in range(2):          # second pass settles the wrapped-around state
+        cur = g[-1] if _ else 1.0
+        for i in range(nb):
+            cur = want[i] if want[i] < cur else want[i] + (cur - want[i]) * a
+            g[i] = cur
+    # interpolate block gains to samples
+    gs = np.interp(np.arange(n), np.arange(nb) * block + block / 2, g)
+    return gs
+
+
 def main():
     with open(os.path.join(ROOT, "build", "cues.json"), encoding="utf-8") as f:
         cues = json.load(f)
@@ -265,7 +290,7 @@ def main():
     cache = {}
     for c in cues:
         kind = c["type"]
-        args = {k: v for k, v in c.items() if k in ("pitch", "note", "dur", "rev", "key")}
+        args = {k: v for k, v in c.items() if k in ("pitch", "note", "dur", "rev", "key", "soft")}
         key = (kind, tuple(sorted(args.items())))
         if key not in cache or kind in ("swish", "whoosh", "tock", "click", "pop"):
             cache[key] = VOICES[kind](**args)
@@ -273,10 +298,11 @@ def main():
         place(fx, c["t"], cache[key], c.get("gain", 1.0) * GAIN[kind], pan)
     pad = pad_bed()
     mixed = fx + pad + reverb(fx * 0.9 + pad * 1.5)
-    # bring the mix up to about -19.5 dBFS RMS, soft-limit the peaks below -3 dBFS
+    # bring the mix up to about -19.5 dBFS RMS, then a look-ahead limiter holds the peaks at -3 dBFS
+    # without squaring the waveform off (hard clipping made the AAC encoder overshoot)
     mixed *= 10 ** (-19.5 / 20) / np.sqrt(np.mean(mixed ** 2))
-    ceil = 10 ** (-3 / 20)
-    mixed = np.tanh(mixed / ceil) * ceil
+    mixed *= limiter_gain(mixed, 10 ** (-3 / 20))
+    mixed = np.clip(mixed, -0.95, 0.95)
     os.makedirs(os.path.join(ROOT, "output"), exist_ok=True)
     path = os.path.join(ROOT, "output", "sfx.wav")
     pcm = (np.clip(mixed.T, -1, 1) * 32767).astype("<i2")

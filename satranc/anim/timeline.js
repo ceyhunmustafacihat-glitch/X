@@ -1,1 +1,1 @@
-window.TL = {"fps": 30, "duration": 78.3};
+window.TL = {"fps": 30, "duration": 112.8};
