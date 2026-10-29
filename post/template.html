@@ -49,7 +49,7 @@
 
   .word {
     font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1;
-    font-size: 210px; letter-spacing: -.02em; white-space: nowrap; text-align: center;
+    font-size: 320px; letter-spacing: -.03em; white-space: nowrap; text-align: center;
     filter: drop-shadow(0 6px 18px rgba(40,0,6,.35));
     margin-top: 10px;
   }
@@ -102,8 +102,8 @@ function highlight(sentence, word) {
 }
 
 function fitWord(el) {
-  const max = 1080 - 2 * 130;
-  let size = 210;
+  const max = 1080 - 2 * 110;
+  let size = 320;
   el.style.fontSize = size + 'px';
   while (el.scrollWidth > max && size > 90) el.style.fontSize = (size -= 4) + 'px';
 }
