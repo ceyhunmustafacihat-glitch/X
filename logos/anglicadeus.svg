@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="1080" height="1080">
+  <defs>
+    <linearGradient id="gold" gradientUnits="userSpaceOnUse" x1="280" y1="400" x2="800" y2="680">
+      <stop offset="0" stop-color="#EBD39B"/>
+      <stop offset="1" stop-color="#C7A56C"/>
+    </linearGradient>
+    <clipPath id="flag"><rect x="280" y="410" width="520" height="260" rx="14"/></clipPath>
+  </defs>
+  <rect width="1080" height="1080" fill="#13296A"/>
+  <g transform="translate(540 540) scale(1.2) translate(-540 -540)">
+  <g clip-path="url(#flag)" fill="none">
+    <path d="M280 410 L800 670 M800 410 L280 670" stroke="url(#gold)" stroke-width="52"/>
+    <path d="M280 410 L800 670 M800 410 L280 670" stroke="#13296A" stroke-width="16"/>
+    <path d="M540 410 V670 M280 540 H800" stroke="url(#gold)" stroke-width="88"/>
+    <path d="M540 410 V670 M280 540 H800" stroke="#13296A" stroke-width="52"/>
+  </g>
+  <rect x="280" y="410" width="520" height="260" rx="14" fill="none" stroke="url(#gold)" stroke-width="14"/>
+  </g>
+</svg>
