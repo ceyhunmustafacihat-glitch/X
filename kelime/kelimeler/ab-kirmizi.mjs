@@ -3,7 +3,7 @@
 import { rng, pine } from '../sahne.mjs';
 export { kelime, tanim, ornek } from './ab.mjs';
 
-export const tema = { yazi: '#fff5e1', vurgu: '#ecd5a0', karartma: 0.08, logo: 'altin', zemin: '#8e1823' };
+export const tema = { yazi: '#fff5e1', vurgu: '#ecd5a0', karartma: 0.08, hale: '#2a050a' };
 
 const R0 = '#9b1b26', R1 = '#8a1722', R2 = '#741320', R3 = '#5c0f19', R4 = '#470b13', RL = '#b3313a';
 const G1 = '#ecd5a0', G2 = '#d8b77e', G3 = '#c29a63';
@@ -83,9 +83,9 @@ export function sahne(W, H) {
   streak(180, 436, 648, 866, 18);
   out.push(`<g id="sol-kaya-ve-selale"><path d="M-10 360C110 366 240 400 360 452C420 478 452 520 456 580C460 680 446 800 440 900C300 930 150 942 -10 950Z" fill="${R3}"/>
   <path d="M-10 360C110 366 240 400 360 452L346 500C230 456 110 424 -10 424Z" fill="${R2}"/>
-  <path d="M196 446Q300 456 380 486C388 520 392 560 398 600H190C192 550 192 500 196 446Z" fill="${G2}"/>
+  <path d="M196 446Q300 456 380 486C388 520 392 560 398 600H190C192 550 192 500 196 446Z" fill="${G3}"/>
   <path d="M150 604C230 590 340 592 440 606L444 648C340 634 230 634 146 648Z" fill="${R4}"/>
-  <path d="M170 640Q300 628 420 640C432 720 436 790 452 866H160C166 790 166 710 170 640Z" fill="${G2}"/>${streaks.join('')}
+  <path d="M170 640Q300 628 420 640C432 720 436 790 452 866H160C166 790 166 710 170 640Z" fill="${G3}"/>${streaks.join('')}
   <ellipse cx="306" cy="868" rx="280" ry="60" fill="url(#sis)"/></g>`);
 
   // ön plan: koyu su, çakıllar ve altın ışık kırılmaları
