@@ -48,8 +48,8 @@
   }
 
   .word {
-    font-family: 'Cormorant Garamond', serif; font-weight: 700; line-height: .9;
-    font-size: 230px; letter-spacing: .01em; white-space: nowrap; text-align: center;
+    font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1;
+    font-size: 210px; letter-spacing: -.02em; white-space: nowrap; text-align: center;
     filter: drop-shadow(0 6px 18px rgba(40,0,6,.35));
     margin-top: 10px;
   }
@@ -58,7 +58,7 @@
     letter-spacing: .18em; text-transform: uppercase; color: rgba(246,234,210,.72);
     display: flex; align-items: center; gap: 18px;
   }
-  .origin b { font-weight: 500; color: var(--altin-1); text-transform: none; letter-spacing: .04em; font-style: italic; font-family: 'Cormorant Garamond', serif; font-size: 36px; }
+  .origin b { font-weight: 500; color: var(--altin-1); text-transform: none; letter-spacing: .04em; font-style: italic; font-family: 'Montserrat', sans-serif; font-size: 29px; }
   .origin .dot { width: 6px; height: 6px; transform: rotate(45deg); background: var(--altin-2); }
 
   .divider { margin: 52px 0 46px; display: flex; align-items: center; gap: 16px; }
@@ -71,7 +71,7 @@
     text-align: center; color: var(--krem); max-width: 840px;
   }
   .meaning ol { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-  .meaning .n { font-variant-numeric: lining-nums; font-family: 'Cormorant Garamond', serif; font-weight: 700; color: var(--altin-2); margin-right: 12px; font-size: 1.12em; }
+  .meaning .n { font-variant-numeric: lining-nums; font-family: 'Montserrat', sans-serif; font-weight: 700; color: var(--altin-2); margin-right: 12px; }
 
   .example {
     margin-top: 46px; font-family: 'Montserrat', sans-serif; font-style: italic; font-weight: 400;
@@ -103,7 +103,7 @@ function highlight(sentence, word) {
 
 function fitWord(el) {
   const max = 1080 - 2 * 130;
-  let size = 230;
+  let size = 210;
   el.style.fontSize = size + 'px';
   while (el.scrollWidth > max && size > 90) el.style.fontSize = (size -= 4) + 'px';
 }
