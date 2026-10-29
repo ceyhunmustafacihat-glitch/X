@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="1080" height="1080">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="42%" r="70%">
+      <stop offset="0" stop-color="#4A2F8A"/>
+      <stop offset="1" stop-color="#3A2470"/>
+    </radialGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#F0D9A0"/>
+      <stop offset=".55" stop-color="#D9BF86"/>
+      <stop offset="1" stop-color="#B8955A"/>
+    </linearGradient>
+    <clipPath id="back"><rect x="-600" y="-600" width="1200" height="600"/></clipPath>
+    <clipPath id="front"><rect x="-600" y="0" width="1200" height="600"/></clipPath>
+    <g id="star"><path d="M0-1C.12-.12.12-.12 1 0 .12.12.12.12 0 1-.12.12-.12.12-1 0-.12-.12-.12-.12 0-1z"/></g>
+  </defs>
+  <rect width="1080" height="1080" fill="url(#bg)"/>
+  <g fill="#D9BF86">
+    <use href="#star" transform="translate(300 300) scale(26)"/>
+    <use href="#star" transform="translate(790 270) scale(18)"/>
+    <use href="#star" transform="translate(810 790) scale(24)"/>
+    <use href="#star" transform="translate(275 760) scale(14)"/>
+    <circle cx="700" cy="215" r="6"/><circle cx="215" cy="520" r="5"/>
+    <circle cx="880" cy="560" r="5"/><circle cx="420" cy="860" r="6"/>
+  </g>
+  <g transform="translate(540 540) rotate(-20)">
+    <mask id="gap" maskUnits="userSpaceOnUse" x="-600" y="-600" width="1200" height="1200">
+      <rect x="-600" y="-600" width="1200" height="1200" fill="#fff"/>
+      <ellipse rx="330" ry="92" fill="none" stroke="#000" stroke-width="58" clip-path="url(#front)"/>
+    </mask>
+    <ellipse rx="330" ry="92" fill="none" stroke="url(#gold)" stroke-width="30"/>
+    <circle r="165" fill="url(#gold)" mask="url(#gap)"/>
+    <ellipse rx="330" ry="92" fill="none" stroke="url(#gold)" stroke-width="30" clip-path="url(#front)"/>
+  </g>
+</svg>
