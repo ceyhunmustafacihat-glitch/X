@@ -38,6 +38,8 @@ Kapak fotoğrafı (9:16, 1080 × 1920): [`docs/kapak_foto.png`](docs/kapak_foto.
 | 74–76 sn | Kapanış | “Tahta bu kadar! Artık satranç tahtasını tanıyorsun.” | Onay sesi |
 | 76–78 sn | Döngü | Tahta dağılır, kapak başlığı geri gelir. Son kare = ilk kare | Whoosh → (başa dönünce) başlık vuruşu |
 
+Bölüm geçişlerinde ekran, köşegen bir dalga hâlinde dönerek yerine oturan satranç kareleriyle dolar (taş tahtaya konur gibi, ahşap tık sesleriyle); başlık kaybolduktan sonra kareler aynı yönde dönerek çekilir ve tahta yeniden görünür.
+
 Döngü kusursuzdur: kapak başlığı tam 78,3. saniyede yerine oturur ve video 0. saniyedeki kareyle devam eder.
 Arka plan deseni ve fon sesi tam olarak video süresiyle periyodiktir; ses efektlerinin ve yankının kuyrukları başa sarılır, bu yüzden geçişte çıt ya da boşluk duyulmaz.
 
