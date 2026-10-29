@@ -5,8 +5,8 @@
   const W = 1080, H = 1920, D = TL.duration;
   const BS = 108, BX = (W - 8 * BS) / 2, BY = 572;     // board: 864 px, x 108–972, y 572–1436
   const C = {
-    bg0: '#0c0e13', bg1: '#191d28', light: '#F0D9B5', dark: '#B58863', frame: '#2b1e15',
-    gold: '#FFC94A', teal: '#2FD6BD', blue: '#4C8DFF', rose: '#FF5C7A', white: '#F7F3EA', muted: '#97a0b3',
+    bg0: '#4E3220', bg1: '#5A3A25', bg2: '#3F2819', card: '#4E3220', shade: '#1f130b', light: '#F0D9B5', dark: '#B58863', frame: '#2b1e15',
+    gold: '#FFC94A', teal: '#2FD6BD', blue: '#4C8DFF', rose: '#FF5C7A', white: '#F7F3EA', muted: '#D2B998',
     green: '#5BE37D', ink: '#21170c',
   };
   const FILES = 'abcdefgh';
@@ -95,12 +95,6 @@
     { a: 68.5, b: 70.5, text: 'Tahta ikiye ayrılır: ~vezir kanadı~ ve *şah kanadı*', hl: C.blue, hl2: C.rose },
     { a: 70.6, b: 72.9, text: 'Tahta bu kadar!', size: 92, sub: 'Artık satranç tahtasını tanıyorsun.' },
   ];
-  const CHIPS = [
-    { a: 3.5, b: 21.1, n: '01', text: 'TAHTANIN YAPISI' },
-    { a: 24.0, b: 42.1, n: '02', text: 'KONUMLANDIRMA' },
-    { a: 42.1, b: 48.5, n: '!', text: 'ÖNEMLİ KURAL', color: C.rose },
-    { a: 51.0, b: 70.5, n: '03', text: 'TAHTANIN BÖLGELERİ' },
-  ];
   // The chapter-1 card plays between the cover and the board: from CUT on, every layer except
   // the cover and this card runs on scene time (real time minus INS), so the rest keeps its timing.
   const CUT = 3.0, INS = 3.3;
@@ -114,13 +108,13 @@
   // ------------------------------------------------------------------ background
   function background(t) {
     const g = ctx.createLinearGradient(0, 0, 0, H);
-    g.addColorStop(0, C.bg1); g.addColorStop(0.55, C.bg0); g.addColorStop(1, '#07080b');
+    g.addColorStop(0, C.bg1); g.addColorStop(0.55, C.bg0); g.addColorStop(1, C.bg2);
     ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
     // faint drifting checker pattern; drifts exactly two tiles per loop so the video loops seamlessly
     const tile = 150, drift = (t / D) * tile * 2;
     ctx.save();
     ctx.translate(W / 2, H / 2); ctx.rotate(-0.21);
-    ctx.fillStyle = 'rgba(255,255,255,0.022)';
+    ctx.fillStyle = 'rgba(255,230,190,0.03)';
     for (let i = -10; i < 10; i++) for (let j = -12; j < 12; j++) {
       if ((i + j) & 1) continue;
       ctx.fillRect(i * tile + drift % (tile * 2) - tile * 2, j * tile + drift % (tile * 2) - tile * 2, tile, tile);
@@ -132,7 +126,7 @@
   }
   function vignette() {
     const v = ctx.createRadialGradient(W / 2, H / 2, H * 0.35, W / 2, H / 2, H * 0.75);
-    v.addColorStop(0, 'rgba(0,0,0,0)'); v.addColorStop(1, 'rgba(0,0,0,0.55)');
+    v.addColorStop(0, 'rgba(0,0,0,0)'); v.addColorStop(1, 'rgba(20,10,4,0.38)');
     ctx.fillStyle = v; ctx.fillRect(0, 0, W, H);
   }
 
@@ -198,7 +192,7 @@
       ctx.fillStyle = light ? C.light : C.dark;
       ctx.fillRect(-BS / 2, -BS / 2, BS, BS);
       ctx.shadowColor = 'transparent';
-      if (dim > 0) { ctx.fillStyle = `rgba(10,12,18,${0.62 * dim})`; ctx.fillRect(-BS / 2, -BS / 2, BS, BS); }
+      if (dim > 0) { ctx.fillStyle = `rgba(31,19,11,${0.62 * dim})`; ctx.fillRect(-BS / 2, -BS / 2, BS, BS); }
       ctx.restore();
     }
 
@@ -388,7 +382,7 @@
     if (t < T.spot - 0.1 || t > 48.8) return;
     const k = win(t, T.spot, 48.7, 0.45, 0.35);
     ctx.save();
-    ctx.globalAlpha = k * 0.68; ctx.fillStyle = '#07090d';
+    ctx.globalAlpha = k * 0.7; ctx.fillStyle = C.shade;
     ctx.beginPath(); ctx.rect(BX, BY, 8 * BS, 8 * BS); ctx.rect(sqX(7) + BS, sqY(0), -BS, BS); ctx.fill('evenodd');
     ctx.restore();
     const p = eBack(seg(t, T.spot + 0.25, T.spot + 0.7));
@@ -526,7 +520,7 @@
     base();
   }
 
-  // ------------------------------------------------------------------ captions / stats / chips / cards
+  // ------------------------------------------------------------------ captions / stats / cards
   function caption(t, c) {
     const k = win(t, c.a, c.b, 0.01, 0.35);
     if (k <= 0) return;
@@ -565,7 +559,7 @@
           ctx.translate(x + wd.width / 2, y); ctx.scale(s, s); ctx.translate(-(x + wd.width / 2), -y);
         }
         font(800, size); ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
-        ctx.shadowColor = 'rgba(0,0,0,0.55)'; ctx.shadowBlur = 18; ctx.shadowOffsetY = 4;
+        ctx.shadowColor = 'rgba(25,14,6,0.6)'; ctx.shadowBlur = 18; ctx.shadowOffsetY = 4;
         ctx.fillStyle = wd.hl === 2 ? c.hl2 : wd.hl ? hl : C.white;
         ctx.fillText(wd.w, x, y);
         ctx.restore();
@@ -614,39 +608,16 @@
     text('+', W / 2, 380, { size: 110, weight: 300, color: C.muted, alpha: kv });
   }
 
-  function chips(t) {
-    for (const c of CHIPS) {
-      const k = win(t, c.a, c.b, 0.35, 0.3);
-      if (k <= 0) continue;
-      const p = eOut(k);
-      const color = c.color || C.gold;
-      ctx.save(); ctx.globalAlpha = k;
-      ctx.translate(W / 2, 205 - (1 - p) * 24);
-      font(800, 30); ctx.letterSpacing = '5px';
-      const tw = ctx.measureText(c.text).width - 5;
-      const w = tw + 130, h = 64;
-      rrect(-w / 2, -h / 2, w, h, h / 2);
-      ctx.fillStyle = 'rgba(255,255,255,0.06)'; ctx.fill();
-      ctx.strokeStyle = rgba(color, 0.7); ctx.lineWidth = 2.5; ctx.stroke();
-      ctx.beginPath(); ctx.arc(-w / 2 + 34, 0, 22, 0, Math.PI * 2); ctx.fillStyle = color; ctx.fill();
-      font(900, 22); ctx.letterSpacing = '0px'; ctx.fillStyle = C.ink; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.fillText(c.n, -w / 2 + 34, 1);
-      font(800, 30); ctx.letterSpacing = '5px'; ctx.fillStyle = C.white; ctx.textAlign = 'left';
-      ctx.fillText(c.text, -w / 2 + 72, 2);
-      ctx.restore();
-    }
-  }
-
   function card(t, c) {
     if (t < c.a || t > c.b) return;
     const kin = eIO(seg(t, c.a, c.a + 0.45)), kout = eIO(seg(t, c.b - 0.5, c.b));
     // backdrop
     ctx.save();
     // chained cards (cover → chapter 1) hand the backdrop over instead of fading it out and in
-    if (c.holdOut) ctx.globalAlpha = 0.86 * kin;
-    else if (c.backdropFrom !== undefined) ctx.globalAlpha = t < c.backdropFrom ? 0 : 0.86 * (1 - kout);
-    else ctx.globalAlpha = 0.86 * kin * (1 - kout);
-    ctx.fillStyle = '#0a0c11'; ctx.fillRect(0, 0, W, H);
+    if (c.holdOut) ctx.globalAlpha = 0.94 * kin;
+    else if (c.backdropFrom !== undefined) ctx.globalAlpha = t < c.backdropFrom ? 0 : 0.94 * (1 - kout);
+    else ctx.globalAlpha = 0.94 * kin * (1 - kout);
+    ctx.fillStyle = C.card; ctx.fillRect(0, 0, W, H);
     ctx.restore();
     // gold band wipe
     const bandIn = eIO(seg(t, c.a + 0.05, c.a + 0.55)), bandOut = eIO(seg(t, c.b - 0.55, c.b - 0.1));
@@ -679,7 +650,6 @@
     board(o);
     for (const c of CAPS) caption(o, c);
     stats(o);
-    chips(o);
     for (const c of CARDS) card(o, c);
     card(t, INTRO_CARD);
     title(t);

@@ -3,6 +3,8 @@
 Instagram Reels / TikTok / Shorts için 9:16 dikey (1080 × 1920), 78 saniyelik, **döngülü (loop)** eğitim videosu.
 Tüm yazılar **Montserrat** ile, tüm ses efektleri koddan sentezlendi (telif sorunu yok).
 
+Ana renk logonun kahverengisi (**#4E3220**); arka plan, geçiş kartları ve gölgeler bu rengin tonlarında. Vurgular ikonik renklerle yapılır: altın (merkez, sayaçlar, başlıklar), turkuaz (genişletilmiş merkez, satırlar), mavi (şah kanadı), kırmızı (vezir kanadı), yeşil (onay).
+
 **Video:** [`output/satranc_tahtasi.mp4`](output/satranc_tahtasi.mp4)
 H.264 High, 1080×1920, 30 fps, yuv420p, AAC 48 kHz stereo.
 
@@ -16,20 +18,20 @@ Kapak fotoğrafı (9:16, 1080 × 1920): [`docs/kapak_foto.png`](docs/kapak_foto.
 |---|---|---|---|
 | 0–3 sn | Kapak | **SATRANÇ TAHTASI**, bölüm geçişleriyle aynı başlık stilinde | Başlık vuruşu, ışıltı |
 | 3–6 sn | Ara başlık | **TAHTANIN YAPISI**: kapak yazısı kayarak çıkarken bu başlık kayarak girer | Whoosh + vuruş |
-| 6–12 sn | 01 · Tahtanın yapısı | Tahta kare kare çapraz dalga hâlinde kurulur. “Birbirini takip eden açık ve koyu renkli karelerden oluşan, kare biçiminde bir oyun alanı” | Ahşap “tok” sesleri |
+| 6–12 sn | Tahtanın yapısı | Tahta kare kare çapraz dalga hâlinde kurulur. “Birbirini takip eden açık ve koyu renkli karelerden oluşan, kare biçiminde bir oyun alanı” | Ahşap “tok” sesleri |
 | 12–15 sn | | 1’den 64’e sayaç, kareler tek tek numaralanır: **64 KARE** | Yükselen tıkırtılar, ding |
 | 15–18 sn | | 8 yatay sıra (satır) alttan üste parlar | Swish + nota |
 | 18–21 sn | | 8 dikey sütun soldan sağa parlar | Swish + nota |
 | 21–24 sn | | Önce 32 açık, sonra 32 koyu kare öne çıkar: **32 + 32** | Pop sesleri |
 | 24–27 sn | Ara başlık | **TAHTANIN KONUMLANDIRILMASI** (büyük font, gelir ve gider) | Whoosh + vuruş |
-| 27–31 sn | 02 · Konumlandırma | “Her karenin kendine özgü bir koordinatı vardır.” a–h harfleri ve 1–8 sayıları yerleşir | Tıklar |
+| 27–31 sn | Konumlandırma | “Her karenin kendine özgü bir koordinatı vardır.” a–h harfleri ve 1–8 sayıları yerleşir | Tıklar |
 | 31–35 sn | | Sütunlar harflerle (a–h), satırlar sayılarla (1–8) | Süpürme |
 | 35–39 sn | | a1 → a2 → … → a8 yürüyüşü | Yükselen tok sesleri |
 | 39–43 sn | | e sütunu × 4. satır = **e4** | Swish, ding |
 | 43–45 sn | | Tüm 64 karenin adı dalga hâlinde görünür | Işıltı |
-| 45–51 sn | ! · Önemli kural | “Sağ alt köşedeki kare mutlaka açık renkli olmalıdır.” Tahta kararır, **h1** parlar, “SAĞ ALT = AÇIK KARE ✓” | Uyarı, onay sesi |
+| 45–51 sn | Önemli kural | “Sağ alt köşedeki kare mutlaka açık renkli olmalıdır.” Tahta kararır, **h1** parlar, “SAĞ ALT = AÇIK KARE ✓” | Uyarı, onay sesi |
 | 51–54 sn | Ara başlık | **TAHTANIN BÖLGELERİ** | Whoosh + vuruş |
-| 54–59 sn | 03 · Bölgeler | Merkez kareler: **d4, e4, d5, e5** (altın) | Pop, ding |
+| 54–59 sn | Bölgeler | Merkez kareler: **d4, e4, d5, e5** (altın) | Pop, ding |
 | 59–65 sn | | Genişletilmiş merkez: c6, c5, c4, c3, d3, e3, f3, f4, f5, f6, e6, d6 (turkuaz) | Pop dizisi |
 | 65–69 sn | | **Şah kanadı**: e, f, g, h sütunları (mavi), şah figürü, e1 f1 g1 h1 | Süpürme, akor |
 | 69–74 sn | | **Vezir kanadı**: a, b, c, d sütunları (kırmızı), vezir figürü, a1 b1 c1 d1, ortadan ayıran çizgi | Süpürme, akor |
