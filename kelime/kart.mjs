@@ -14,6 +14,9 @@ const W = 1080, H = 1440;
 // KARARTMA, her kartın arka planının üstüne binen eşit siyah perdenin oranı.
 const KARARTMA = 0.2;
 const word = await import(path.join(root, 'kelime/kelimeler', `${slug}.mjs`));
+// Kelime dosyası isterse renk teması verir: yazı rengi, vurgu (kalın kelimeler ve tanım çizgisi),
+// karartma oranı ve alttaki işaretin türü ('cizgi': beyaz çizgi kitap, 'altin': dolgulu altın kitap).
+const tema = { yazi: '#ffffff', vurgu: null, karartma: KARARTMA, logo: 'cizgi', ...word.tema };
 
 // Montserrat'ı SVG'nin içine gömüyoruz: dosya her tarayıcıda aynı görünür.
 // Illustrator gömülü fontu okumaz; orada bilgisayarda Montserrat kurulu olmalı.
@@ -34,7 +37,7 @@ await page.setContent(`<style>${fontCss}</style><body style="margin:0"></body>`)
 await page.evaluate(() => Promise.all(['800 70px Montserrat', '700 32px Montserrat', '400 32px Montserrat', 'italic 400 25px Montserrat']
   .map((f) => document.fonts.load(f, 'Şğİıöçü'))));
 
-const textLayer = await page.evaluate(({ W, H, kelime, tanim, ornek, logo }) => {
+const textLayer = await page.evaluate(({ W, H, kelime, tanim, ornek, logo, tema }) => {
   const g = document.createElement('canvas').getContext('2d');
   const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   const font = (px, b) => `${b ? 700 : 400} ${px}px Montserrat`;
@@ -66,7 +69,7 @@ const textLayer = await page.evaluate(({ W, H, kelime, tanim, ornek, logo }) => 
       const t = (i && !k ? ' ' : '') + p.t;
       if (runs.length && runs.at(-1).b === p.b) runs.at(-1).t += t; else runs.push({ t, b: p.b });
     }));
-    return runs.map((r) => `<tspan font-weight="${r.b ? 700 : 400}">${esc(r.t)}</tspan>`).join('');
+    return runs.map((r) => `<tspan font-weight="${r.b ? 700 : 400}"${r.b && tema.vurgu ? ` fill="${tema.vurgu}"` : ''}>${esc(r.t)}</tspan>`).join('');
   };
 
   const out = [];
@@ -77,7 +80,7 @@ const textLayer = await page.evaluate(({ W, H, kelime, tanim, ornek, logo }) => 
 
   const dl = wrap(tanim, 32, W * 0.76), dLH = 44;
   const dy0 = Math.round(H * 0.448 - (dl.length - 1) * dLH / 2);
-  out.push(`<rect x="${Math.round(W * 0.103)}" y="${dy0 - 52}" width="3" height="${(dl.length - 1) * dLH + 82}" fill-opacity="0.9"/>`);
+  out.push(`<rect x="${Math.round(W * 0.103)}" y="${dy0 - 52}" width="3" height="${(dl.length - 1) * dLH + 82}" fill-opacity="0.9"${tema.vurgu ? ` fill="${tema.vurgu}"` : ''}/>`);
   dl.forEach((ln, i) => out.push(`<text x="${Math.round(W * 0.135)}" y="${dy0 + i * dLH}" font-size="32">${tspans(ln)}</text>`));
 
   const el = wrap(ornek, 35, W * 0.76), eLH = 47;
@@ -86,10 +89,18 @@ const textLayer = await page.evaluate(({ W, H, kelime, tanim, ornek, logo }) => 
 
   // sayfanın işareti: açık kitap
   const s = 68 / 24;
-  if (logo) out.push(`<g transform="translate(${cx - 34} ${Math.round(H * 0.935) - 34}) scale(${s.toFixed(4)})" fill="none" stroke="#fff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+  if (logo && tema.logo === 'altin') {
+    // profil logosundaki dolgulu altın kitap: iki sayfa, üçer satır, altta sayfa kenarı
+    const k = 100 / 24, satir = (x0, x1, y, yon) => `M${x0} ${y}C${x0 + yon * 2.4} ${y - 0.15} ${x0 + yon * 4.6} ${y} ${x1} ${y + 0.55}`;
+    out.push(`<defs><linearGradient id="altinKitap" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ead29c"/><stop offset="1" stop-color="#d1ad73"/></linearGradient></defs>
+  <g transform="translate(${cx - 50} ${Math.round(H * 0.935) - 52}) scale(${k.toFixed(4)})">
+  <path d="M11.5 8.6C9.3 7.2 6.2 6.8 3.4 7.4V18.1C6.2 17.5 9.3 17.9 11.5 19.3Z" fill="url(#altinKitap)"/><path d="M12.5 8.6C14.7 7.2 17.8 6.8 20.6 7.4V18.1C17.8 17.5 14.7 17.9 12.5 19.3Z" fill="url(#altinKitap)"/>
+  <path d="${satir(4.9, 10.2, 10.3, 1)}${satir(4.9, 10.2, 12.3, 1)}${satir(4.9, 10.2, 14.3, 1)}${satir(19.1, 13.8, 10.3, -1)}${satir(19.1, 13.8, 12.3, -1)}${satir(19.1, 13.8, 14.3, -1)}" fill="none" stroke="${tema.zemin ?? '#9b1b26'}" stroke-width="0.55" stroke-linecap="round"/>
+  <path d="M2.6 18.9C6 18.3 9.4 18.7 12 20.1C14.6 18.7 18 18.3 21.4 18.9" fill="none" stroke="url(#altinKitap)" stroke-width="0.6" stroke-linecap="round" stroke-linejoin="round"/></g>`);
+  } else if (logo) out.push(`<g transform="translate(${cx - 34} ${Math.round(H * 0.935) - 34}) scale(${s.toFixed(4)})" fill="none" stroke="#fff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
   <path d="M12 6.5C9.5 4.8 6 4.3 2.5 5.2V18.6C6 17.8 9.5 18.3 12 20"/><path d="M12 6.5C14.5 4.8 18 4.3 21.5 5.2V18.6C18 17.8 14.5 18.3 12 20"/><path d="M12 6.5V20"/></g>`);
   return out.join('\n');
-}, { W, H, kelime: word.kelime, tanim: word.tanim, ornek: word.ornek, logo: !logosuz });
+}, { W, H, kelime: word.kelime, tanim: word.tanim, ornek: word.ornek, logo: !logosuz, tema });
 
 const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
 <title>${word.kelime} — sözlükdeus</title>
@@ -98,8 +109,8 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" 
 <g id="arka-plan">
 ${word.sahne(W, H)}
 </g>
-<rect id="sablon-karartma" width="${W}" height="${H}" fill="#000" opacity="${KARARTMA}"/>
-<g id="yazi" font-family="Montserrat, sans-serif" fill="#fff" filter="url(#golge)" xml:space="preserve">
+<rect id="sablon-karartma" width="${W}" height="${H}" fill="#000" opacity="${tema.karartma}"/>
+<g id="yazi" font-family="Montserrat, sans-serif" fill="${tema.yazi}" filter="url(#golge)" xml:space="preserve">
 ${textLayer}
 </g>
 </svg>
