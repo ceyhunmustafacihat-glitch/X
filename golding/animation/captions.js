@@ -2,7 +2,7 @@
 // On-screen writing: chapter chip, caption cards and the quote card.
 // The film has no narration, so captions are short, large and paced for reading.
 
-const CAP = { x: 500, top: 1262, maxW: 740, font: 600, size: 45, lh: 62 };
+const CAP = { x: 540, top: 1262, maxW: 740, font: 600, size: 45, lh: 62 };
 
 // words are runs of segments, so a highlighted stem keeps its suffix: *1911*'de
 function tokens(str) {
@@ -163,7 +163,7 @@ function fountainPen(g, x, y, rot = -0.85) {
     g.fillRect(150, -22, 110, 5);
   });
 }
-// a chapter page: one colour, and a fountain pen writes the title, then underlines it
+// a chapter page: one colour, and a fountain pen writes the title
 function chapterPage(g, lt, sc) {
   g.fillStyle = C.forest; g.fillRect(0, 0, W, H);
   // the gutter of an open book on the left
@@ -190,17 +190,10 @@ function chapterPage(g, lt, sc) {
     }
     done += ws[i];
   });
-  // the underline
-  const uy = y0 + (lines.length - 1) * lh + sz * 0.78, ul = clamp(inv(1.38, 1.62, lt));
-  if (ul > 0) {
-    g.fillStyle = goldGrad(g, 460, uy, 620, uy + 6);
-    g.fillRect(460, uy, 160 * ul, 6);
-    if (ul < 1) pen = [460 + 160 * ul, uy + 3];
-  }
   // the pen comes in, writes, then lifts away to the upper right
   const first = [540 - ws[0] / 2, y0 + sz * 0.3];
+  const last = [540 + ws[ws.length - 1] / 2, y0 + (lines.length - 1) * lh + sz * 0.3];
   if (lt < 0.45) pen = [lerp(1150, first[0], easeOut(inv(0.15, 0.45, lt))), lerp(1500, first[1], easeOut(inv(0.15, 0.45, lt)))];
-  if (lt >= 1.62) { const k = easeIn(inv(1.62, 1.95, lt)); pen = [lerp(620, 1300, k), lerp(uy + 3, uy - 700, k)]; }
-  if (!pen && lt < 1.62) pen = [460, uy + 3];
+  if (lt >= 1.35) { const k = easeIn(inv(1.4, 1.75, lt)); pen = [lerp(last[0], 1350, k), lerp(last[1], last[1] - 800, k)]; }
   if (pen && lt > 0.15) fountainPen(g, pen[0], pen[1]);
 }

@@ -51,20 +51,17 @@ function cloud(g, x, y, s, colr = C.white, seed = 1) {
 // opening card; the closing card replays it backwards so the film loops
 function titleCard(g, lt, cu) {
   g.fillStyle = C.forest; g.fillRect(0, 0, W, H);
-  drawGlow(g, 540, 760, 760, '#2f6a49', 0.55);
+  drawGlow(g, 540, 820, 700, '#2f6a49', 0.55);
+  // the writer himself, no frame around him
   const s = pop(cu.ink, lt, 0.7);
-  if (s > 0) at(g, 540, 690, s, 0, () => {
-    g.fillStyle = 'rgba(5,15,10,0.35)'; g.beginPath(); g.arc(12, 18, 330, 0, TAU); g.fill();
-    const ring = wellipse(0, 0, 330, 330, 0, 11, 48);
-    g.fillStyle = goldGrad(g, -330, -330, 330, 330); g.fill(ring);
-    g.lineWidth = 6; g.strokeStyle = C.forestD; g.stroke(ring);
-    const inner = wellipse(0, 0, 286, 286, 0, 12, 48);
-    ink(g, inner, C.forestL, 5, C.forestD);
-    g.save(); g.clip(inner);
-    person(g, Object.assign({}, WILL.old, { shadow: false, x: 0, y: 590, s: 1.95, t: lt, armL: 0.1, armR: 0.1, mouth: 'smile' }));
-    g.restore();
+  if (s > 0) at(g, 540, 1010, 1, 0, () => {
+    g.scale(s, s);
+    g.fillStyle = 'rgba(5,15,10,0.35)'; g.beginPath(); g.ellipse(0, 6, 150, 18, 0, 0, TAU); g.fill();
+    person(g, Object.assign({}, WILL.old, { shadow: false, x: 0, y: 0, s: 2.0, t: lt, coat: '#6a5038', top: '#efe6d2', tie: C.goldD,
+      armL: 0.12, armR: 1.5, elbR: 1.2, mouth: 'smile',
+      handR: (gg, x, y) => propBook(gg, x + 10, y - 4, 1.0, C.forestL, -0.2) }));
   });
-  drawWordmark(g, 1170, ss(cu.name, cu.name + 1.0, lt), ss(cu.years, cu.years + 0.6, lt), ss(cu.tag, cu.tag + 0.6, lt));
+  drawWordmark(g, 1190, ss(cu.name, cu.name + 1.0, lt), ss(cu.years, cu.years + 0.6, lt), ss(cu.tag, cu.tag + 0.6, lt));
 }
 SCENES.title = (g, lt, sc) => titleCard(g, lt, sc.cues);
 
