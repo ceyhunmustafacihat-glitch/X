@@ -100,7 +100,7 @@
   // the cover and this card runs on scene time (real time minus INS), so the rest keeps its timing.
   const CUT = 3.0, INS = 3.3;
   const sceneT = t => (t < CUT ? t : Math.max(CUT, t - INS));
-  const INTRO_CARD = { a: 2.95, b: 6.3, backdropFrom: 3.2, kicker: 'BÖLÜM 01', lines: ['TAHTANIN', 'YAPISI'] };
+  const INTRO_CARD = { a: 2.75, b: 6.3, flipAt: 2.75, kicker: 'BÖLÜM 01', lines: ['TAHTANIN', 'YAPISI'] };
   const CARDS = [
     { a: 21.0, b: 24.1, kicker: 'BÖLÜM 02', lines: ['TAHTANIN', 'KONUMLANDIRILMASI'] },
     { a: 48.4, b: 51.1, kicker: 'BÖLÜM 03', lines: ['TAHTANIN', 'BÖLGELERİ'] },
@@ -134,7 +134,7 @@
   // ------------------------------------------------------------------ cover (loop point)
   // Drawn in the chapter-card style. Fully shown at t = 0 and leaves by COVER.b; re-enters over the
   // last second and lands exactly at t = D (= 0), so the video loops seamlessly.
-  const COVER = { a: -1.2, b: 3.2, holdOut: true, kicker: '', lines: ['SATRANÇ', 'TAHTASI'] };
+  const COVER = { a: -1.2, b: 3.2, holdOut: true, tilesUntil: INTRO_CARD.flipAt, soft: true, noBand: true, kicker: '', lines: ['SATRANÇ', 'TAHTASI'] };
   function title(t) {
     if (t < T.titleIn) card(t, COVER);
     else card(t - D, COVER);
@@ -490,7 +490,8 @@
     }
   }
   // simple piece silhouettes drawn in a 100×100 box centred on the origin
-  function pieceStyle() { ctx.fillStyle = C.white; ctx.strokeStyle = C.ink; ctx.lineWidth = 4; ctx.lineJoin = 'round'; }
+  let pieceFill = C.white, pieceStroke = C.ink;
+  function pieceStyle() { ctx.fillStyle = pieceFill; ctx.strokeStyle = pieceStroke; ctx.lineWidth = 4; ctx.lineJoin = 'round'; }
   function base() {
     ctx.beginPath(); ctx.roundRect(-34, 30, 68, 14, 5); ctx.fill(); ctx.stroke();
     ctx.beginPath(); ctx.roundRect(-26, 22, 52, 10, 4); ctx.fill(); ctx.stroke();
@@ -612,40 +613,114 @@
     text('+', W / 2, 380, { size: 110, weight: 300, color: C.muted, alpha: kv });
   }
 
-  // Chapter transition: the screen fills with chessboard squares in a diagonal wave, each square
-  // turning into place like a piece being set down, and clears the same way to reveal the board.
-  const TILE = 120, TCOLS = 9, TROWS = 16, TILE_IN = 0.2, WAVE = 0.45, FLIP = 0.28;
+  // Main-heading transition: two pieces collide in the middle of the screen and board squares spread
+  // out from the impact, each turning into place like a piece set down. Every other transition (a
+  // heading leaving, the cover coming back at the end of the loop) is a soft fade.
+  const TILE = 120, TCOLS = 9, TROWS = 16, TILE_IN = 0.2, WAVE = 0.45, FLIP = 0.28, SOFT = 0.55;
+  const IMPACT_X = W / 2, IMPACT_Y = 960, TMAXR = Math.hypot(W / 2 + TILE, 960 + TILE);
   function tiles(t, c) {
-    const outStart = c.b - (WAVE + FLIP + 0.05);
+    if (c.tilesUntil !== undefined && t >= c.tilesUntil) return;
+    const fadeIn = c.soft ? eIO(seg(t, c.a, c.a + SOFT)) : 1;
+    const fadeOut = c.holdOut ? 1 : 1 - eIO(seg(t, c.b - SOFT, c.b));
     ctx.save();
+    ctx.globalAlpha = fadeIn * fadeOut;
     for (let i = 0; i < TCOLS; i++) for (let j = 0; j < TROWS; j++) {
-      const d = ((i + j) / (TCOLS + TROWS - 2)) * WAVE;
-      // chained cards (cover → chapter 1) hand the squares over instead of clearing and refilling them
-      let pin = c.backdropFrom !== undefined ? (t >= c.backdropFrom ? 1 : 0) : eBack(seg(t, c.a + d, c.a + d + FLIP));
-      const pout = c.holdOut ? 0 : eIn(seg(t, outStart + d, outStart + d + FLIP));
-      const k = clamp(pin) * (1 - pout);
-      if (k <= 0.001) continue;
-      const sc = pin * (1 - pout);
+      const x = i * TILE + TILE / 2, y = j * TILE + TILE / 2;
+      const d = (Math.hypot(x - IMPACT_X, y - IMPACT_Y) / TMAXR) * WAVE;
+      const base = (i + j) % 2 ? C.card : C.cardDark, inv = (i + j) % 2 ? C.cardDark : C.card;
       ctx.save();
-      ctx.translate(i * TILE + TILE / 2, j * TILE + TILE / 2);
-      ctx.rotate((1 - clamp(pin)) * -Math.PI / 2 + pout * Math.PI / 2);
-      ctx.scale(sc, sc);
-      ctx.fillStyle = (i + j) % 2 ? C.card : C.cardDark;
-      ctx.fillRect(-TILE / 2 - 0.6, -TILE / 2 - 0.6, TILE + 1.2, TILE + 1.2);
-      if (k < 0.98) { ctx.strokeStyle = rgba(C.gold, 0.5 * (1 - k)); ctx.lineWidth = 3; ctx.strokeRect(-TILE / 2 + 2, -TILE / 2 + 2, TILE - 4, TILE - 4); }
+      ctx.translate(x, y);
+      if (c.soft) {
+        ctx.fillStyle = base; ctx.fillRect(-TILE / 2 - 0.6, -TILE / 2 - 0.6, TILE + 1.2, TILE + 1.2);
+      } else if (c.flipAt !== undefined) {
+        // chained from the cover: the cover's squares flip over to the inverted pattern
+        const fp = seg(t, c.flipAt + d, c.flipAt + d + FLIP * 1.3);
+        ctx.fillStyle = '#3c2617'; ctx.fillRect(-TILE / 2 - 0.6, -TILE / 2 - 0.6, TILE + 1.2, TILE + 1.2);
+        ctx.scale(Math.max(0.02, Math.abs(Math.cos(fp * Math.PI))), 1);
+        ctx.fillStyle = fp < 0.5 ? base : inv; ctx.fillRect(-TILE / 2 - 0.6, -TILE / 2 - 0.6, TILE + 1.2, TILE + 1.2);
+        if (fp > 0 && fp < 1) { ctx.strokeStyle = rgba(C.gold, 0.3); ctx.lineWidth = 3; ctx.strokeRect(-TILE / 2 + 2, -TILE / 2 + 2, TILE - 4, TILE - 4); }
+      } else {
+        const pin = eBack(seg(t, c.a + d, c.a + d + FLIP));
+        if (pin > 0.001) {
+          ctx.rotate((1 - clamp(pin)) * -Math.PI / 2);
+          ctx.scale(pin, pin);
+          ctx.fillStyle = base; ctx.fillRect(-TILE / 2 - 0.6, -TILE / 2 - 0.6, TILE + 1.2, TILE + 1.2);
+          if (pin < 0.98) { ctx.strokeStyle = rgba(C.gold, 0.5 * (1 - clamp(pin))); ctx.lineWidth = 3; ctx.strokeRect(-TILE / 2 + 2, -TILE / 2 + 2, TILE - 4, TILE - 4); }
+        }
+      }
       ctx.restore();
     }
     ctx.restore();
   }
+
+  // the two pieces that collide to open a main heading; impact at time tc
+  const PIECE_S = 2.5;
+  function collision(t, tc, flip) {
+    if (t < tc - 0.6 || t > tc + 0.8) return;
+    const left = flip ? drawQueen : drawKing, right = flip ? drawKing : drawQueen;
+    const approach = eIn(seg(t, tc - 0.55, tc));
+    const recoil = eOut(seg(t, tc, tc + 0.35));
+    const fade = 1 - eIO(seg(t, tc + 0.2, tc + 0.55));
+    const gap = 84 * PIECE_S;   // centres when the two bases touch
+    const lx = -160 + (IMPACT_X - gap / 2 + 160) * approach - recoil * 70;
+    const rx = W + 160 - (W + 160 - IMPACT_X - gap / 2) * approach + recoil * 70;
+    const piece = (x, draw, dark, tilt) => {
+      if (fade <= 0) return;
+      ctx.save(); ctx.globalAlpha = fade;
+      ctx.translate(x, IMPACT_Y); ctx.rotate(tilt * recoil); ctx.scale(PIECE_S * (1 - 0.15 * recoil), PIECE_S * (1 - 0.15 * recoil));
+      ctx.shadowColor = 'rgba(20,10,4,0.55)'; ctx.shadowBlur = 24; ctx.shadowOffsetY = 10;
+      pieceFill = dark ? C.choc : C.white; pieceStroke = dark ? C.gold : C.ink;
+      draw();
+      ctx.restore();
+    };
+    piece(lx, left, flip, -0.35);
+    piece(rx, right, !flip, 0.35);
+    pieceFill = C.white; pieceStroke = C.ink;
+    if (t < tc) return;
+    const p = seg(t, tc, tc + 0.6);
+    // flash
+    const fl = Math.pow(1 - seg(t, tc, tc + 0.3), 2);
+    if (fl > 0) {
+      const g = ctx.createRadialGradient(IMPACT_X, IMPACT_Y, 10, IMPACT_X, IMPACT_Y, 420);
+      g.addColorStop(0, rgba(C.white, 0.85 * fl)); g.addColorStop(0.35, rgba(C.gold, 0.45 * fl)); g.addColorStop(1, rgba(C.gold, 0));
+      ctx.fillStyle = g; ctx.fillRect(0, IMPACT_Y - 420, W, 840);
+    }
+    // shock ring
+    ctx.save(); ctx.globalAlpha = 1 - p; ctx.strokeStyle = C.gold; ctx.lineWidth = 12 * (1 - p) + 1;
+    ctx.beginPath(); ctx.arc(IMPACT_X, IMPACT_Y, 30 + 650 * eOut(p), 0, Math.PI * 2); ctx.stroke(); ctx.restore();
+    // shards: small board squares thrown out of the impact
+    for (let i = 0; i < 18; i++) {
+      const h = Math.sin(i * 12.9898 + tc * 78.233) * 43758.5453, rnd = h - Math.floor(h);
+      const ang = (i / 18) * Math.PI * 2 + rnd * 0.5, sp = 520 + rnd * 520, dt = t - tc;
+      const x = IMPACT_X + Math.cos(ang) * sp * dt, y = IMPACT_Y + Math.sin(ang) * sp * dt + 900 * dt * dt;
+      const sz = 14 + rnd * 16;
+      ctx.save(); ctx.globalAlpha = 1 - p; ctx.translate(x, y); ctx.rotate(dt * (6 + rnd * 8) * (i % 2 ? 1 : -1));
+      ctx.fillStyle = i % 3 === 0 ? C.gold : i % 3 === 1 ? C.light : C.dark;
+      ctx.fillRect(-sz / 2, -sz / 2, sz, sz); ctx.restore();
+    }
+  }
+  function shake(t, collisions) {
+    let dx = 0, dy = 0;
+    for (const tc of collisions) {
+      const dt = t - tc;
+      if (dt < 0 || dt > 0.4) continue;
+      const amp = 18 * Math.exp(-dt / 0.09);
+      dx += amp * Math.sin(dt * 95); dy += amp * 0.6 * Math.cos(dt * 73);
+    }
+    return [dx, dy];
+  }
+  // real-time instants of every collision: chapter 1 (off the cover) and the chapter cards
+  const collisions = () => [INTRO_CARD.flipAt, ...CARDS.map(c => c.a + INS)];
+
   function card(t, c) {
     if (t < c.a || t > c.b) return;
     tiles(t, c);
     // text leaves before the squares clear; a chained card keeps its squares, so its text can stay longer
-    const lead = c.holdOut ? 0.6 : 1.05;
+    const lead = c.holdOut ? 1.0 : 0.85;   // the cover clears before the pieces arrive
     // gold band wipe
     const bandIn = eIO(seg(t, c.a + 0.05, c.a + 0.55)), bandOut = eIO(seg(t, c.b - lead + 0.05, c.b - lead + 0.35));
     const bx0 = W * bandOut, bx1 = W * bandIn;
-    if (bx1 > bx0) {
+    if (bx1 > bx0 && !c.noBand) {
       ctx.save(); ctx.fillStyle = C.gold; ctx.fillRect(bx0, 1180, bx1 - bx0, 10); ctx.restore();
     }
     const yC = 960;
@@ -669,6 +744,9 @@
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.globalAlpha = 1; ctx.letterSpacing = '0px'; ctx.filter = 'none';
     background(t);
+    const cols = collisions();
+    const [sx, sy] = shake(t, cols);
+    ctx.save(); ctx.translate(sx, sy);
     const o = sceneT(t);
     board(o);
     for (const c of CAPS) caption(o, c);
@@ -676,27 +754,29 @@
     for (const c of CARDS) card(o, c);
     card(t, INTRO_CARD);
     title(t);
+    cols.forEach((tc, i) => collision(t, tc, i % 2 === 1));
+    ctx.restore();
     vignette();
   }
 
   // ------------------------------------------------------------------ sound cues (same clock)
   // a short run of wooden taps that follows the square wave in and out
-  function tileCues(a, b, add) {
-    for (let k = 0; k < 7; k++) {
-      if (a !== null) add(a + 0.05 + k * (WAVE / 6), 'tock', { pitch: 0.85 + k * 0.05, gain: 0.32 });
-      if (b !== null) add(b - (WAVE + FLIP + 0.05) + 0.05 + k * (WAVE / 6), 'tock', { pitch: 1.15 - k * 0.04, gain: 0.26 });
-    }
+  function tileCues(a, add) {
+    for (let k = 1; k < 7; k++) add(a + 0.05 + k * (WAVE / 6), 'tock', { pitch: 0.85 + k * 0.05, gain: 0.28 });
   }
   function buildCues() {
     const q = [];
     // cue times are written in scene time and shifted onto the real clock past the cut
     const put = (t, type, o) => q.push(Object.assign({ t: +t.toFixed(4), type }, o));
     const add = (t, type, o = {}) => put(t >= CUT ? t + INS : t, type, o);
-    put(INTRO_CARD.a + 0.3, 'hit', { gain: 0.6 });
-    put(INTRO_CARD.b - 0.75, 'whoosh', { gain: 0.5, dur: 0.6, rev: 1 });
-    tileCues(null, INTRO_CARD.b, put);
-    tileCues(COVER.a + D, null, put);
-    add(0.05, 'hit', { gain: 0.9 }); add(0.07, 'shimmer', { gain: 0.5 });
+    for (const tc of collisions()) {
+      put(tc - 0.5, 'swish', { gain: 0.45, dur: 0.5 });
+      put(tc, 'tock', { pitch: 0.55, gain: 1.0 }); put(tc, 'hit', { gain: 0.8 }); put(tc + 0.02, 'shimmer', { gain: 0.25 });
+      tileCues(tc, put);
+    }
+    put(INTRO_CARD.b - SOFT, 'whoosh', { gain: 0.35, dur: 0.6, rev: 1 });
+    put(COVER.a + D, 'whoosh', { gain: 0.4, dur: 0.8 });
+    add(0.07, 'shimmer', { gain: 0.35 });
     add(T.frameIn, 'thud', { gain: 0.6 });
     for (let k = 0; k <= 14; k++) add(T.build + k * 0.06 + 0.05, 'tock', { pitch: 1 + k * 0.035, gain: 0.55 });
     for (const c of CAPS) add(c.a, 'blip', { gain: 0.22 });
@@ -709,11 +789,7 @@
     add(T.lights + 1.35, 'ding', { note: 'D6', gain: 0.45 });
     for (let i = 0; i < 32; i += 2) add(T.darks + i * 0.04, 'pop', { pitch: 0.8 + i * 0.01, gain: 0.32 });
     add(T.darks + 1.35, 'ding', { note: 'A5', gain: 0.45 });
-    for (const c of CARDS) {
-      add(c.a, 'whoosh', { gain: 0.6, dur: 0.7 }); add(c.a + 0.5, 'hit', { gain: 0.75 });
-      add(c.b - 0.75, 'whoosh', { gain: 0.5, dur: 0.6, rev: 1 });
-      tileCues(c.a, c.b, add);
-    }
+    for (const c of CARDS) add(c.b - SOFT, 'whoosh', { gain: 0.35, dur: 0.6, rev: 1 });
     for (let i = 0; i < 8; i++) add(T.axisLetters + i * 0.09 + 0.1, 'click', { pitch: 1 + i * 0.05, gain: 0.45 });
     for (let i = 0; i < 8; i++) add(T.axisNumbers + i * 0.09 + 0.1, 'click', { pitch: 1.2 + i * 0.05, gain: 0.45 });
     add(T.filesGlow, 'sweep', { gain: 0.3, dur: 1.3 }); add(T.ranksGlow, 'sweep', { gain: 0.3, dur: 1.3 });
@@ -735,7 +811,6 @@
     add(T.divider, 'swish', { gain: 0.5, dur: 0.6 });
     add(70.6, 'success', { gain: 0.55 });
     for (let k = 0; k <= 14; k++) add(T.boardOut + k * 0.04 + 0.1, 'tock', { pitch: 1.5 - k * 0.035, gain: 0.4 });
-    put(T.titleIn - 0.1, 'whoosh', { gain: 0.75, dur: 1.0, rev: 1 });
     return q.sort((a, b) => a.t - b.t);
   }
 
