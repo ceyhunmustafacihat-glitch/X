@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="1080" height="1080">
+  <defs>
+    <linearGradient id="gold" gradientUnits="userSpaceOnUse" x1="330" y1="280" x2="750" y2="800">
+      <stop offset="0" stop-color="#EBD39B"/>
+      <stop offset="1" stop-color="#C7A56C"/>
+    </linearGradient>
+    <mask id="m1" maskUnits="userSpaceOnUse" x="0" y="0" width="1080" height="1080">
+      <rect width="1080" height="1080" fill="#fff"/>
+      <g fill="#000"><path d="M378 460h44l-32 56h-44z"/><path d="M478 460h44l-32 56h-44z"/><path d="M578 460h44l-32 56h-44z"/><path d="M678 460h44l-32 56h-44z"/></g>
+    </mask>
+    <mask id="m2" maskUnits="userSpaceOnUse" x="0" y="0" width="1080" height="1080">
+      <rect width="1080" height="1080" fill="#fff"/>
+      <g fill="#000"><path d="M378 386h44l-32 56h-44z"/><path d="M478 386h44l-32 56h-44z"/><path d="M578 386h44l-32 56h-44z"/><path d="M678 386h44l-32 56h-44z"/></g>
+    </mask>
+  </defs>
+  <rect width="1080" height="1080" fill="#6A1642"/>
+  <g fill="url(#gold)">
+    <rect x="330" y="530" width="420" height="270" rx="18"/>
+    <rect x="330" y="460" width="420" height="56" rx="10" mask="url(#m1)"/>
+    <g transform="rotate(-14 330 450)">
+      <rect x="330" y="386" width="420" height="56" rx="10" mask="url(#m2)"/>
+    </g>
+  </g>
+</svg>
