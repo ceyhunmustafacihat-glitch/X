@@ -54,8 +54,9 @@ function col(a, b, t, alpha = 1) { return rgb(mixc(a, b, t), alpha); }
 function shade(c, k) { c = hex(c); return [Math.min(255, c[0] * k), Math.min(255, c[1] * k), Math.min(255, c[2] * k)]; }
 
 const C = {
-  paper: '#f3e7cd', paper2: '#e9d9b6', card: '#fdf6e6', ink: '#2a211d',
-  navy: '#2e4057', navyD: '#1f2c3d', teal: '#3f7f7a', sea: '#4f93a6', seaD: '#2f6475', sky: '#bfe0e6',
+  paper: '#f3e7cd', paper2: '#e9d9b6', card: '#f7eed8', ink: '#1e2a22',
+  navy: '#2e4057', navyD: '#1f2c3d', teal: '#2f6b4a', sea: '#3f7c6a', seaD: '#2a5a4a', sky: '#dbe5cd',
+  forest: '#1f4f35', forestD: '#173d29', forestL: '#2c6345', goldL: '#e9cf98', goldM: '#d6b47f', goldD: '#c39f69',
   mustard: '#e5a93c', gold: '#f2c14e', coral: '#d9633d', red: '#b9412f', pink: '#f0a1a0',
   sage: '#9cb486', grass: '#7f9f58', grassD: '#5f7f43', brown: '#7b4f2e', wood: '#a8713f',
   grey: '#8b9096', stone: '#b3ada0', night: '#1d2742', purple: '#6f4a8e', green: '#4f7f4b',

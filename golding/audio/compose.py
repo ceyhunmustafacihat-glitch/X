@@ -294,9 +294,17 @@ G_TUNE = [["D6", None, "B5", None, "G5", "A5", "B5", None], ["E6", None, "B5", N
 for sc_ in TL["scenes"]:
     if sc_.get("title"):
         t = sc_["start"]
-        FX(t - 0.2, paper(0.45), 0.22, 0.1, 0.3)
+        # the page turning in and out
+        for tf in (t - 0.4, sc_["end"] - 0.4):
+            FX(tf, paper(0.7) * np.linspace(0.4, 1, int(0.7 * SR)), 0.3, 0.2, 0.3)
+            FX(tf + 0.45, noise_band(0.12, 200, 1500) * np.exp(-tt(int(0.12 * SR)) / 0.03), 0.12, 0.2, 0.2)
         for k, nm in enumerate(["C4", "G4", "E5"]):
-            M(t + 0.15 + k * 0.05, bell(hz(nm), 0.35, 2.2), 0.45, -0.2 + k * 0.2, 0.6)
+            M(t + 0.15 + k * 0.05, bell(hz(nm), 0.35, 2.2), 0.4, -0.2 + k * 0.2, 0.6)
+        # the nib scratching out the title, then the underline
+        wd = 1.2
+        n_ = int(wd * SR)
+        scr = noise_band(wd, 2500, 7500) * np.clip(np.sin(2 * np.pi * 7 * tt(n_) + 1.2 * np.sin(2 * np.pi * 1.9 * tt(n_))), 0, 1) ** 0.6
+        FX(t + 0.45, scr * np.clip(tt(n_) / 0.05, 0, 1) * np.clip((wd - tt(n_)) / 0.1, 0, 1), 0.06, 0.1, 0.1)
 
 # --- title: warm, open
 t0 = S("title")

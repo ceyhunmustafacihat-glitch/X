@@ -48,24 +48,25 @@ function cloud(g, x, y, s, colr = C.white, seed = 1) {
 }
 
 // ------------------------------------------------------------------ title
-SCENES.title = (g, lt, sc) => {
-  const cu = sc.cues;
-  g.fillStyle = C.paper; g.fillRect(0, 0, W, H);
-  drawGlow(g, 540, 700, 700, '#fff3d6', 0.9);
-
-  // medallion portrait
+// opening card; the closing card replays it backwards so the film loops
+function titleCard(g, lt, cu) {
+  g.fillStyle = C.forest; g.fillRect(0, 0, W, H);
+  drawGlow(g, 540, 760, 760, '#2f6a49', 0.55);
   const s = pop(cu.ink, lt, 0.7);
-  at(g, 540, 690, s, 0, () => {
-    g.fillStyle = 'rgba(42,33,29,0.22)'; g.beginPath(); g.arc(12, 16, 330, 0, TAU); g.fill();
-    ink(g, wellipse(0, 0, 330, 330, 2, 11, 24), C.mustard, 6);
-    const inner = wellipse(0, 0, 286, 286, 1.6, 12, 24);
-    ink(g, inner, C.teal, 5);
+  if (s > 0) at(g, 540, 690, s, 0, () => {
+    g.fillStyle = 'rgba(5,15,10,0.35)'; g.beginPath(); g.arc(12, 18, 330, 0, TAU); g.fill();
+    const ring = wellipse(0, 0, 330, 330, 0, 11, 48);
+    g.fillStyle = goldGrad(g, -330, -330, 330, 330); g.fill(ring);
+    g.lineWidth = 6; g.strokeStyle = C.forestD; g.stroke(ring);
+    const inner = wellipse(0, 0, 286, 286, 0, 12, 48);
+    ink(g, inner, C.forestL, 5, C.forestD);
     g.save(); g.clip(inner);
     person(g, Object.assign({}, WILL.old, { shadow: false, x: 0, y: 590, s: 1.95, t: lt, armL: 0.1, armR: 0.1, mouth: 'smile' }));
     g.restore();
   });
   drawWordmark(g, 1170, ss(cu.name, cu.name + 1.0, lt), ss(cu.years, cu.years + 0.6, lt), ss(cu.tag, cu.tag + 0.6, lt));
-};
+}
+SCENES.title = (g, lt, sc) => titleCard(g, lt, sc.cues);
 
 function drawIcon(g, k, t) {
   if (k === 'book') {
@@ -282,7 +283,7 @@ SCENES.house = (g, lt, sc) => {
   g.save(); g.translate(0, -pan);
   // night sky
   const sk = g.createLinearGradient(0, 0, 0, 1150);
-  sk.addColorStop(0, '#141c33'); sk.addColorStop(1, '#3a4d74');
+  sk.addColorStop(0, '#0f2219'); sk.addColorStop(1, '#2a5240');
   g.fillStyle = sk; g.fillRect(0, -100, W, 1260);
   const rnd = mulberry32(5);
   for (let i = 0; i < 60; i++) {

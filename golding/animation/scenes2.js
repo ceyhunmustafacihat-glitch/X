@@ -134,7 +134,7 @@ SCENES.school = (g, lt, sc) => {
 // ------------------------------------------------------------------ the dark confession
 SCENES.dark = (g, lt, sc) => {
   const cu = sc.cues;
-  g.fillStyle = '#2b2c38'; g.fillRect(0, 0, W, H);
+  g.fillStyle = '#17271e'; g.fillRect(0, 0, W, H);
   // rainy window
   ink(g, wrect(640, 330, 300, 380, 1.2, 900), '#1b2030', 6);
   g.save(); g.beginPath(); g.rect(645, 335, 290, 370); g.clip();
@@ -257,7 +257,7 @@ function ring(g, x, y, s, broken = 0, seed = 1) {
 SCENES.love = (g, lt, sc) => {
   const cu = sc.cues;
   const sk = g.createLinearGradient(0, 200, 0, 1100);
-  sk.addColorStop(0, '#f6b8a8'); sk.addColorStop(1, '#fde2c8');
+  sk.addColorStop(0, '#e6cb93'); sk.addColorStop(1, '#f7ecd2');
   g.fillStyle = sk; g.fillRect(0, 0, W, H);
   cloud(g, 260, 460, 1.0, '#fff4ea', 1001); cloud(g, 860, 380, 0.8, '#fff4ea', 1002);
   for (const [x, s] of [[110, 1.1], [960, 1.25]]) {
@@ -315,7 +315,7 @@ SCENES.love = (g, lt, sc) => {
 // ------------------------------------------------------------------ teacher
 SCENES.teacher = (g, lt, sc) => {
   const cu = sc.cues;
-  g.fillStyle = '#cfe6e3'; g.fillRect(0, 0, W, H);
+  g.fillStyle = '#dfe6cf'; g.fillRect(0, 0, W, H);
   cloud(g, 220 + lt * 6, 420, 1.0, C.white, 1101); cloud(g, 880 - lt * 5, 520, 0.7, C.white, 1102);
   // distant downs and Salisbury's spire
   ink(g, wcurve([[-20, 800], [200, 720], [450, 760], [700, 700], [1100, 760], [1100, 900], [-20, 900]], 2, 1103), '#a9c39a');

@@ -41,10 +41,10 @@ SCENES.war = (g, lt, sc) => {
   const navy = { hair: '#6b4428', hairStyle: 'short', seed: 3, bottom: C.navyD };
   if (bA > 0) alpha(g, bA, () => {
     const sk = g.createLinearGradient(0, 0, 0, 1000);
-    sk.addColorStop(0, '#9fb3c2'); sk.addColorStop(1, '#d4dde0');
+    sk.addColorStop(0, '#a7b6a2'); sk.addColorStop(1, '#e0e3cf');
     g.fillStyle = sk; g.fillRect(0, 0, W, H);
     cloud(g, 300, 440, 1.3, '#e9eef0', 1201); cloud(g, 820, 360, 1.0, '#e9eef0', 1202);
-    g.fillStyle = '#5d7f93'; g.fillRect(0, 960, W, 1000);
+    g.fillStyle = '#4a7465'; g.fillRect(0, 960, W, 1000);
     const bob = Math.sin(lt * 1.3) * 8;
     warship(g, 600 + lt * 6, 960 + bob, 1.3, '#8a939e', 1210);
     ensign(g, 820 + lt * 6, 650 + bob, lt, 0.9);
@@ -60,7 +60,7 @@ SCENES.war = (g, lt, sc) => {
       look: glance, armR: lt > cu.horn + 0.6 && lt < 2.4 ? 2.75 : 0.15, elbR: lt > cu.horn + 0.6 && lt < 2.4 ? 2.1 : 0, armL: 0.1 }));
   });
   if (bB > 0) alpha(g, bB, () => {
-    g.fillStyle = '#2f4865'; g.fillRect(0, 0, W, H);
+    g.fillStyle = C.forest; g.fillRect(0, 0, W, H);
     waves(g, 360, 1900, rgb(C.white, 0.08), lt, 6, 80);
     const steps = [[220, 1150, 'Er'], [520, 1010, 'Subay adayı'], [820, 870, 'Teğmen']];
     steps.forEach(([x, y, lab], i) => {
@@ -84,7 +84,7 @@ SCENES.war = (g, lt, sc) => {
   if (bC > 0) alpha(g, bC, () => {
     const lc = lt - cu.chase;
     const sk = g.createLinearGradient(0, 0, 0, 1000);
-    sk.addColorStop(0, '#0f1426'); sk.addColorStop(1, '#2d3656');
+    sk.addColorStop(0, '#0b1a12'); sk.addColorStop(1, '#1f3a2b');
     g.fillStyle = sk; g.fillRect(0, 0, W, H);
     drawGlow(g, 820, 420, 200, '#fff2c0', 0.35);
     ink(g, wellipse(820, 420, 56, 56, 1, 1250), '#eadfb5', 4);
@@ -99,7 +99,7 @@ SCENES.war = (g, lt, sc) => {
       g.lineTo(sx + Math.cos(a - 0.06) * 1000, 940 + Math.sin(a - 0.06) * 1000); g.lineTo(sx + Math.cos(a + 0.06) * 1000, 940 + Math.sin(a + 0.06) * 1000); g.fill();
     }
     g.restore();
-    g.fillStyle = '#1d2a40'; g.fillRect(0, 980, W, 1000);
+    g.fillStyle = '#15301f'; g.fillRect(0, 980, W, 1000);
     // British ships (left), Bismarck (right)
     warship(g, 200, 990, 0.62, '#59657a', 1260);
     warship(g, 380, 1040, 0.5, '#4f5a6e', 1270);
@@ -133,7 +133,7 @@ SCENES.war = (g, lt, sc) => {
   });
   if (bD > 0) alpha(g, bD, () => {
     const sk = g.createLinearGradient(0, 0, 0, 1050);
-    sk.addColorStop(0, '#4a3a3e'); sk.addColorStop(1, '#a8746a');
+    sk.addColorStop(0, '#363a2c'); sk.addColorStop(1, '#a78a5c');
     g.fillStyle = sk; g.fillRect(0, 0, W, H);
     const ruins = [[-20, 1060], [-20, 760], [60, 760], [80, 700], [120, 780], [160, 640], [230, 640], [230, 820], [300, 820], [330, 720], [380, 760], [420, 600], [470, 640], [500, 590], [540, 900],
       [620, 900], [640, 700], [700, 720], [740, 660], [790, 760], [860, 760], [880, 620], [940, 680], [960, 800], [W + 20, 800], [W + 20, 1060]];
@@ -168,7 +168,7 @@ SCENES.hard = (g, lt, sc) => {
   if (bAB > 0) alpha(g, bAB, () => {
     const tilt = Math.sin(lt * 1.7) * 0.03 * ss(4.8, 6.0, lt);
     g.save(); g.translate(540, 900); g.rotate(tilt); g.translate(-540, -900);
-    g.fillStyle = '#2f3a55'; g.fillRect(-200, -200, W + 400, H + 400);
+    g.fillStyle = '#1c3527'; g.fillRect(-200, -200, W + 400, H + 400);
     ink(g, wrect(120, 330, 280, 340, 1.2, 1410), '#1a2036', 6);
     ink(g, wellipse(260, 440, 46, 46, 1, 1411), '#eadfb5', 3);
     // clock spinning through the night
@@ -204,7 +204,7 @@ SCENES.hard = (g, lt, sc) => {
     g.restore();
   });
   if (bC > 0) alpha(g, bC, () => {
-    g.fillStyle = '#25223a'; g.fillRect(0, 0, W, H);
+    g.fillStyle = '#172a20'; g.fillRect(0, 0, W, H);
     ink(g, wrect(120, 380, 260, 320, 1.2, 1460), '#151a30', 6);
     ink(g, wellipse(250, 480, 40, 40, 1, 1461), '#eadfb5', 3);
     ink(g, wrect(-10, 1180, W + 20, 800, 1.4, 1462), '#3b2f3e');
@@ -256,7 +256,7 @@ SCENES.hard = (g, lt, sc) => {
   if (bG > 0) alpha(g, bG, () => {
     // ...and then he buried it in the garden
     const lb = lt - cu.bury;
-    g.fillStyle = '#1f2440'; g.fillRect(0, 0, W, H);
+    g.fillStyle = '#13261b'; g.fillRect(0, 0, W, H);
     for (let i = 0; i < 30; i++) sparkle(g, (i * 137) % W, 300 + (i * 89) % 600, 4 + (i % 3) * 2, 0.7, '#fff3c4');
     drawGlow(g, 820, 430, 200, '#fff2c0', 0.4);
     ink(g, wellipse(820, 430, 60, 60, 1, 1560), '#eadfb5', 4);
@@ -313,13 +313,13 @@ SCENES.honors = (g, lt, sc) => {
   const cu = sc.cues;
   const bA = 1 - ss(3.8, 4.3, lt), bB = ss(3.8, 4.3, lt);
   if (bA > 0) alpha(g, bA, () => {
-    g.fillStyle = '#3a1f2a'; g.fillRect(0, 0, W, H);
+    g.fillStyle = C.forestD; g.fillRect(0, 0, W, H);
     for (const sd of [-1, 1]) {
       const p = wcurve(sd < 0 ? [[-20, 280], [260, 280], [200, 700], [230, 1100], [-20, 1200]] : [[W + 20, 280], [820, 280], [880, 700], [850, 1100], [W + 20, 1200]], 2, 1620 + sd);
-      ink(g, p, '#a3263a');
+      ink(g, p, '#2c6345');
       for (let i = 0; i < 4; i++) wline(g, [[sd < 0 ? 40 + i * 50 : W - 40 - i * 50, 300], [sd < 0 ? 30 + i * 46 : W - 30 - i * 46, 1100]], 3, rgb(C.ink, 0.3), 1625 + i + sd);
     }
-    ink(g, wrect(-10, 260, W + 20, 60, 1, 1630), '#8a1f30');
+    ink(g, wrect(-10, 260, W + 20, 60, 1, 1630), '#c39f69');
     g.save(); g.globalCompositeOperation = 'screen';
     const sp = g.createRadialGradient(540, 1100, 20, 540, 900, 700);
     sp.addColorStop(0, 'rgba(255,230,160,0.55)'); sp.addColorStop(1, 'rgba(255,230,160,0)');
@@ -342,11 +342,11 @@ SCENES.honors = (g, lt, sc) => {
     }
   });
   if (bB > 0) alpha(g, bB, () => {
-    g.fillStyle = '#5a2f4f'; g.fillRect(0, 0, W, H);
+    g.fillStyle = C.forest; g.fillRect(0, 0, W, H);
     for (let x = 60; x < W; x += 160) for (let y = 380; y < 1000; y += 160) ink(g, starPath(x + ((y / 160) % 2) * 80, y, 16, 7, 4), rgb(C.gold, 0.35), 0);
-    ink(g, wcurve([[700, 1100], [690, 700], [760, 520], [900, 480], [1040, 520], [1100, 700], [1100, 1100]], 1.5, 1700), '#8a1f30');
+    ink(g, wcurve([[700, 1100], [690, 700], [760, 520], [900, 480], [1040, 520], [1100, 700], [1100, 1100]], 1.5, 1700), '#c39f69');
     ink(g, wrect(-10, 1100, W + 20, 900, 1.4, 1701), '#6a4a3a');
-    ink(g, wpoly([[380, 1100], [700, 1100], [860, 1920], [220, 1920]], 1.2, 1702), '#a3263a');
+    ink(g, wpoly([[380, 1100], [700, 1100], [860, 1920], [220, 1920]], 1.2, 1702), '#2c6345');
     const k1 = cu.kneel, t1 = cu.tap1, t2 = cu.tap2, sir = cu.sir;
     const up = ss(sir, sir + 0.6, lt);
     const swordA = lt < t1 - 0.4 ? -1.3 : lt < t1 ? lerp(-1.3, -0.2, ss(t1 - 0.4, t1, lt)) : lt < t2 - 0.4 ? lerp(-0.2, -1.6, ss(t1 + 0.1, t1 + 0.4, lt)) : lt < sir ? lerp(-1.6, 0.15, ss(t2 - 0.4, t2, lt)) : -1.3;
@@ -374,12 +374,12 @@ SCENES.end = (g, lt, sc) => {
   const bA = 1 - ss(cu.card - 0.4, cu.card + 0.2, lt);
   if (bA > 0) alpha(g, bA, () => {
     const sk = g.createLinearGradient(0, 200, 0, 1050);
-    sk.addColorStop(0, '#5a4a7a'); sk.addColorStop(0.55, '#e88a5a'); sk.addColorStop(1, '#f6c77a');
+    sk.addColorStop(0, '#24453a'); sk.addColorStop(0.55, '#d8a865'); sk.addColorStop(1, '#f1d69c');
     g.fillStyle = sk; g.fillRect(0, 0, W, H);
     const sunY = 960 + lt * 10;
     drawGlow(g, 640, sunY, 380, '#ffd59a', 0.8);
     g.save(); g.beginPath(); g.rect(0, 0, W, 1000); g.clip(); ink(g, wellipse(640, sunY, 110, 110, 1, 1800), '#ffd27a', 0); g.restore();
-    g.fillStyle = '#3f5f7a'; g.fillRect(0, 1000, W, 1000);
+    g.fillStyle = '#2f5a48'; g.fillRect(0, 1000, W, 1000);
     g.fillStyle = rgb('#ffd27a', 0.45);
     for (let i = 0; i < 6; i++) { const w = 220 - i * 30; g.fillRect(640 - w / 2 + Math.sin(lt * 2 + i) * 10, 1020 + i * 30, w, 8); }
     waves(g, 1060, 1900, rgb(C.white, 0.2), lt, 8, 60);
@@ -391,19 +391,11 @@ SCENES.end = (g, lt, sc) => {
     ink(g, wrect(160, 680, 40, 44, 0.6, 1805), rgb('#ffcf6a', 0.9), 4);
     seagull(g, 620 + lt * 10, 560, 1, lt, 6); seagull(g, 720 + lt * 8, 620, 0.7, lt, 7);
   });
+  // closing card = the opening card; in the last moments it un-builds to the empty first frame
   const bB = ss(cu.card - 0.4, cu.card + 0.2, lt);
   if (bB > 0) alpha(g, bB, () => {
-    g.fillStyle = C.paper; g.fillRect(0, 0, W, H);
-    drawGlow(g, 540, 760, 700, '#fff3d6', 0.9);
-    const lc = lt - cu.card;
-    at(g, 540, 760, 0.85 + 0.03 * lc, 0, () => {
-      ink(g, wellipse(0, 0, 330, 330, 2, 11, 24), C.mustard, 6);
-      const inner = wellipse(0, 0, 286, 286, 1.6, 12, 24);
-      ink(g, inner, C.teal, 5);
-      g.save(); g.clip(inner);
-      person(g, Object.assign({}, WILL.old, { shadow: false, x: 0, y: 590, s: 1.95, t: lt, mouth: 'smile', eyes: 'happy' }));
-      g.restore();
-    });
-    drawWordmark(g, 1170, ss(cu.card + 0.3, cu.card + 1.2, lt), ss(cu.card + 0.8, cu.card + 1.4, lt), ss(cu.card + 1.1, cu.card + 1.7, lt));
+    const dur = sc.end - sc.start, back = 1.4;
+    const k = Math.min(4.0, (dur - lt) / back * 3.4);
+    titleCard(g, k, TL.scenes[0].cues);
   });
 };

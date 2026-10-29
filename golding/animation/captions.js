@@ -57,7 +57,7 @@ function drawCaption(g, str, t0, t1, t) {
   g.fillStyle = 'rgba(42,33,29,0.22)';
   g.fill(wround(bx + 10, by + 12, boxW, boxH, 26, 1.2, 501));
   ink(g, wround(bx, by, boxW, boxH, 26, 1.2, 502), C.card, 4.5);
-  alpha(g, 0.75, () => at(g, bx + 70, by + 2, 1, -0.12, () => ink(g, wrect(-40, -16, 80, 30, 0.8, 503), '#e9cf8a', 0)));
+  alpha(g, 0.75, () => at(g, bx + 70, by + 2, 1, -0.12, () => ink(g, wrect(-40, -16, 80, 30, 0.8, 503), C.goldM, 0)));
   // words, each sliding up in turn
   let i = 0;
   L.forEach((ln, li) => {
@@ -72,8 +72,8 @@ function drawCaption(g, str, t0, t1, t) {
         g.globalAlpha = a * wa;
         let sx = x;
         wd.segs.forEach((sg, j) => {
-          if (sg.hi) { g.fillStyle = rgb(C.gold, 0.55); g.fill(wround(sx - 6, y - 6, sg.w + 12, 30, 10, 1, 510 + i * 3 + j)); }
-          text(g, sg.s, sx, y + (1 - wa) * 10, segFont(sg.hi), sg.hi ? C.red : C.ink, 'left');
+          if (sg.hi) { g.fillStyle = rgb(C.goldL, 0.85); g.fill(wround(sx - 6, y - 6, sg.w + 12, 30, 10, 1, 510 + i * 3 + j)); }
+          text(g, sg.s, sx, y + (1 - wa) * 10, segFont(sg.hi), sg.hi ? C.forest : C.ink, 'left');
           sx += sg.w;
         });
         g.restore();
@@ -123,37 +123,84 @@ function fitFont(g, str, weight, size, spacing, maxW) {
   const w = g.measureText(str).width; g.letterSpacing = '0px';
   return w > maxW ? size * maxW / w : size;
 }
+function goldGrad(g, x0, y0, x1, y1) {
+  const gr = g.createLinearGradient(x0, y0, x1, y1);
+  gr.addColorStop(0, C.goldL); gr.addColorStop(0.6, C.goldM); gr.addColorStop(1, C.goldD);
+  return gr;
+}
 function drawWordmark(g, y, nameA, yearsA, tagA) {
   const name = 'WILLIAM GOLDING';
   const sz = fitFont(g, name, 800, 84, 7, 900);
   if (nameA > 0) {
     // revealed left to right behind a sliding mask
     g.save(); g.beginPath(); g.rect(0, y - 70, 90 + easeOut(nameA) * 900, 140); g.clip();
-    text(g, name, 540, y, `800 ${sz}px Montserrat`, C.ink, 'center', 7);
+    text(g, name, 540, y, `800 ${sz}px Montserrat`, goldGrad(g, 100, y - 50, 980, y + 50), 'center', 7);
     g.restore();
   }
   alpha(g, yearsA, () => {
     const yy = y + 92;
-    g.strokeStyle = C.red; g.lineWidth = 3;
+    g.strokeStyle = C.goldM; g.lineWidth = 3;
     g.beginPath(); g.moveTo(540 - 330 * yearsA, yy); g.lineTo(540 - 170, yy); g.moveTo(540 + 170, yy); g.lineTo(540 + 330 * yearsA, yy); g.stroke();
-    text(g, '1911 – 1993', 540, yy + 2, '700 40px Montserrat', C.red, 'center', 8);
+    text(g, '1911 – 1993', 540, yy + 2, '700 40px Montserrat', C.cream, 'center', 8);
   });
-  alpha(g, tagA, () => text(g, 'NOBEL ÖDÜLLÜ İNGİLİZ YAZAR', 540, y + 170 + (1 - tagA) * 12, '600 28px Montserrat', C.navy, 'center', 7));
+  alpha(g, tagA, () => text(g, 'NOBEL ÖDÜLLÜ İNGİLİZ YAZAR', 540, y + 170 + (1 - tagA) * 12, '600 28px Montserrat', rgb(C.cream, 0.85), 'center', 7));
 }
 
-// a plain, single-colour chapter page with one large title
-function chapterPage(g, lt, sc) {
-  const dur = sc.end - sc.start;
-  g.fillStyle = C.navy; g.fillRect(0, 0, W, H);
-  const lines = sc.title.split('|');
-  const a = ss(0.15, 0.6, lt);
-  const sz = Math.min(...lines.map(ln => fitFont(g, ln, 800, 112, 6, 920)));
-  const y0 = 900 - (lines.length - 1) * sz * 0.62;
-  lines.forEach((ln, i) => {
-    const la = ss(0.15 + i * 0.12, 0.65 + i * 0.12, lt);
-    alpha(g, la, () => text(g, ln, 540, y0 + i * sz * 1.24 + (1 - la) * 18, `800 ${sz}px Montserrat`, C.cream, 'center', 6));
+// a fountain pen, nib at (x, y), body rising to the upper right
+function fountainPen(g, x, y, rot = -0.85) {
+  at(g, x, y, 1, rot, () => {
+    g.fillStyle = 'rgba(5,15,10,0.35)';
+    g.beginPath(); g.ellipse(170, 26, 150, 14, 0, 0, TAU); g.fill();
+    const nib = new Path2D(); nib.moveTo(0, 0); nib.lineTo(48, -12); nib.lineTo(62, 0); nib.lineTo(48, 12); nib.closePath();
+    g.fillStyle = goldGrad(g, 0, -12, 60, 12); g.fill(nib);
+    g.strokeStyle = C.forestD; g.lineWidth = 2.5; g.stroke(nib);
+    g.beginPath(); g.moveTo(6, 0); g.lineTo(40, 0); g.stroke();
+    g.beginPath(); g.arc(40, 0, 3.5, 0, TAU); g.fillStyle = C.forestD; g.fill();
+    g.fillStyle = '#10261a'; g.beginPath(); g.roundRect(60, -14, 34, 28, 6); g.fill();
+    g.fillStyle = '#123322'; g.beginPath(); g.roundRect(92, -18, 230, 36, 16); g.fill();
+    g.fillStyle = 'rgba(255,255,255,0.12)'; g.fillRect(100, -13, 210, 6);
+    g.fillStyle = goldGrad(g, 120, -18, 140, 18); g.fillRect(118, -18, 14, 36); g.fillRect(286, -18, 8, 36);
+    g.fillRect(150, -22, 110, 5);
   });
-  const w = 160 * easeOut(ss(0.5, 1.1, lt));
-  g.fillStyle = C.gold;
-  g.fillRect(540 - w / 2, y0 + (lines.length - 1) * sz * 1.24 + sz * 0.85, w, 6);
+}
+// a chapter page: one colour, and a fountain pen writes the title, then underlines it
+function chapterPage(g, lt, sc) {
+  g.fillStyle = C.forest; g.fillRect(0, 0, W, H);
+  // the gutter of an open book on the left
+  const sp = g.createLinearGradient(0, 0, 140, 0);
+  sp.addColorStop(0, 'rgba(5,15,10,0.45)'); sp.addColorStop(1, 'rgba(5,15,10,0)');
+  g.fillStyle = sp; g.fillRect(0, 0, 140, H);
+  const lines = sc.title.split('|');
+  const sz = Math.min(...lines.map(ln => fitFont(g, ln, 800, 112, 6, 900)));
+  const lh = sz * 1.24, y0 = 900 - (lines.length - 1) * lh / 2;
+  g.font = `800 ${sz}px Montserrat`; g.letterSpacing = '6px';
+  const ws = lines.map(ln => g.measureText(ln).width);
+  g.letterSpacing = '0px';
+  const total = ws.reduce((a, b) => a + b, 0);
+  const wr = clamp(inv(0.45, 1.35, lt)) * total;        // how much has been written
+  let done = 0, pen = null;
+  lines.forEach((ln, i) => {
+    const y = y0 + i * lh, x0 = 540 - ws[i] / 2;
+    const show = clamp(wr - done, 0, ws[i]);
+    if (show > 0) {
+      g.save(); g.beginPath(); g.rect(x0 - 10, y - sz, show + 10, sz * 2); g.clip();
+      text(g, ln, 540, y, `800 ${sz}px Montserrat`, goldGrad(g, x0, y - sz / 2, x0 + ws[i], y + sz / 2), 'center', 6);
+      g.restore();
+      if (show < ws[i]) pen = [x0 + show, y + sz * 0.3 - Math.abs(Math.sin(show * 0.09)) * sz * 0.5];
+    }
+    done += ws[i];
+  });
+  // the underline
+  const uy = y0 + (lines.length - 1) * lh + sz * 0.78, ul = clamp(inv(1.38, 1.62, lt));
+  if (ul > 0) {
+    g.fillStyle = goldGrad(g, 460, uy, 620, uy + 6);
+    g.fillRect(460, uy, 160 * ul, 6);
+    if (ul < 1) pen = [460 + 160 * ul, uy + 3];
+  }
+  // the pen comes in, writes, then lifts away to the upper right
+  const first = [540 - ws[0] / 2, y0 + sz * 0.3];
+  if (lt < 0.45) pen = [lerp(1150, first[0], easeOut(inv(0.15, 0.45, lt))), lerp(1500, first[1], easeOut(inv(0.15, 0.45, lt)))];
+  if (lt >= 1.62) { const k = easeIn(inv(1.62, 1.95, lt)); pen = [lerp(620, 1300, k), lerp(uy + 3, uy - 700, k)]; }
+  if (!pen && lt < 1.62) pen = [460, uy + 3];
+  if (pen && lt > 0.15) fountainPen(g, pen[0], pen[1]);
 }

@@ -3,7 +3,7 @@
 // to the start of their scene; "*word*" marks a highlighted word. Scenes with
 // a "title" are plain chapter pages.
 window.TIMELINE = {
-  "duration": 177.4,
+  "duration": 178.6,
   "fps": 30,
   "scenes": [
     {
@@ -73,15 +73,15 @@ window.TIMELINE = {
     {
       "id": "ch_youth",
       "start": 30.6,
-      "end": 32.6,
+      "end": 32.8,
       "title": "ÇOCUKLUK VE|GENÇLİK YILLARI",
       "caps": [],
       "cues": {}
     },
     {
       "id": "house",
-      "start": 32.6,
-      "end": 45.0,
+      "start": 32.8,
+      "end": 45.2,
       "caps": [
         [
           0.5,
@@ -103,8 +103,8 @@ window.TIMELINE = {
     },
     {
       "id": "school",
-      "start": 45.0,
-      "end": 62.8,
+      "start": 45.2,
+      "end": 63.0,
       "caps": [
         [
           0.5,
@@ -132,16 +132,16 @@ window.TIMELINE = {
     },
     {
       "id": "ch_oxford",
-      "start": 62.8,
-      "end": 64.8,
+      "start": 63.0,
+      "end": 65.2,
       "title": "OXFORD YILLARI",
       "caps": [],
       "cues": {}
     },
     {
       "id": "oxford",
-      "start": 64.8,
-      "end": 76.4,
+      "start": 65.2,
+      "end": 76.8,
       "caps": [
         [
           0.5,
@@ -161,8 +161,8 @@ window.TIMELINE = {
     },
     {
       "id": "dark",
-      "start": 76.4,
-      "end": 85.4,
+      "start": 76.8,
+      "end": 85.8,
       "caps": [
         [
           0.5,
@@ -182,8 +182,8 @@ window.TIMELINE = {
     },
     {
       "id": "love",
-      "start": 85.4,
-      "end": 97.0,
+      "start": 85.8,
+      "end": 97.4,
       "caps": [
         [
           0.5,
@@ -211,16 +211,16 @@ window.TIMELINE = {
     },
     {
       "id": "ch_teacher",
-      "start": 97.0,
-      "end": 99.0,
+      "start": 97.4,
+      "end": 99.6,
       "title": "ÖĞRETMENLİK|YILLARI",
       "caps": [],
       "cues": {}
     },
     {
       "id": "teacher",
-      "start": 99.0,
-      "end": 112.6,
+      "start": 99.6,
+      "end": 113.2,
       "caps": [
         [
           0.5,
@@ -247,16 +247,16 @@ window.TIMELINE = {
     },
     {
       "id": "ch_war",
-      "start": 112.6,
-      "end": 114.6,
+      "start": 113.2,
+      "end": 115.4,
       "title": "İKİNCİ DÜNYA|SAVAŞI",
       "caps": [],
       "cues": {}
     },
     {
       "id": "war",
-      "start": 114.6,
-      "end": 137.4,
+      "start": 115.4,
+      "end": 138.2,
       "caps": [
         [
           0.5,
@@ -297,16 +297,16 @@ window.TIMELINE = {
     },
     {
       "id": "ch_hard",
-      "start": 137.4,
-      "end": 139.4,
+      "start": 138.2,
+      "end": 140.4,
       "title": "SAVAŞ SONRASI|ZOR ZAMANLAR",
       "caps": [],
       "cues": {}
     },
     {
       "id": "hard",
-      "start": 139.4,
-      "end": 156.4,
+      "start": 140.4,
+      "end": 157.4,
       "caps": [
         [
           0.5,
@@ -346,16 +346,16 @@ window.TIMELINE = {
     },
     {
       "id": "ch_last",
-      "start": 156.4,
-      "end": 158.4,
+      "start": 157.4,
+      "end": 159.6,
       "title": "SON YILLAR",
       "caps": [],
       "cues": {}
     },
     {
       "id": "honors",
-      "start": 158.4,
-      "end": 168.8,
+      "start": 159.6,
+      "end": 170.0,
       "caps": [
         [
           0.5,
@@ -379,8 +379,8 @@ window.TIMELINE = {
     },
     {
       "id": "end",
-      "start": 168.8,
-      "end": 177.4,
+      "start": 170.0,
+      "end": 178.6,
       "caps": [
         [
           0.5,
