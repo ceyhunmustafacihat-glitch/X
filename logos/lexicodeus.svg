@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="1080" height="1080">
+  <defs>
+    <linearGradient id="gold" gradientUnits="userSpaceOnUse" x1="310" y1="380" x2="770" y2="780">
+      <stop offset="0" stop-color="#EBD39B"/>
+      <stop offset="1" stop-color="#C7A56C"/>
+    </linearGradient>
+    <mask id="text" maskUnits="userSpaceOnUse" x="0" y="0" width="1080" height="1080">
+      <rect width="1080" height="1080" fill="#fff"/>
+      <g fill="none" stroke="#000" stroke-width="9" stroke-linecap="round"><path d="M364 488 C430 485 476 491 500 502"/><path d="M364 548 C430 545 476 551 500 562"/><path d="M364 608 C430 605 476 611 500 622"/><g transform="translate(1080 0) scale(-1 1)"><path d="M364 488 C430 485 476 491 500 502"/><path d="M364 548 C430 545 476 551 500 562"/><path d="M364 608 C430 605 476 611 500 622"/></g></g>
+    </mask>
+    <path id="page" d="M528 432 C470 396 392 384 322 398 L322 718 C392 704 470 714 528 748 Z"/>
+  </defs>
+  <rect width="1080" height="1080" fill="#9C1A25"/>
+  <g transform="translate(0 -40)">
+    <g fill="url(#gold)" mask="url(#text)">
+      <use href="#page"/>
+      <use href="#page" transform="translate(1080 0) scale(-1 1)"/>
+    </g>
+    <path d="M314 740 C392 726 470 736 540 774 C610 736 688 726 766 740" fill="none" stroke="url(#gold)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>
