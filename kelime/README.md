@@ -19,7 +19,7 @@ Tasarım bilinçli olarak sade tutuldu: kapakta motif yok, yazıların çevresin
 | 4,1–5 sn | Kitap aşağı iniyor, **ab** ekranın üstüne yerleşiyor ve üzerinden bir ışık geçiyor. | |
 | 5 sn | **KÖKEN:** Farsça · *āb* · آب | |
 | 8 sn | **ANLAM:** Altın bir damla düşüyor ve halkalar yayılıyor: **su** | Su damlası |
-| 11–19,5 sn | **ÖRNEK:** “Efsaneye göre Hızır, **ab-ı hayat**tan içerek ölümsüzlüğe kavuştu.” Cümle kelime kelime beliriyor. Ardından bütün bilgiler yaklaşık 7 saniye boyunca ekranda kalıyor. | |
+| 11–19,5 sn | **ÖRNEK:** “Çölde yol alan kervan için bir yudum **ab**, altından daha değerliydi.” Cümle kelime kelime beliriyor. Ardından bütün bilgiler yaklaşık 7 saniye boyunca ekranda kalıyor. | |
 | 19,5–21,6 sn | Yazılar dağılıyor, kitap geri geliyor, **ab** sayfadaki yerine iniyor. | İnen arpej |
 | 21,6–23,3 sn | Sayfalar geri çevriliyor, kapak kapanıyor. Son kare ilk kareyle aynı olduğu için video kesintisiz dönüyor. | Kapanış, başa bağlanan akor |
 

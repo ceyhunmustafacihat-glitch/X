@@ -5,8 +5,8 @@ window.WORD = {
   "origin": { "lang": "Farsça", "translit": "āb", "native": "آب" },
   "meaning": "su",
   "example": {
-    "text": "Efsaneye göre Hızır, ab-ı hayattan içerek ölümsüzlüğe kavuştu.",
-    "highlight": "ab-ı hayat"
+    "text": "Çölde yol alan kervan için bir yudum ab, altından daha değerliydi.",
+    "highlight": "ab"
   },
   "motif": "water"
 };

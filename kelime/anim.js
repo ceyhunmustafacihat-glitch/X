@@ -457,7 +457,13 @@ function revealIn(ctx, k, dy, fn) {
   ctx.restore();
 }
 function sentenceWords(text, hl) {
-  const i0 = hl ? text.indexOf(hl) : -1, i1 = i0 + (hl ? hl.length : 0);
+  // vurguyu ayrı bir kelime olarak ara (ör. "ab", "kervan" ya da "abanmak" içinde değil)
+  const isLetter = c => !!c && /\p{L}/u.test(c);
+  let i0 = -1;
+  for (let i = hl ? text.indexOf(hl) : -1; i >= 0; i = text.indexOf(hl, i + 1))
+    if (!isLetter(text[i - 1]) && !isLetter(text[i + hl.length])) { i0 = i; break; }
+  if (i0 < 0 && hl) i0 = text.indexOf(hl);
+  const i1 = i0 + (hl ? hl.length : 0);
   const words = [];
   let cur = [], run = null;
   for (let i = 0; i <= text.length; i++) {
