@@ -4,6 +4,8 @@ Instagram Reels için 9:16 dikey (1080 × 1920), 32 saniyelik 2D animasyon.
 Sosyal medyada amaçsızca vakit geçiren bir genç, [@sozlukdeus](https://www.instagram.com/sozlukdeus/) sayfasının bir kelime paylaşımına rastlar;
 tek bir kelimenin uyandırdığı merak, zihnindeki ve odasındaki değişimi başlatır.
 
+**Günün kelimesi videoları:** [`kelime/`](kelime/README.md) klasöründe (ilk kelime: “ab”, [`output/kelime_ab.mp4`](output/kelime_ab.mp4)).
+
 **Video:** [`output/sozlukdeus_reels.mp4`](output/sozlukdeus_reels.mp4)
 H.264 High, 1080×1920, 30 fps, yuv420p, AAC 48 kHz stereo, yaklaşık 30 MB, yaklaşık −12 LUFS.
 
