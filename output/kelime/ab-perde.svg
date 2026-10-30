@@ -11,7 +11,6 @@
 <defs>
 <filter id="golge" x="-10%" y="-30%" width="120%" height="160%"><feDropShadow dx="0" dy="1" stdDeviation="1.5" flood-color="#000" flood-opacity="0.75"/><feDropShadow dx="0" dy="3" stdDeviation="9" flood-color="#000" flood-opacity="0.6"/></filter>
 <linearGradient id="altinBaslik" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ead29c"/><stop offset="1" stop-color="#d1ad73"/></linearGradient>
-<radialGradient id="hale"><stop offset="0" stop-color="#3a070d" stop-opacity="0.62"/><stop offset="0.55" stop-color="#3a070d" stop-opacity="0.4"/><stop offset="1" stop-color="#3a070d" stop-opacity="0"/></radialGradient>
 </defs>
 <g id="arka-plan">
 <defs>
@@ -124,15 +123,11 @@
   <path d="M1070 1290C1010 1272 944 1290 908 1328" fill="none" stroke="#5b6567" stroke-width="3" stroke-linecap="round" opacity="0.7"/></g>
 <g id="karartma"><rect width="1080" height="1440" fill="url(#perde)"/><rect width="1080" height="1440" fill="url(#vinyet)"/></g>
 </g>
-<rect id="sablon-karartma" width="1080" height="1440" fill="#9b1b26" opacity="0.32"/>
-<g id="okunurluk">
-<ellipse cx="540" cy="450" rx="300" ry="125" fill="url(#hale)"/>
-<ellipse cx="508" cy="633" rx="542" ry="107" fill="url(#hale)"/>
-<ellipse cx="540" cy="938" rx="561" ry="161" fill="url(#hale)"/>
-</g>
+<rect id="sablon-karartma" width="1080" height="1440" fill="#9b1b26" opacity="0.6" style="mix-blend-mode:color"/>
+<rect id="sablon-koyu" width="1080" height="1440" fill="#000" opacity="0.3"/>
 <g id="yazi" font-family="Montserrat, sans-serif" fill="#ffffff" filter="url(#golge)" xml:space="preserve">
-<text x="540" y="454" text-anchor="middle" font-size="70" font-weight="800" letter-spacing="-0.6" fill="url(#altinBaslik)">“Ab”</text>
-<text x="540" y="494" text-anchor="middle" font-size="25" font-style="italic" font-weight="500" fill-opacity="0.92">Sözlük</text>
+<text x="540" y="454" text-anchor="middle" font-size="96" font-weight="800" letter-spacing="-1" fill="url(#altinBaslik)">“Ab”</text>
+<text x="540" y="494" text-anchor="middle" font-size="21" font-style="italic" font-weight="500" letter-spacing="1" fill-opacity="0.8">(sözlük)</text>
 <rect x="111" y="593" width="3" height="82" fill-opacity="0.9" fill="#e3c58a"/>
 <text x="146" y="645" font-size="32"><tspan font-weight="500">Farsça kökenli bir kelime olup</tspan><tspan font-weight="700" fill="#e3c58a"> "su"</tspan><tspan font-weight="500"> demektir.</tspan></text>
 <text x="540" y="903" text-anchor="middle" font-size="35"><tspan font-weight="500">"Kelâm, gönülden doğmadıkça dudaklarda</tspan></text>

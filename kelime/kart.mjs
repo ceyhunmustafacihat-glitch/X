@@ -14,9 +14,10 @@ const W = 1080, H = 1440;
 const KARARTMA = 0.2;
 const word = await import(path.join(root, 'kelime/kelimeler', `${slug}.mjs`));
 // Kelime dosyası isterse renk teması verir: yazı rengi, vurgu (kalın kelimeler ve tanım çizgisi),
-// karartma oranı ve rengi (perde), yazıların arkasındaki yumuşak koyulaştırmanın (hale) rengi ve
-// büyük kelimenin rengi (baslik: 'altin' verilirse logodaki kitabın altın gradyanı).
-const tema = { yazi: '#ffffff', vurgu: null, karartma: KARARTMA, perde: '#000000', hale: '#000000', baslik: null, ...word.tema };
+// karartma oranı ve rengi (perde), perdenin karışım modu (karisim: 'color' verilirse sahnenin renkleri
+// perde rengine çevrilir, iki tonlu fotoğraf gibi), ek siyah koyulaştırma (koyu) ve büyük kelimenin rengi
+// (baslik: 'altin' verilirse logodaki kitabın altın gradyanı).
+const tema = { yazi: '#ffffff', vurgu: null, karartma: KARARTMA, perde: '#000000', karisim: null, koyu: 0, baslik: null, ...word.tema };
 
 // Montserrat'ı SVG'nin içine gömüyoruz: dosya her tarayıcıda aynı görünür.
 // Illustrator gömülü fontu okumaz; orada bilgisayarda Montserrat kurulu olmalı.
@@ -73,28 +74,22 @@ const textLayer = await page.evaluate(({ W, H, kelime, tanim, ornek, tema }) => 
     return runs.map((r) => `<tspan font-weight="${r.b ? 700 : 500}"${r.b && tema.vurgu ? ` fill="${tema.vurgu}"` : ''}>${esc(r.t)}</tspan>`).join('');
   };
 
-  // her yazı bloğunun arkasına kenarsız, yumuşak bir koyulaştırma (hale)
-  const out = [], halo = [];
-  const addHalo = (x, y, rx, ry) => halo.push(`<ellipse cx="${Math.round(x)}" cy="${Math.round(y)}" rx="${Math.round(rx)}" ry="${Math.round(ry)}" fill="url(#hale)"/>`);
+  const out = [];
   const cx = W / 2;
   const wy = Math.round(H * 0.297 + 26);
-  out.push(`<text x="${cx}" y="${wy}" text-anchor="middle" font-size="70" font-weight="800" letter-spacing="-0.6"${tema.baslik === 'altin' ? ' fill="url(#altinBaslik)"' : ''}>“${esc(kelime)}”</text>`);
-  out.push(`<text x="${cx}" y="${wy + 40}" text-anchor="middle" font-size="25" font-style="italic" font-weight="500" fill-opacity="0.92">Sözlük</text>`);
-  addHalo(cx, wy - 4, 300, 125);
+  out.push(`<text x="${cx}" y="${wy}" text-anchor="middle" font-size="96" font-weight="800" letter-spacing="-1"${tema.baslik === 'altin' ? ' fill="url(#altinBaslik)"' : ''}>“${esc(kelime)}”</text>`);
+  // sözlükten alınmış bir kelime olduğunu anlatan küçük not
+  out.push(`<text x="${cx}" y="${wy + 40}" text-anchor="middle" font-size="21" font-style="italic" font-weight="500" letter-spacing="1" fill-opacity="0.8">(sözlük)</text>`);
 
   const dl = wrap(tanim, 32, W * 0.76), dLH = 44;
   const dy0 = Math.round(H * 0.448 - (dl.length - 1) * dLH / 2);
   out.push(`<rect x="${Math.round(W * 0.103)}" y="${dy0 - 52}" width="3" height="${(dl.length - 1) * dLH + 82}" fill-opacity="0.9"${tema.vurgu ? ` fill="${tema.vurgu}"` : ''}/>`);
   dl.forEach((ln, i) => out.push(`<text x="${Math.round(W * 0.135)}" y="${dy0 + i * dLH}" font-size="32">${tspans(ln)}</text>`));
-  const dW = Math.max(...dl.widths);
-  addHalo(W * 0.135 + dW / 2, dy0 - 12 + (dl.length - 1) * dLH / 2, dW / 2 + 180, dl.length * dLH / 2 + 85);
 
   const el = wrap(ornek, 35, W * 0.76), eLH = 47;
   const ey0 = Math.round(H * 0.66 - (el.length - 1) * eLH / 2);
   el.forEach((ln, i) => out.push(`<text x="${cx}" y="${ey0 + i * eLH}" text-anchor="middle" font-size="35">${tspans(ln)}</text>`));
-  const eW = Math.max(...el.widths);
-  addHalo(cx, ey0 - 12 + (el.length - 1) * eLH / 2, eW / 2 + 180, el.length * eLH / 2 + 90);
-  return { text: out.join('\n'), halo: halo.join('\n') };
+  return out.join('\n');
 }, { W, H, kelime: word.kelime, tanim: word.tanim, ornek: word.ornek, tema });
 
 
@@ -104,17 +99,14 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" 
 <defs>
 <filter id="golge" x="-10%" y="-30%" width="120%" height="160%"><feDropShadow dx="0" dy="1" stdDeviation="1.5" flood-color="#000" flood-opacity="0.75"/><feDropShadow dx="0" dy="3" stdDeviation="9" flood-color="#000" flood-opacity="0.6"/></filter>
 <linearGradient id="altinBaslik" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ead29c"/><stop offset="1" stop-color="#d1ad73"/></linearGradient>
-<radialGradient id="hale"><stop offset="0" stop-color="${tema.hale}" stop-opacity="0.62"/><stop offset="0.55" stop-color="${tema.hale}" stop-opacity="0.4"/><stop offset="1" stop-color="${tema.hale}" stop-opacity="0"/></radialGradient>
 </defs>
 <g id="arka-plan">
 ${word.sahne(W, H)}
 </g>
-<rect id="sablon-karartma" width="${W}" height="${H}" fill="${tema.perde}" opacity="${tema.karartma}"/>
-<g id="okunurluk">
-${textLayer.halo}
-</g>
+<rect id="sablon-karartma" width="${W}" height="${H}" fill="${tema.perde}" opacity="${tema.karartma}"${tema.karisim ? ` style="mix-blend-mode:${tema.karisim}"` : ''}/>${tema.koyu ? `
+<rect id="sablon-koyu" width="${W}" height="${H}" fill="#000" opacity="${tema.koyu}"/>` : ''}
 <g id="yazi" font-family="Montserrat, sans-serif" fill="${tema.yazi}" filter="url(#golge)" xml:space="preserve">
-${textLayer.text}
+${textLayer}
 </g>
 </svg>
 `;
