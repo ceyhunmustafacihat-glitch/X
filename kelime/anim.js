@@ -620,22 +620,60 @@ window.init = function (cv) {
   makeTextures();
   makeBackground();
 };
-// Kapak görseli: kelime (isteğe bağlı olarak altında kökeni), dikey ortada (Instagram ızgarasındaki 3:4 kırpmada da tam görünür).
+// Kapak görseli: kelime (isteğe bağlı olarak altında kökeni), dikey ortada.
+// Bütün kapaklarda punto aynıdır, böylece Reels ızgarasında yan yana dizilen kapaklar birbirini tutar.
+// Tek satıra sığmayan kelime küçültülmez; hece sınırından (ya da boşluktan) iki satıra bölünür.
+const COVER_SIZE = 180, COVER_MAXW = 920;
+function syllableBreaks(w) {
+  // Türkçe heceleme: ünlüler arasında tek ünsüz sonraki heceye geçer, birden çok ünsüzün sonuncusu geçer.
+  const V = /[aeıioöuüâîû]/i, vowels = [];
+  for (let i = 0; i < w.length; i++) if (V.test(w[i])) vowels.push(i);
+  const out = [];
+  for (let k = 1; k < vowels.length; k++) {
+    const a = vowels[k - 1], b = vowels[k], gap = w.slice(a + 1, b);
+    if (/[^\p{L}]/u.test(gap)) continue;          // tire ya da kesme işareti: o noktadan ayrıca bölünür
+    out.push(b - (b - a > 1 ? 1 : 0));
+  }
+  return out;
+}
+function coverLines(ctx, word) {
+  ctx.font = `700 ${COVER_SIZE}px Montserrat`; ctx.letterSpacing = (COVER_SIZE * 0.015) + 'px';
+  const wd = t => ctx.measureText(t).width;
+  if (wd(word) <= COVER_MAXW) return [word];
+  const cands = [];
+  for (let i = 1; i < word.length; i++) {
+    if (word[i - 1] === ' ') cands.push([word.slice(0, i - 1), word.slice(i)]);
+    else if (word[i - 1] === '-') cands.push([word.slice(0, i), word.slice(i)]);
+  }
+  if (!cands.length) for (const b of syllableBreaks(word)) cands.push([word.slice(0, b) + '-', word.slice(b)]);
+  if (!cands.length) return [word];
+  cands.sort((p, q) => Math.max(wd(p[0]), wd(p[1])) - Math.max(wd(q[0]), wd(q[1])));
+  return cands[0];
+}
 window.renderCover = function (withOrigin) {
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; ctx.filter = 'none';
   drawBackground(ctx);
   drawParticles(ctx, 0, 0);
-  const size = fitFont(ctx, 700, 360, 'Montserrat', WORD.word, 940, 5), y = withOrigin ? 1000 : 960 + size * 0.35;
   ctx.save();
+  const lines = coverLines(ctx, WORD.word);
+  let size = COVER_SIZE;
+  const widest = Math.max(...lines.map(l => ctx.measureText(l).width));
+  if (widest > COVER_MAXW) size = Math.floor(COVER_SIZE * COVER_MAXW / widest);   // yalnızca çok istisnai uzunlukta
+  const lh = size * 1.08, originGap = withOrigin ? 130 : 0;
+  const block = (lines.length - 1) * lh + originGap;
+  let y = 960 + size * 0.35 - block / 2;
   ctx.font = `700 ${size}px Montserrat`; ctx.letterSpacing = (size * 0.015) + 'px'; ctx.textAlign = 'center';
   ctx.shadowColor = 'rgba(255,190,100,0.5)'; ctx.shadowBlur = size * 0.22;
-  ctx.fillStyle = goldGrad(ctx, y - size * 0.74, y + size * 0.04);
-  ctx.fillText(WORD.word, W / 2, y);
+  for (const l of lines) {
+    ctx.fillStyle = goldGrad(ctx, y - size * 0.74, y + size * 0.04);
+    ctx.fillText(l, W / 2 + size * 0.0075, y);
+    y += lh;
+  }
   ctx.restore();
   if (!withOrigin) return;
-  const sz = fitFont(ctx, 600, 84, 'Montserrat', WORD.origin.lang, 940);
-  runsLine(ctx, [{ t: WORD.origin.lang, font: `600 ${sz}px Montserrat`, size: sz }], W / 2, y + 150, 1);
+  const sz = fitFont(ctx, 600, 72, 'Montserrat', WORD.origin.lang, 940);
+  runsLine(ctx, [{ t: WORD.origin.lang, font: `600 ${sz}px Montserrat`, size: sz }], W / 2, y - lh + originGap, 1);
 };
 window.renderFrame = function (t) {
   t = ((t % T) + T) % T;

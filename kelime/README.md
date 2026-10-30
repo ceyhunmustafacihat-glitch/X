@@ -35,6 +35,7 @@ Yayından önce tanımı [sozluk.gov.tr](https://sozluk.gov.tr) üzerinden teyit
    `word`, `origin` (`lang`, `translit`, isteğe bağlı `native`: özgün yazılışı), `meaning`, `example` (`text`, vurgulanacak `highlight`) ve `motif`.
    `motif: "water"` damla ile halka efektini açar; başka kelimelerde bu alanı silebilirsiniz.
 2. Uzun kelimeler ve tanımlar ekrana sığacak şekilde otomatik küçültülür. Örnek cümle satırlara kendiliğinden bölünür.
+   Kapak görsellerinde kelime her zaman aynı puntoyla (180 px) yazılır, böylece Reels ızgarasında yan yana dizilen kapakların hepsi aynı büyüklükte görünür. Tek satıra sığmayan bir kelime küçültülmez; Türkçe hece kurallarına göre iki satıra bölünür (ör. “abdest-sizlik”, “muvaffa-kiyetsizlik”). Birden çok kelimeden oluşan maddeler boşluktan ya da tireden bölünür.
 3. Üretim:
 
 ```bash
