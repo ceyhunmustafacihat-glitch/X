@@ -8,6 +8,14 @@ Tasarım bilinçli olarak sade tutuldu: kapakta motif yok, yazıların çevresin
 - **Sessiz** (Instagram'da kendi müziğinizi eklemek için): [`output/kelime_ab_sessiz.mp4`](../output/kelime_ab_sessiz.mp4)
 - **Kapak görseli** (9:16 dikey): yalnızca kelime [`output/kelime_ab_kapak.jpg`](../output/kelime_ab_kapak.jpg), altında kökeniyle [`output/kelime_ab_kapak_koken.jpg`](../output/kelime_ab_kapak_koken.jpg)
 
+Aynı şablonla yapılan diğer kelimeler:
+
+| Kelime | Köken | Anlam | Video | Kapak |
+|---|---|---|---|---|
+| **aba** | Arapça (abā · عباء) | yünden yapılmış kalın kumaş | [`kelime_aba.mp4`](../output/kelime_aba.mp4) · [sessiz](../output/kelime_aba_sessiz.mp4) | [`kelime_aba_kapak.jpg`](../output/kelime_aba_kapak.jpg) · [kökenli](../output/kelime_aba_kapak_koken.jpg) |
+
+“aba” için örnek cümle: “Kış gecesinde yaşlı çoban, kalın **aba**sına sarınıp ateşin başında uyudu.” TDK'de “aba” adıyla iki madde var; burada Arapça kökenli olan birinci madde kullanıldı.
+
 ![Kareler](storyboard.jpg)
 
 ## Akış
@@ -33,13 +41,15 @@ Yayından önce tanımı [sozluk.gov.tr](https://sozluk.gov.tr) üzerinden teyit
 
 1. `kelime/words/ab.js` dosyasını kopyalayın (ör. `words/inşirah.js` yerine `words/insirah.js`) ve alanları doldurun:
    `word`, `origin` (`lang`, `translit`, isteğe bağlı `native`: özgün yazılışı), `meaning`, `example` (`text`, vurgulanacak `highlight`) ve `motif`.
-   `motif: "water"` damla ile halka efektini açar; başka kelimelerde bu alanı silebilirsiniz.
+   `motif: "water"` damla ile halka efektini ve damla sesini açar; başka kelimelerde bu alanı silebilirsiniz (ör. `words/aba.js`).
+   Tanım tek satıra rahatça sığmıyorsa iki satıra bölünür.
+   Sözlük sayfası: kelime “a” bölümünün ilk sayfasındaysa (a, ab, aba, abacı…) gerçek madde başları görünür. Değilse komşu maddeler okunmayan çubuklar olarak çizilir ve sayfada yalnızca kelimenin kendisi yazılır. Sol sayfadaki büyük harf, kelimenin baş harfidir.
 2. Uzun kelimeler ve tanımlar ekrana sığacak şekilde otomatik küçültülür. Örnek cümle satırlara kendiliğinden bölünür.
    Kapak görsellerinde kelime her zaman aynı puntoyla (180 px) yazılır, böylece Reels ızgarasında yan yana dizilen kapakların hepsi aynı büyüklükte görünür. Tek satıra sığmayan bir kelime küçültülmez; Türkçe hece kurallarına göre iki satıra bölünür (ör. “abdest-sizlik”, “muvaffa-kiyetsizlik”). Birden çok kelimeden oluşan maddeler boşluktan ya da tireden bölünür.
 3. Üretim:
 
 ```bash
-python3 kelime/audio.py                 # kelime/out/soundtrack.wav
+python3 kelime/audio.py insirah         # kelime/out/soundtrack_insirah.wav
 node kelime/render.mjs --word insirah    # output/kelime_insirah.mp4 ve _sessiz.mp4
 node kelime/cover.mjs --word insirah     # output/kelime_insirah_kapak.jpg ve _kapak_koken.jpg
 ```
