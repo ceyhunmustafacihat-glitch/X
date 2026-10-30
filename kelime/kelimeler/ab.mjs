@@ -3,10 +3,10 @@
 import { rng, pine } from '../sahne.mjs';
 
 export const kelime = 'Ab';
+export const koken = 'Farsça';
 export const tanim = [
-  { t: 'Farsça kökenli bir kelime olup ' },
-  { t: '"su"', b: true },
-  { t: ' demektir.' },
+  { t: 'Su', b: true },
+  { t: '; mecaz anlamda parlaklık, tazelik.' },
 ];
 export const ornek = [
   { t: '"Kelâm, gönülden doğmadıkça dudaklarda kurur; gönülden doğarsa, çorak ruhlara ' },

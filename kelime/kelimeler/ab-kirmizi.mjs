@@ -1,7 +1,7 @@
 // "Ab" kartının kırmızı-altın sürümü: profil logosunun paletiyle (kırmızı zemin, altın tonları)
 // düz renkli, serigrafi gibi bir sahne. Yazılar ab.mjs ile aynı.
 import { rng, pine } from '../sahne.mjs';
-export { kelime, tanim, ornek } from './ab.mjs';
+export { kelime, koken, tanim, ornek } from './ab.mjs';
 
 export const tema = { yazi: '#fff5e1', vurgu: '#ecd5a0', karartma: 0.08, hale: '#2a050a' };
 

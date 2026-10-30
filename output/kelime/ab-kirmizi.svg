@@ -37,9 +37,9 @@
 <rect id="sablon-karartma" width="1080" height="1440" fill="#000000" opacity="0.08"/>
 <g id="yazi" font-family="Montserrat, sans-serif" fill="#fff5e1" filter="url(#golge)" xml:space="preserve">
 <text x="540" y="454" text-anchor="middle" font-size="96" font-weight="800" letter-spacing="-1">“Ab”</text>
-<text x="540" y="494" text-anchor="middle" font-size="21" font-style="italic" font-weight="500" letter-spacing="1" fill-opacity="0.8">(sözlük)</text>
+<text x="540" y="496" text-anchor="middle" font-size="25" font-style="italic" font-weight="500" letter-spacing="0.5" fill-opacity="0.88">(Farsça)</text>
 <rect x="111" y="593" width="3" height="82" fill-opacity="0.9" fill="#ecd5a0"/>
-<text x="146" y="645" font-size="32"><tspan font-weight="500">Farsça kökenli bir kelime olup</tspan><tspan font-weight="700" fill="#ecd5a0"> "su"</tspan><tspan font-weight="500"> demektir.</tspan></text>
+<text x="146" y="645" font-size="32"><tspan font-weight="700" fill="#ecd5a0">Su</tspan><tspan font-weight="500">; mecaz anlamda parlaklık, tazelik.</tspan></text>
 <text x="540" y="903" text-anchor="middle" font-size="35"><tspan font-weight="500">"Kelâm, gönülden doğmadıkça dudaklarda</tspan></text>
 <text x="540" y="950" text-anchor="middle" font-size="35"><tspan font-weight="500">kurur; gönülden doğarsa, çorak ruhlara</tspan><tspan font-weight="700" fill="#ecd5a0"> âb</tspan></text>
 <text x="540" y="997" text-anchor="middle" font-size="35"><tspan font-weight="500">olur."</tspan></text>

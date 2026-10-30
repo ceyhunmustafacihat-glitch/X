@@ -38,7 +38,7 @@ await page.setContent(`<style>${fontCss}</style><body style="margin:0"></body>`)
 await page.evaluate(() => Promise.all(['800 70px Montserrat', '700 32px Montserrat', '500 32px Montserrat', 'italic 500 25px Montserrat']
   .map((f) => document.fonts.load(f, 'Şğİıöçü'))));
 
-const textLayer = await page.evaluate(({ W, H, kelime, tanim, ornek, tema }) => {
+const textLayer = await page.evaluate(({ W, H, kelime, koken, tanim, ornek, tema }) => {
   const g = document.createElement('canvas').getContext('2d');
   const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   const font = (px, b) => `${b ? 700 : 500} ${px}px Montserrat`;
@@ -78,8 +78,8 @@ const textLayer = await page.evaluate(({ W, H, kelime, tanim, ornek, tema }) => 
   const cx = W / 2;
   const wy = Math.round(H * 0.297 + 26);
   out.push(`<text x="${cx}" y="${wy}" text-anchor="middle" font-size="96" font-weight="800" letter-spacing="-1"${tema.baslik === 'altin' ? ' fill="url(#altinBaslik)"' : ''}>“${esc(kelime)}”</text>`);
-  // sözlükten alınmış bir kelime olduğunu anlatan küçük not
-  out.push(`<text x="${cx}" y="${wy + 40}" text-anchor="middle" font-size="21" font-style="italic" font-weight="500" letter-spacing="1" fill-opacity="0.8">(sözlük)</text>`);
+  // kelimenin altında parantez içinde, italik kökeni (kelime dosyası vermezse "sözlük")
+  out.push(`<text x="${cx}" y="${wy + 42}" text-anchor="middle" font-size="25" font-style="italic" font-weight="500" letter-spacing="0.5" fill-opacity="0.88">(${esc(koken ?? 'sözlük')})</text>`);
 
   const dl = wrap(tanim, 32, W * 0.76), dLH = 44;
   const dy0 = Math.round(H * 0.448 - (dl.length - 1) * dLH / 2);
@@ -90,7 +90,7 @@ const textLayer = await page.evaluate(({ W, H, kelime, tanim, ornek, tema }) => 
   const ey0 = Math.round(H * 0.66 - (el.length - 1) * eLH / 2);
   el.forEach((ln, i) => out.push(`<text x="${cx}" y="${ey0 + i * eLH}" text-anchor="middle" font-size="35">${tspans(ln)}</text>`));
   return out.join('\n');
-}, { W, H, kelime: word.kelime, tanim: word.tanim, ornek: word.ornek, tema });
+}, { W, H, kelime: word.kelime, koken: word.koken ?? null, tanim: word.tanim, ornek: word.ornek, tema });
 
 
 const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
