@@ -14,8 +14,9 @@ const W = 1080, H = 1440;
 const KARARTMA = 0.2;
 const word = await import(path.join(root, 'kelime/kelimeler', `${slug}.mjs`));
 // Kelime dosyası isterse renk teması verir: yazı rengi, vurgu (kalın kelimeler ve tanım çizgisi),
-// karartma oranı ve yazıların arkasındaki yumuşak koyulaştırmanın (hale) rengi.
-const tema = { yazi: '#ffffff', vurgu: null, karartma: KARARTMA, hale: '#000000', ...word.tema };
+// karartma oranı ve rengi (perde), yazıların arkasındaki yumuşak koyulaştırmanın (hale) rengi ve
+// büyük kelimenin rengi (baslik: 'altin' verilirse logodaki kitabın altın gradyanı).
+const tema = { yazi: '#ffffff', vurgu: null, karartma: KARARTMA, perde: '#000000', hale: '#000000', baslik: null, ...word.tema };
 
 // Montserrat'ı SVG'nin içine gömüyoruz: dosya her tarayıcıda aynı görünür.
 // Illustrator gömülü fontu okumaz; orada bilgisayarda Montserrat kurulu olmalı.
@@ -77,7 +78,7 @@ const textLayer = await page.evaluate(({ W, H, kelime, tanim, ornek, tema }) => 
   const addHalo = (x, y, rx, ry) => halo.push(`<ellipse cx="${Math.round(x)}" cy="${Math.round(y)}" rx="${Math.round(rx)}" ry="${Math.round(ry)}" fill="url(#hale)"/>`);
   const cx = W / 2;
   const wy = Math.round(H * 0.297 + 26);
-  out.push(`<text x="${cx}" y="${wy}" text-anchor="middle" font-size="70" font-weight="800" letter-spacing="-0.6">“${esc(kelime)}”</text>`);
+  out.push(`<text x="${cx}" y="${wy}" text-anchor="middle" font-size="70" font-weight="800" letter-spacing="-0.6"${tema.baslik === 'altin' ? ' fill="url(#altinBaslik)"' : ''}>“${esc(kelime)}”</text>`);
   out.push(`<text x="${cx}" y="${wy + 40}" text-anchor="middle" font-size="25" font-style="italic" font-weight="500" fill-opacity="0.92">Sözlük</text>`);
   addHalo(cx, wy - 4, 300, 125);
 
@@ -102,12 +103,13 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" 
 <style>${fontCss}</style>
 <defs>
 <filter id="golge" x="-10%" y="-30%" width="120%" height="160%"><feDropShadow dx="0" dy="1" stdDeviation="1.5" flood-color="#000" flood-opacity="0.75"/><feDropShadow dx="0" dy="3" stdDeviation="9" flood-color="#000" flood-opacity="0.6"/></filter>
+<linearGradient id="altinBaslik" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ead29c"/><stop offset="1" stop-color="#d1ad73"/></linearGradient>
 <radialGradient id="hale"><stop offset="0" stop-color="${tema.hale}" stop-opacity="0.62"/><stop offset="0.55" stop-color="${tema.hale}" stop-opacity="0.4"/><stop offset="1" stop-color="${tema.hale}" stop-opacity="0"/></radialGradient>
 </defs>
 <g id="arka-plan">
 ${word.sahne(W, H)}
 </g>
-<rect id="sablon-karartma" width="${W}" height="${H}" fill="#000" opacity="${tema.karartma}"/>
+<rect id="sablon-karartma" width="${W}" height="${H}" fill="${tema.perde}" opacity="${tema.karartma}"/>
 <g id="okunurluk">
 ${textLayer.halo}
 </g>
