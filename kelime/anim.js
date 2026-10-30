@@ -42,30 +42,6 @@ function goldGrad(g, y0, y1) {
   gr.addColorStop(1, '#f7dc96');
   return gr;
 }
-// sekiz köşeli yıldız (iç içe iki kare)
-function star8(g, cx, cy, r, inner = 0.62) {
-  g.beginPath();
-  for (let i = 0; i < 16; i++) {
-    const a = -Math.PI / 2 + i * Math.PI / 8, rr = i % 2 ? r * inner : r;
-    g.lineTo(cx + Math.cos(a) * rr, cy + Math.sin(a) * rr);
-  }
-  g.closePath();
-}
-function rubElHizb(g, cx, cy, r, rot = 0) {
-  g.beginPath();
-  for (const off of [0, Math.PI / 4]) {
-    for (let i = 0; i < 4; i++) {
-      const a = rot + off + i * Math.PI / 2 + Math.PI / 4;
-      const x = cx + Math.cos(a) * r, y = cy + Math.sin(a) * r;
-      i ? g.lineTo(x, y) : g.moveTo(x, y);
-    }
-    g.closePath();
-  }
-}
-function diamond(g, x, y, r) {
-  g.beginPath(); g.moveTo(x, y - r); g.lineTo(x + r, y); g.lineTo(x, y + r); g.lineTo(x - r, y); g.closePath();
-}
-
 // ------------------------------------------------------------------ kitap ölçüleri
 const BW = 500, BH = 700;           // kapak
 const PW = 484, PH = 676;           // sayfa
@@ -95,35 +71,15 @@ function makeCoverFront() {
   sp.addColorStop(0, 'rgba(0,0,0,0.45)'); sp.addColorStop(0.45, 'rgba(0,0,0,0.15)');
   sp.addColorStop(0.55, 'rgba(255,200,180,0.10)'); sp.addColorStop(1, 'rgba(0,0,0,0)');
   g.fillStyle = sp; g.fillRect(0, 0, 40, BH);
-  // yaldız çerçeve
-  const gold = goldGrad(g, 0, BH);
-  g.strokeStyle = gold; g.lineWidth = 3.2; g.strokeRect(48, 34, BW - 82, BH - 68);
-  g.lineWidth = 1.2; g.strokeRect(58, 44, BW - 102, BH - 88);
-  g.fillStyle = gold;
-  for (const [x, y] of [[48, 34], [BW - 34, 34], [48, BH - 34], [BW - 34, BH - 34]]) { star8(g, x, y, 11); g.fill(); }
   // başlık
   g.textAlign = 'center'; g.textBaseline = 'alphabetic';
   g.font = '800 54px Montserrat'; g.letterSpacing = '9px';
-  const cx = (48 + BW - 34) / 2 + 4.5;
-  for (const [txt, y] of [['TÜRKÇE', 236], ['SÖZLÜK', 306]]) {
+  const cx = (36 + BW) / 2 + 4.5;
+  for (const [txt, y] of [['TÜRKÇE', 330], ['SÖZLÜK', 400]]) {
     g.fillStyle = 'rgba(40,0,0,0.55)'; g.fillText(txt, cx + 1.5, y + 2.5);
     g.fillStyle = goldGrad(g, y - 44, y + 4); g.fillText(txt, cx, y);
   }
   g.letterSpacing = '0px';
-  // ayraç
-  g.strokeStyle = gold; g.lineWidth = 1.4;
-  g.beginPath(); g.moveTo(cx - 4.5 - 110, 350); g.lineTo(cx - 4.5 - 16, 350); g.moveTo(cx - 4.5 + 16, 350); g.lineTo(cx - 4.5 + 110, 350); g.stroke();
-  diamond(g, cx - 4.5, 350, 6); g.fillStyle = gold; g.fill();
-  // madalyon
-  const mx = cx - 4.5, my = 480;
-  g.lineWidth = 2.2; rubElHizb(g, mx, my, 70); g.stroke();
-  g.lineWidth = 1.2; g.beginPath(); g.arc(mx, my, 44, 0, TAU); g.stroke();
-  g.beginPath(); g.arc(mx, my, 88, 0, TAU); g.stroke();
-  star8(g, mx, my, 24, 0.5); g.fill();
-  for (let i = 0; i < 8; i++) {
-    const a = i * Math.PI / 4;
-    diamond(g, mx + Math.cos(a) * 100, my + Math.sin(a) * 100, 4); g.fill();
-  }
   return c;
 }
 
@@ -135,12 +91,6 @@ function makeEndpaper() {
   g.save();
   g.beginPath(); g.rect(14, 14, BW - 14, BH - 28); g.clip();
   g.fillStyle = '#5c0a10'; g.fillRect(0, 0, BW, BH);
-  g.strokeStyle = 'rgba(226,182,96,0.42)'; g.lineWidth = 1;
-  for (let y = 0; y < BH + 50; y += 48) for (let x = (y / 48) % 2 ? 24 : 0; x < BW + 50; x += 48) {
-    rubElHizb(g, x, y, 13); g.stroke();
-  }
-  g.fillStyle = 'rgba(226,182,96,0.35)';
-  for (let y = 24; y < BH + 50; y += 48) for (let x = (y / 48 + 0.5) % 2 >= 1 ? 24 : 0; x < BW + 50; x += 48) { diamond(g, x, y, 2.5); g.fill(); }
   const gut = g.createLinearGradient(BW, 0, BW - 70, 0);
   gut.addColorStop(0, 'rgba(0,0,0,0.5)'); gut.addColorStop(1, 'rgba(0,0,0,0)');
   g.fillStyle = gut; g.fillRect(BW - 70, 0, 70, BH);
@@ -211,8 +161,6 @@ function makeTextures() {
     g.font = '700 34px Montserrat'; g.letterSpacing = '8px';
     g.fillText('TÜRKÇE', PW / 2 + 4, 270); g.fillText('SÖZLÜK', PW / 2 + 4, 318);
     g.letterSpacing = '0px';
-    g.fillStyle = '#b8873a'; g.fillRect(PW / 2 - 70, 350, 140, 1.4);
-    star8(g, PW / 2, 400, 12); g.fill();
   });
   TEX.imprint = pageTex('L', 41, (g, r) => {
     for (let i = 0; i < 4; i++) bars(g, PW / 2 - 90, 560 + i * 16, 180, 1, 16, r);
@@ -234,8 +182,6 @@ function makeTextures() {
   TEX.letterA = pageTex('L', 81, (g) => {
     g.textAlign = 'center'; g.fillStyle = C.inkRed; g.font = '800 300px Montserrat';
     g.fillText('A', PW / 2, 430);
-    g.fillStyle = '#b8873a'; g.fillRect(PW / 2 - 80, 478, 160, 1.4);
-    diamond(g, PW / 2, 478, 5); g.fill();
   });
   const entries = [
     ['a', 2], ['a', 1], ['ab', 2], ['aba', 3], ['aba', 2], ['abacı', 1], ['abadi', 2], ['abajur', 2], ['abajurcu', 1],
@@ -297,9 +243,9 @@ function state(t) {
   s.L = returning ? 1 - ease(prog(t, K.sink)) : ease(prog(t, K.lift));
   s.P = out;
   s.entryGlow = clamp(prog(t, K.entryGlow) - prog(t, [K.sink[1] - 0.1, K.sink[1] + 0.25]));
-  s.rays = Math.max(win(t, 2.6, 3.3, 4.0, 4.9), win(t, 15.9, 16.6, 17.1, 17.8));
-  s.leak = Math.max(win(t, 0.25, 0.85, 1.0, 1.6), win(t, 17.9, 18.4, 18.55, 18.95));
-  const shine = ((t - 18.55 + T) % T) / 1.3;
+  s.rays = Math.max(win(t, 2.6, 3.3, 4.0, 4.9), win(t, K.back[0] + 0.3, K.back[1] + 0.1, K.sink[0] + 0.6, K.sink[1] + 0.5));
+  s.leak = Math.max(win(t, 0.25, 0.85, 1.0, 1.6), win(t, K.coverClose[0] + 0.05, K.coverClose[1] - 0.35, K.coverClose[1] - 0.2, K.coverClose[1] + 0.2));
+  const shine = ((t - (K.coverClose[1] - 0.2) + T) % T) / 1.3;
   s.coverShine = shine <= 1 ? shine : -1;
   s.secOut = ease(prog(t, K.out));
   return s;
@@ -426,22 +372,8 @@ function drawBook(ctx, t, s) {
 }
 
 // ------------------------------------------------------------------ ışık, toz, arka plan
-function drawBackground(ctx, t) {
+function drawBackground(ctx) {
   ctx.drawImage(BG, 0, 0);
-  ctx.save();
-  ctx.translate(W / 2, 900);
-  const rot = (t / T) * Math.PI / 4;   // 45° simetri: döngü sonunda aynı görüntü
-  ctx.strokeStyle = 'rgba(232,184,96,0.075)';
-  for (const [r, lw] of [[640, 2], [520, 1.2], [760, 1]]) { ctx.lineWidth = lw; rubElHizb(ctx, 0, 0, r, rot); ctx.stroke(); }
-  ctx.lineWidth = 1;
-  ctx.beginPath(); ctx.arc(0, 0, 440, 0, TAU); ctx.stroke();
-  ctx.beginPath(); ctx.arc(0, 0, 900, 0, TAU); ctx.stroke();
-  for (let i = 0; i < 16; i++) {
-    const a = rot + i * Math.PI / 8;
-    ctx.fillStyle = 'rgba(232,184,96,0.09)';
-    diamond(ctx, Math.cos(a) * 900, Math.sin(a) * 900, 7); ctx.fill();
-  }
-  ctx.restore();
 }
 function drawRays(ctx, s, x, y, k) {
   if (k <= 0.001) return;
@@ -507,23 +439,13 @@ function runsLine(ctx, runs, cx, y, alpha) {
   }
   ctx.restore();
 }
-function drawLabel(ctx, text, y, k, alpha) {
+function drawLabel(ctx, text, y, alpha) {
   if (alpha <= 0) return;
   ctx.save(); ctx.globalAlpha = alpha;
-  ctx.font = '600 29px Montserrat'; ctx.letterSpacing = '11px'; ctx.textAlign = 'center';
-  const tw = ctx.measureText(text).width - 11;
-  ctx.fillStyle = goldGrad(ctx, y - 22, y + 2);
-  ctx.fillText(text, W / 2 + 5.5, y);
+  ctx.font = '600 34px Montserrat'; ctx.letterSpacing = '12px'; ctx.textAlign = 'center';
+  ctx.fillStyle = goldGrad(ctx, y - 26, y + 2);
+  ctx.fillText(text, W / 2 + 6, y);
   ctx.letterSpacing = '0px';
-  const len = 130 * ease(k), yl = y - 10;
-  ctx.strokeStyle = 'rgba(226,182,96,0.8)'; ctx.lineWidth = 1.4;
-  ctx.beginPath();
-  ctx.moveTo(W / 2 - tw / 2 - 26, yl); ctx.lineTo(W / 2 - tw / 2 - 26 - len, yl);
-  ctx.moveTo(W / 2 + tw / 2 + 26, yl); ctx.lineTo(W / 2 + tw / 2 + 26 + len, yl);
-  ctx.stroke();
-  ctx.fillStyle = '#e2b660';
-  diamond(ctx, W / 2 - tw / 2 - 26 - len, yl, 4 * k); ctx.fill();
-  diamond(ctx, W / 2 + tw / 2 + 26 + len, yl, 4 * k); ctx.fill();
   ctx.restore();
 }
 function revealIn(ctx, k, dy, fn) {
@@ -539,9 +461,8 @@ function sentenceWords(text, hl) {
   const words = [];
   let cur = [], run = null;
   for (let i = 0; i <= text.length; i++) {
-    const ch = text[i];
-    if (ch === ' ' || ch === undefined) { if (run) cur.push(run); if (cur.length) words.push(cur); cur = []; run = null; continue; }
-    const g = i >= i0 && i < i1;
+    const ch = text[i], g = i >= i0 && i < i1;
+    if ((ch === ' ' && !g) || ch === undefined) { if (run) cur.push(run); if (cur.length) words.push(cur); cur = []; run = null; continue; }
     if (!run || run.gold !== g) { if (run) cur.push(run); run = { t: '', gold: g }; }
     run.t += ch;
   }
@@ -549,7 +470,7 @@ function sentenceWords(text, hl) {
 }
 function drawSentence(ctx, t, t0, cx, y, maxW, alphaAll) {
   const words = sentenceWords('“' + WORD.example.text + '”', WORD.example.highlight);
-  const size = 50, lh = 72;
+  const size = 54, lh = 80;
   const fontN = `italic 400 ${size}px Montserrat`, fontG = `italic 700 ${size}px Montserrat`;
   ctx.save(); ctx.textBaseline = 'alphabetic'; ctx.textAlign = 'left';
   ctx.font = fontN; const sp = ctx.measureText(' ').width;
@@ -653,55 +574,36 @@ function drawSections(ctx, t, s) {
   ctx.save();
   ctx.translate(0, -out * 30);
   if (out > 0) ctx.filter = `blur(${out * 10}px)`;
-  // ayraç
-  const dk = ease(prog(t, [4.75, 5.5]));
-  if (dk > 0) {
-    ctx.save(); ctx.globalAlpha = A;
-    ctx.strokeStyle = 'rgba(226,182,96,0.75)'; ctx.lineWidth = 1.4;
-    ctx.beginPath(); ctx.moveTo(W / 2 - 16, 512); ctx.lineTo(W / 2 - 16 - 190 * dk, 512);
-    ctx.moveTo(W / 2 + 16, 512); ctx.lineTo(W / 2 + 16 + 190 * dk, 512); ctx.stroke();
-    ctx.fillStyle = '#e2b660'; star8(ctx, W / 2, 512, 9 * dk); ctx.fill();
-    ctx.restore();
-  }
   // KÖKEN
   const k1 = prog(t, [t1, t1 + 0.8]);
-  drawLabel(ctx, 'KÖKEN', 612, k1, A * smooth(clamp(k1 * 2)));
+  drawLabel(ctx, 'KÖKEN', 620, A * smooth(k1));
   revealIn(ctx, prog(t, [t1 + 0.25, t1 + 1.0]), 26, k => {
     const sz = fitFont(ctx, 600, 74, 'Montserrat', WORD.origin.lang, 940);
-    runsLine(ctx, [{ t: WORD.origin.lang, font: `600 ${sz}px Montserrat`, size: sz }], W / 2, 702, A * k);
+    runsLine(ctx, [{ t: WORD.origin.lang, font: `600 ${sz}px Montserrat`, size: sz }], W / 2, 712, A * k);
   });
   revealIn(ctx, prog(t, [t1 + 0.55, t1 + 1.35]), 26, k => {
     const runs = [{ t: WORD.origin.translit, font: 'italic 500 58px Montserrat', gold: true, size: 58 }];
     if (WORD.origin.native) runs.push({ gap: 26 }, { t: '·', font: '400 50px Montserrat', color: 'rgba(248,236,211,0.6)' }, { gap: 26 },
       { t: WORD.origin.native, font: '600 72px "Noto Naskh Arabic"', gold: true, size: 72, dir: 'rtl' });
-    runsLine(ctx, runs, W / 2, 790, A * k);
+    runsLine(ctx, runs, W / 2, 800, A * k);
   });
   // ANLAM
   const k2 = prog(t, [t2, t2 + 0.8]);
-  drawLabel(ctx, 'ANLAM', 912, k2, A * smooth(clamp(k2 * 2)));
+  drawLabel(ctx, 'ANLAM', 950, A * smooth(k2));
   const water = WORD.motif === 'water';
   const mt = t2 + (water ? 0.72 : 0.25);
   if (water) {
-    drawDrop(ctx, t, t2 + 0.3, W / 2, 935, 1048);
-    drawRipples(ctx, t, t2 + 0.72, W / 2, 1056, A);
+    drawDrop(ctx, t, t2 + 0.3, W / 2, 975, 1088);
+    drawRipples(ctx, t, t2 + 0.72, W / 2, 1096, A);
   }
   revealIn(ctx, prog(t, [mt, mt + 0.8]), 22, k => {
     const sz = fitFont(ctx, 600, 132, 'Montserrat', WORD.meaning, 940);
-    runsLine(ctx, [{ t: WORD.meaning, font: `600 ${sz}px Montserrat`, size: sz }], W / 2, 1040, A * k);
+    runsLine(ctx, [{ t: WORD.meaning, font: `600 ${sz}px Montserrat`, size: sz }], W / 2, 1080, A * k);
   });
-  if (WORD.note) {
-    revealIn(ctx, prog(t, [mt + 0.55, mt + 1.3]), 22, k => {
-      runsLine(ctx, [{ t: WORD.note.term, font: 'italic 700 52px Montserrat', gold: true, size: 52 }], W / 2, 1130, A * k);
-    });
-    revealIn(ctx, prog(t, [mt + 0.8, mt + 1.55]), 22, k => {
-      const sz = fitFont(ctx, 500, 42, 'Montserrat', WORD.note.text, 940);
-      runsLine(ctx, [{ t: WORD.note.text, font: `500 ${sz}px Montserrat`, size: sz, color: 'rgba(248,236,211,0.88)' }], W / 2, 1190, A * k);
-    });
-  }
   // ÖRNEK
   const k3 = prog(t, [t3, t3 + 0.8]);
-  drawLabel(ctx, 'ÖRNEK', 1302, k3, A * smooth(clamp(k3 * 2)));
-  drawSentence(ctx, t, t3 + 0.3, W / 2, 1390, 940, A);
+  drawLabel(ctx, 'ÖRNEK', 1250, A * smooth(k3));
+  drawSentence(ctx, t, t3 + 0.3, W / 2, 1345, 940, A);
   ctx.restore();
 }
 
@@ -717,7 +619,7 @@ window.renderFrame = function (t) {
   const s = state(t);
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; ctx.filter = 'none';
-  drawBackground(ctx, t);
+  drawBackground(ctx);
   drawParticles(ctx, t, s.rays);
   const rc = toScreen(s, 0, -40);
   drawRays(ctx, s, rc.x, rc.y, s.rays * (1 - 0.4 * s.out));

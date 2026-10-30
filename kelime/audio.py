@@ -105,8 +105,9 @@ t = np.arange(N) / SR
 chords = [  # (başlangıç, notalar)
     (0.0, [50, 57, 62, 65, 69]),     # Dm(add9 yok) — kapalı kitap
     (4.6, [46, 53, 58, 62, 65]),     # B♭
-    (9.8, [43, 50, 55, 58, 62, 69]), # Gm9 rengi
-    (15.2, [45, 52, 57, 61, 64]),    # A — başa (Dm) çözülür
+    (10.8, [43, 50, 55, 58, 62, 69]), # Gm9 rengi
+    (15.2, [51, 58, 62, 67, 70]),     # E♭maj7
+    (19.5, [45, 52, 57, 61, 64]),    # A — başa (Dm) çözülür
 ]
 pad = np.zeros((2, N))
 for ci, (st, notes) in enumerate(chords):

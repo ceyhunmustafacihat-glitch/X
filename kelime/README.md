@@ -1,7 +1,8 @@
 # Günün kelimesi: “ab”
 
-Instagram Reels için 9:16 dikey (1080 × 1920), 19 saniyelik, kesintisiz dönen kelime videosu.
+Instagram Reels için 9:16 dikey (1080 × 1920), 23 saniyelik, kesintisiz dönen kelime videosu.
 Yazı tipi Montserrat. Renkler sayfanın profil görselinden alındı: kırmızı zemin, altın yaldız. Logo hiçbir yere filigran olarak konmadı.
+Tasarım bilinçli olarak sade tutuldu: kapakta motif yok, yazıların çevresinde süs çizgisi yok. Ekranda yalnızca kelime, köken, anlam ve örnek var.
 
 - **Sesli:** [`output/kelime_ab.mp4`](../output/kelime_ab.mp4)
 - **Sessiz** (Instagram'da kendi müziğinizi eklemek için): [`output/kelime_ab_sessiz.mp4`](../output/kelime_ab_sessiz.mp4)
@@ -12,15 +13,15 @@ Yazı tipi Montserrat. Renkler sayfanın profil görselinden alındı: kırmız�
 
 | Zaman | Görüntü | Ses |
 |---|---|---|
-| 0–0,9 sn | Kırmızı deri kaplı, altın yaldızlı **Türkçe Sözlük** kapalı duruyor; yaldızın üzerinden ışık geçiyor, kenarlardan altın ışık sızıyor. | D minör yumuşak pad |
-| 0,9–2,7 sn | Kapak açılıyor (iç kapakta altın sekiz köşeli yıldız deseni), sayfalar çevriliyor: iç kapak, önsöz, “A” harfi. | Kapak ve sayfa hışırtısı |
+| 0–0,9 sn | Sade, kırmızı deri kaplı bir kitap kapalı duruyor. Üzerinde yalnızca altın yaldızla **TÜRKÇE SÖZLÜK** yazıyor; yaldızın üzerinden ışık geçiyor, kenarlardan altın ışık sızıyor. | D minör yumuşak pad |
+| 0,9–2,7 sn | Kapak açılıyor, sayfalar çevriliyor: iç kapak, önsöz, “A” harfi. | Kapak ve sayfa hışırtısı |
 | 2,6–4 sn | Sözlük sayfasındaki **ab** maddesi parlıyor. Kelime altın ışık huzmeleriyle sayfadan yükseliyor. | Çelesta arpeji |
 | 4,1–5 sn | Kitap aşağı iniyor, **ab** ekranın üstüne yerleşiyor ve üzerinden bir ışık geçiyor. | |
 | 5 sn | **KÖKEN:** Farsça · *āb* · آب | |
-| 7,6 sn | **ANLAM:** Altın bir damla düşüyor ve halkalar yayılıyor: **su**. *ab-ı hayat*: hayat suyu, ölümsüzlük suyu | Su damlası |
-| 10,4 sn | **ÖRNEK:** “Efsaneye göre Hızır, **ab-ı hayat**tan içerek ölümsüzlüğe kavuştu.” (kelime kelime beliriyor) | |
-| 15,2–17,3 sn | Yazılar dağılıyor, kitap geri geliyor, **ab** sayfadaki yerine iniyor. | İnen arpej |
-| 17,3–19 sn | Sayfalar geri çevriliyor, kapak kapanıyor. Son kare ilk kareyle aynı olduğu için video kesintisiz dönüyor. | Kapanış, başa bağlanan akor |
+| 8 sn | **ANLAM:** Altın bir damla düşüyor ve halkalar yayılıyor: **su** | Su damlası |
+| 11–19,5 sn | **ÖRNEK:** “Efsaneye göre Hızır, **ab-ı hayat**tan içerek ölümsüzlüğe kavuştu.” Cümle kelime kelime beliriyor. Ardından bütün bilgiler yaklaşık 7 saniye boyunca ekranda kalıyor. | |
+| 19,5–21,6 sn | Yazılar dağılıyor, kitap geri geliyor, **ab** sayfadaki yerine iniyor. | İnen arpej |
+| 21,6–23,3 sn | Sayfalar geri çevriliyor, kapak kapanıyor. Son kare ilk kareyle aynı olduğu için video kesintisiz dönüyor. | Kapanış, başa bağlanan akor |
 
 Ses de dairesel olarak sentezlendi: sondaki yankı videonun başına taşıyor, böylece video başa sardığında seste de bir kesinti duyulmuyor.
 
@@ -30,7 +31,7 @@ Yayından önce tanımı [sozluk.gov.tr](https://sozluk.gov.tr) üzerinden teyit
 ## Yeni bir kelime için
 
 1. `kelime/words/ab.js` dosyasını kopyalayın (ör. `words/inşirah.js` yerine `words/insirah.js`) ve alanları doldurun:
-   `word`, `origin` (`lang`, `translit`, isteğe bağlı `native`: özgün yazılışı), `meaning`, isteğe bağlı `note`, `example` (`text`, vurgulanacak `highlight`) ve `motif`.
+   `word`, `origin` (`lang`, `translit`, isteğe bağlı `native`: özgün yazılışı), `meaning`, `example` (`text`, vurgulanacak `highlight`) ve `motif`.
    `motif: "water"` damla ile halka efektini açar; başka kelimelerde bu alanı silebilirsiniz.
 2. Uzun kelimeler ve tanımlar ekrana sığacak şekilde otomatik küçültülür. Örnek cümle satırlara kendiliğinden bölünür.
 3. Üretim:
@@ -61,4 +62,4 @@ kelime/
 ## Instagram notları
 
 - Önemli içerik ekranın üstteki 220 ve alttaki 400 pikselinin dışında kalıyor, böylece Reels arayüzünün altında kalmıyor.
-- Kapak karesi olarak 14. saniye uygun: kelime, köken, anlam ve örnek aynı karede görünüyor ([`poster.jpg`](poster.jpg)).
+- Kapak karesi olarak 17. saniye uygun: kelime, köken, anlam ve örnek aynı karede görünüyor ([`poster.jpg`](poster.jpg)).
