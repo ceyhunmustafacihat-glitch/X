@@ -6,7 +6,7 @@ Tasarım bilinçli olarak sade tutuldu: kapakta motif yok, yazıların çevresin
 
 - **Sesli:** [`output/kelime_ab.mp4`](../output/kelime_ab.mp4)
 - **Sessiz** (Instagram'da kendi müziğinizi eklemek için): [`output/kelime_ab_sessiz.mp4`](../output/kelime_ab_sessiz.mp4)
-- **Kapak görseli** (9:16, yalnızca kelime ve kökeni): [`output/kelime_ab_kapak.jpg`](../output/kelime_ab_kapak.jpg)
+- **Kapak görseli** (9:16 dikey): yalnızca kelime [`output/kelime_ab_kapak.jpg`](../output/kelime_ab_kapak.jpg), altında kökeniyle [`output/kelime_ab_kapak_koken.jpg`](../output/kelime_ab_kapak_koken.jpg)
 
 ![Kareler](storyboard.jpg)
 
@@ -40,7 +40,7 @@ Yayından önce tanımı [sozluk.gov.tr](https://sozluk.gov.tr) üzerinden teyit
 ```bash
 python3 kelime/audio.py                 # kelime/out/soundtrack.wav
 node kelime/render.mjs --word insirah    # output/kelime_insirah.mp4 ve _sessiz.mp4
-node kelime/cover.mjs --word insirah     # output/kelime_insirah_kapak.jpg
+node kelime/cover.mjs --word insirah     # output/kelime_insirah_kapak.jpg ve _kapak_koken.jpg
 ```
 
 Önizleme için `kelime/index.html?word=ab` dosyasını tarayıcıda açın. `node kelime/stills.mjs <klasör> --word ab 3.3 9 14` komutu seçtiğiniz saniyelerden PNG kareler alır.
@@ -58,11 +58,11 @@ kelime/
   audio.py       döngüye uygun müzik ve efekt sentezi
   render.mjs     kare kare render ve ffmpeg ile MP4 (H.264 + AAC)
   stills.mjs     tek tek kare almak için yardımcı
-  cover.mjs      kapak görseli (kelime ve kökeni)
+  cover.mjs      kapak görselleri (yalnızca kelime; kelime ve kökeni)
   fonts/         Montserrat ve Noto Naskh Arabic (SIL OFL), yerel kopya
 ```
 
 ## Instagram notları
 
 - Önemli içerik ekranın üstteki 220 ve alttaki 400 pikselinin dışında kalıyor, böylece Reels arayüzünün altında kalmıyor.
-- Kapak olarak `output/kelime_ab_kapak.jpg` dosyasını kullanabilirsiniz. Kelime ve kökeni ekranın tam ortasında olduğu için profil ızgarasındaki 3:4 kırpmada da tamamen görünür. Videodan bir kare seçmek isterseniz 17. saniyede bütün bilgiler bir arada ([`poster.jpg`](poster.jpg)).
+- Kapak olarak `output/kelime_ab_kapak.jpg` (yalnızca kelime) ya da `output/kelime_ab_kapak_koken.jpg` (kelime ve kökeni) dosyasını kullanabilirsiniz. Yazı ekranın tam ortasında olduğu için profil ızgarasındaki 3:4 kırpmada da tamamen görünür. Videodan bir kare seçmek isterseniz 17. saniyede bütün bilgiler bir arada ([`poster.jpg`](poster.jpg)).

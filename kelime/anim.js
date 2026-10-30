@@ -620,19 +620,20 @@ window.init = function (cv) {
   makeTextures();
   makeBackground();
 };
-// Kapak görseli: yalnızca kelime ve kökeni, dikey ortada (Instagram ızgarasındaki 3:4 kırpmada da tam görünür).
-window.renderCover = function () {
+// Kapak görseli: kelime (isteğe bağlı olarak altında kökeni), dikey ortada (Instagram ızgarasındaki 3:4 kırpmada da tam görünür).
+window.renderCover = function (withOrigin) {
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; ctx.filter = 'none';
   drawBackground(ctx);
   drawParticles(ctx, 0, 0);
-  const size = fitFont(ctx, 700, 360, 'Montserrat', WORD.word, 940, 5), y = 1000;
+  const size = fitFont(ctx, 700, 360, 'Montserrat', WORD.word, 940, 5), y = withOrigin ? 1000 : 960 + size * 0.35;
   ctx.save();
   ctx.font = `700 ${size}px Montserrat`; ctx.letterSpacing = (size * 0.015) + 'px'; ctx.textAlign = 'center';
   ctx.shadowColor = 'rgba(255,190,100,0.5)'; ctx.shadowBlur = size * 0.22;
   ctx.fillStyle = goldGrad(ctx, y - size * 0.74, y + size * 0.04);
   ctx.fillText(WORD.word, W / 2, y);
   ctx.restore();
+  if (!withOrigin) return;
   const sz = fitFont(ctx, 600, 84, 'Montserrat', WORD.origin.lang, 940);
   runsLine(ctx, [{ t: WORD.origin.lang, font: `600 ${sz}px Montserrat`, size: sz }], W / 2, y + 150, 1);
 };
