@@ -4,10 +4,13 @@
 Her şey dairesel bir tampona yazılır: video sonundan taşan yankı ve notalar başa sarılır,
 böylece Instagram videoyu tekrar başlattığında seste de kesinti olmaz.
 
-    python3 kelime/audio.py            -> kelime/out/soundtrack.wav (48 kHz, stereo, 16 bit)
+    python3 kelime/audio.py [kelime]   -> kelime/out/soundtrack_<kelime>.wav (48 kHz, stereo, 16 bit)
+
+Kelimenin dosyasından (words/<kelime>.js) yalnızca motif okunur: "water" ise su damlası sesi eklenir.
 """
 import json
 import os
+import sys
 import wave
 
 import numpy as np
@@ -17,6 +20,10 @@ SR = 48000
 with open(os.path.join(HERE, "timeline.js"), encoding="utf-8") as f:
     src = f.read()
 TL = json.loads(src[src.index("{"): src.rindex("}") + 1])
+SLUG = sys.argv[1] if len(sys.argv) > 1 else "ab"
+with open(os.path.join(HERE, "words", SLUG + ".js"), encoding="utf-8") as f:
+    src = f.read()
+WORD = json.loads(src[src.index("{"): src.rindex("}") + 1])
 T = TL["duration"]
 N = int(round(T * SR))
 rng = np.random.default_rng(3)
@@ -147,8 +154,11 @@ s1, s2, s3 = TL["sections"]
 place(pluck(hz(69), 2.5, 0.22), s1 + 0.25, pan=-0.2, send=0.45)
 place(pluck(hz(74), 2.5, 0.18), s1 + 0.55, pan=0.2, send=0.45)
 place(pluck(hz(70), 2.5, 0.22), s2 + 0.05, pan=-0.2, send=0.45)
-place(drop(0.32), s2 + 0.68, pan=0.0, send=0.5)
-place(bell(hz(86), 2.2, 0.07), s2 + 0.72, pan=0.3, send=0.7)
+if WORD.get("motif") == "water":
+    place(drop(0.32), s2 + 0.68, pan=0.0, send=0.5)
+    place(bell(hz(86), 2.2, 0.07), s2 + 0.72, pan=0.3, send=0.7)
+else:
+    place(pluck(hz(77), 2.5, 0.15), s2 + 0.35, pan=0.2, send=0.45)
 place(pluck(hz(67), 2.5, 0.2), s3 + 0.05, pan=0.2, send=0.45)
 place(pluck(hz(74), 2.5, 0.16), s3 + 0.35, pan=-0.2, send=0.45)
 # dönüş: inen arpej, sayfalar, kapanış
@@ -182,7 +192,7 @@ if peak > 0.89:
     mix = np.tanh(mix / peak * 1.4) / np.tanh(1.4) * 0.89
 
 os.makedirs(os.path.join(HERE, "out"), exist_ok=True)
-path = os.path.join(HERE, "out", "soundtrack.wav")
+path = os.path.join(HERE, "out", f"soundtrack_{SLUG}.wav")
 with wave.open(path, "wb") as w:
     w.setnchannels(2)
     w.setsampwidth(2)

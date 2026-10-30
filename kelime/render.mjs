@@ -14,7 +14,7 @@ const tl = JSON.parse(fs.readFileSync(path.join(dir, 'timeline.js'), 'utf8').rep
 const fps = tl.fps, total = Math.round(tl.duration * fps);
 const workers = parseInt(args.workers || '4', 10);
 const frameDir = path.join(dir, 'frames', word);
-const audio = path.join(dir, 'out', 'soundtrack.wav');
+const audio = path.join(dir, 'out', `soundtrack_${word}.wav`);
 fs.mkdirSync(frameDir, { recursive: true });
 fs.mkdirSync(path.join(root, 'output'), { recursive: true });
 

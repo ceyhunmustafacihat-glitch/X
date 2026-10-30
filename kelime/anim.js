@@ -145,9 +145,10 @@ function columns(g, side, entries, r, mark) {
     if (y + (n - 1) * lh > PH - 50) { col++; y = 82; if (col > 1) break; }
     const x = x0 + col * (cw + gap);
     g.font = '700 14px Montserrat'; g.textAlign = 'left'; g.fillStyle = C.inkRed;
-    g.fillText(e.w, x, y);
-    const hw = g.measureText(e.w).width;
-    if (e.w === mark) AB_ENTRY = { x: x + hw / 2, y: y, w: hw, size: 14 };
+    let hw;
+    if (e.w) { g.fillText(e.w, x, y); hw = g.measureText(e.w).width; }
+    else { hw = e.bw; g.fillStyle = 'rgba(122,15,22,0.55)'; g.fillRect(x, y - 9, hw, 7); }   // okunmayan madde başı
+    if (e.w === mark && !AB_ENTRY) AB_ENTRY = { x: x + hw / 2, y: y, w: hw, size: 14 };
     bars(g, x, y, cw, n, lh, r, hw + 7);
     y += n * lh + 7;
   }
@@ -179,18 +180,30 @@ function makeTextures() {
     let y = 80;
     for (let p = 0; p < 8; p++) { const n = 3 + Math.floor(r() * 5); bars(g, 54, y, PW - 98, n, 16, r, 20); y += n * 16 + 14; if (y > PH - 80) break; }
   });
+  // kelimenin bulunduğu harf bölümünün açılış sayfası
+  const letter = WORD.word[0].toLocaleUpperCase('tr');
   TEX.letterA = pageTex('L', 81, (g) => {
-    g.textAlign = 'center'; g.fillStyle = C.inkRed; g.font = '800 300px Montserrat';
-    g.fillText('A', PW / 2, 430);
+    g.textAlign = 'center'; g.fillStyle = C.inkRed;
+    g.font = `800 ${fitFont(g, 800, 300, 'Montserrat', letter, PW - 80)}px Montserrat`;
+    g.fillText(letter, PW / 2, 430);
   });
-  const entries = [
+  // "a" bölümünün ilk sayfası gerçek madde başlarıyla çizilir. Kelime bu sayfada değilse
+  // komşu maddeler okunmayan çubuklar olarak çizilir ve yalnızca kelimenin kendisi yazılır.
+  let entries = [
     ['a', 2], ['a', 1], ['ab', 2], ['aba', 3], ['aba', 2], ['abacı', 1], ['abadi', 2], ['abajur', 2], ['abajurcu', 1],
     ['abaküs', 3], ['abandone', 2], ['abanmak', 3], ['abanoz', 3], ['abanozlaşmak', 1], ['abartı', 2], ['abartıcı', 1],
     ['abartılı', 2], ['abartılmak', 1], ['abartma', 1], ['abartmacı', 1], ['abartmak', 3], ['abazan', 2], ['abdal', 4],
     ['abdallaşmak', 1], ['abdest', 3], ['abdestli', 1], ['abdestsiz', 2],
   ].map(([w, n]) => ({ w, n }));
+  const onFirstPage = entries.some(e => e.w === WORD.word);
+  if (!onFirstPage) {
+    const r = rng(17);
+    entries = Array.from({ length: 26 }, (_, i) => ({ bw: 34 + r() * 60, n: 1 + Math.floor(r() * 3) }));
+    entries.splice(2, 0, { w: WORD.word, n: 2 });
+  }
   TEX.abPage = pageTex('R', 91, (g, r) => {
-    header(g, 'R', 'a', 'abdestsiz', '1');
+    if (onFirstPage) header(g, 'R', 'a', 'abdestsiz', '1');
+    else header(g, 'R', WORD.word, '', '');
     columns(g, 'R', entries, r, WORD.word);
   });
   // yaprak sırası: üstteki önce
@@ -573,6 +586,22 @@ function drawWord(ctx, t, s) {
   }
 }
 
+// Kısa tanım tek satırda büyük yazılır; sığmazsa iki satıra bölünür (en fazla iki satır, gerekirse küçülür).
+function meaningLines(ctx) {
+  const m = WORD.meaning, single = fitFont(ctx, 600, 132, 'Montserrat', m, 940);
+  if (single >= 88) return [{ t: m, size: single, y: 1080 }];
+  const words = m.split(' ');
+  let best = null;
+  for (let i = 1; i < words.length; i++) {
+    const a = words.slice(0, i).join(' '), b = words.slice(i).join(' ');
+    ctx.font = '600 70px Montserrat';
+    const w = Math.max(ctx.measureText(a).width, ctx.measureText(b).width);
+    if (!best || w < best.w) best = { a, b, w };
+  }
+  if (!best) return [{ t: m, size: single, y: 1080 }];
+  const size = Math.min(70, Math.floor(70 * 940 / best.w));
+  return [{ t: best.a, size, y: 1040 }, { t: best.b, size, y: 1040 + size * 1.2 }];
+}
 function drawSections(ctx, t, s) {
   const out = s.secOut, A = 1 - out;
   if (A <= 0) return;
@@ -603,8 +632,8 @@ function drawSections(ctx, t, s) {
     drawRipples(ctx, t, t2 + 0.72, W / 2, 1096, A);
   }
   revealIn(ctx, prog(t, [mt, mt + 0.8]), 22, k => {
-    const sz = fitFont(ctx, 600, 132, 'Montserrat', WORD.meaning, 940);
-    runsLine(ctx, [{ t: WORD.meaning, font: `600 ${sz}px Montserrat`, size: sz }], W / 2, 1080, A * k);
+    const lines = meaningLines(ctx);
+    lines.forEach((l, i) => runsLine(ctx, [{ t: l.t, font: `600 ${l.size}px Montserrat`, size: l.size }], W / 2, l.y, A * k));
   });
   // ÖRNEK
   const k3 = prog(t, [t3, t3 + 0.8]);
