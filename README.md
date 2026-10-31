@@ -78,3 +78,18 @@ node render/render.mjs --encode-only 1   # yalnızca sesi ya da kodlamayı deği
 - Logo, şiar ve kullanıcı adı ekranın orta bölümünde. Reels arayüzünün kapladığı alt %20'lik kısma önemli içerik yerleştirilmedi.
 - İlk 0,7 saniye siyahtan açılıyor. Kapak olarak 10. saniyedeki paylaşım karesini seçebilirsiniz.
 - Müzik tamamen bu proje için sentezlendi; telif sorunu yoktur.
+
+---
+
+## Deneme: “Big Bang'den önce ne vardı?”
+
+Anlatıcının ses kaydı üzerine kurulu, 18 saniyelik deneme Reels'i: **[`output/bigbang_deneme.mp4`](output/bigbang_deneme.mp4)** (1080×1920, 30 fps).
+
+- Kayıt (`bigbang/voice/anlatim.m4a`) 1,85–16,5 sn arası kullanılır; “Bu iki sı…” ve sonrasındaki “Ah, kaçırdım…” bölümü kesilir.
+- Sahneler cümlelere oturur: yıldızlar ve başlık → zamanın geri sarılması (13,8 milyar yıl) → tekillik ve “?” → patlama → evrenin zaman konisi → **gözlemsel sınır** (ilk ışık, yaklaşık 380.000 yıl) → **kuramsal sınır** (Planck zamanı, 10⁻⁴³ saniye) → kapanış sorusu.
+- Söylenen kelimeler ekranda kelime kelime altyazı olarak belirir. Cümle zamanları `bigbang/timeline.js` içindedir ve kaydın duraklamalarından ölçülmüştür.
+- Arkadaki müzik ve efektler `bigbang/audio.py` ile sentezlenir ve sesin altında otomatik kısılır.
+
+```bash
+npm run bigbang     # output/bigbang_audio.wav ve output/bigbang_deneme.mp4
+```

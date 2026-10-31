@@ -1,5 +1,5 @@
 node_modules/
-/render/frames/
+/render/frames*/
 /render/tmp/
 *.pyc
 __pycache__/

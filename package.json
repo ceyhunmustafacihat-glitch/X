@@ -7,7 +7,8 @@
     "audio": "python3 audio/compose.py",
     "frames": "node render/render.mjs",
     "build": "python3 audio/compose.py && node render/render.mjs",
-    "encode": "node render/render.mjs --encode-only 1"
+    "encode": "node render/render.mjs --encode-only 1",
+    "bigbang": "python3 bigbang/audio.py && node render/render.mjs --page bigbang/index.html --timeline bigbang/timeline.js --audio output/bigbang_audio.wav --frames render/frames_bigbang --out output/bigbang_deneme.mp4"
   },
   "devDependencies": {
     "playwright": "^1.56.1"

@@ -1,6 +1,7 @@
 // Renders every frame of the animation with headless Chromium, then muxes
 // the frames with the soundtrack into an Instagram-ready MP4.
 //   node render/render.mjs [--workers 4] [--from 0] [--to 32] [--out output/sozlukdeus_reels.mp4] [--encode-only 1]
+//   other projects: --page bigbang/index.html --timeline bigbang/timeline.js --audio output/bigbang_audio.wav --frames render/frames_bigbang
 import { chromium } from 'playwright';
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
@@ -8,13 +9,15 @@ import path from 'node:path';
 
 const root = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 const args = Object.fromEntries(process.argv.slice(2).reduce((a, v, i, arr) => (v.startsWith('--') ? a.concat([[v.slice(2), arr[i + 1]]]) : a), []));
-const tl = JSON.parse(fs.readFileSync(path.join(root, 'animation/timeline.js'), 'utf8').replace(/^[\s\S]*?=\s*/, '').replace(/;\s*$/, ''));
+const pageFile = args.page || 'animation/index.html';
+const tlSrc = fs.readFileSync(path.join(root, args.timeline || 'animation/timeline.js'), 'utf8');
+const tl = JSON.parse(tlSrc.slice(tlSrc.indexOf('{'), tlSrc.lastIndexOf('}') + 1));
 const fps = tl.fps, duration = tl.duration;
 const workers = parseInt(args.workers || '4', 10);
 const from = parseFloat(args.from || '0'), to = parseFloat(args.to || String(duration));
-const frameDir = path.join(root, 'render/frames');
+const frameDir = path.join(root, args.frames || 'render/frames');
 const out = path.join(root, args.out || 'output/sozlukdeus_reels.mp4');
-const audio = path.join(root, 'output/soundtrack.wav');
+const audio = path.join(root, args.audio || 'output/soundtrack.wav');
 fs.mkdirSync(frameDir, { recursive: true });
 fs.mkdirSync(path.dirname(out), { recursive: true });
 
@@ -30,7 +33,7 @@ const t0 = Date.now();
 async function worker() {
   const page = await browser.newPage({ viewport: { width: 1080, height: 1920 } });
   page.on('pageerror', e => console.error('pageerror:', e.message));
-  await page.goto('file://' + path.join(root, 'animation/index.html') + '?render=1');
+  await page.goto('file://' + path.join(root, pageFile) + '?render=1');
   await page.waitForFunction(() => window.animReady === true);
   const canvas = page.locator('#c');
   while (next < frames.length) {
