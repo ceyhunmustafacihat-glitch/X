@@ -8,7 +8,8 @@
     "frames": "node render/render.mjs",
     "build": "python3 audio/compose.py && node render/render.mjs",
     "encode": "node render/render.mjs --encode-only 1",
-    "bigbang": "python3 bigbang/audio.py && node render/render.mjs --page bigbang/index.html --timeline bigbang/timeline.js --audio output/bigbang_audio.wav --frames render/frames_bigbang --out output/bigbang_deneme.mp4"
+    "bigbang": "python3 bigbang/audio.py && node render/render.mjs --page bigbang/index.html --timeline bigbang/timeline.js --audio output/bigbang_audio.wav --frames render/frames_bigbang --out output/bigbang_deneme.mp4",
+    "golding": "python3 golding/prep_images.py && python3 golding/audio.py && node render/render.mjs --page golding/index.html --timeline golding/timeline.js --audio output/golding_audio.wav --frames render/frames_golding --out output/golding_ornek.mp4"
   },
   "devDependencies": {
     "playwright": "^1.56.1"

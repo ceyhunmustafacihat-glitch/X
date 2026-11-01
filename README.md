@@ -93,3 +93,18 @@ Anlatıcının ses kaydı üzerine kurulu, 18 saniyelik deneme Reels'i: **[`outp
 ```bash
 npm run bigbang     # output/bigbang_audio.wav ve output/bigbang_deneme.mp4
 ```
+
+---
+
+## Örnek: William Golding
+
+25 saniyelik, yazılı ve animasyonlu tanıtım videosu: **[`output/golding_ornek.mp4`](output/golding_ornek.mp4)** (1080×1920, 30 fps).
+
+Akış: isim ve yıllar (daktilo efektiyle alt başlık) → portre ve hayatından notlar → *Sineklerin Tanrısı* (1954) ve kendini çizen deniz kabuğu → kendini çizdikten sonra fotoğrafa dönüşen çocukluk evi (29 The Green, Marlborough) → ödüller (1980 Booker, 1983 Nobel, 1988 “Sir” unvanı) → kapanış.
+
+- Kaynak fotoğraflar `golding/images/` içinde. `golding/prep_images.py` fotoğrafları büyütüp keskinleştirir, evin çizgi eskizini çıkarır ve hepsini `golding/images.js` içine gömer.
+- Müzik `golding/audio.py` ile sentezlenir: piyano, ada sahnesinde deniz sesi ve daktilo tıkırtıları.
+
+```bash
+npm run golding     # output/golding_audio.wav ve output/golding_ornek.mp4
+```
